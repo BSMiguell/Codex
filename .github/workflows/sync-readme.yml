@@ -1,0 +1,53 @@
+name: Sync README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'characters-api.json'
+      - 'scripts/build_readme.ps1'
+      - 'Temporario.md'
+      - '.github/workflows/sync-readme.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  readme:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate README with UTF-8
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_readme.ps1
+
+          $path = Join-Path $PWD 'README.md'
+          $content = [System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8)
+
+          # Publicação oficial do projeto: nunca reintroduzir o endereço legado.
+          $content = $content.Replace('https://bsmiguell.github.io/Temporario/', 'https://bsmiguell.github.io/Codex/')
+          $content = $content.Replace('https://bsmiguell.github.io/Temporario', 'https://bsmiguell.github.io/Codex')
+
+          # O acervo usa WebP como formato principal quando disponível.
+          $content = $content.Replace('e arte `.png`.', 'e arte `.webp`/`.png`.')
+          $content = $content.Replace('fichas `.md` e imagens `.png`/', 'fichas `.md` e imagens `.webp`/`.png`/')
+
+          [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
+
+      - name: Commit README if changed
+        shell: pwsh
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          if (-not (git diff --cached --quiet)) {
+            git commit -m 'docs: corrige encoding e URL do README'
+            git push
+          } else {
+            Write-Host 'README já está sincronizado.'
+          }

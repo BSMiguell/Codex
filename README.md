@@ -8,7 +8,11 @@
 
 ## O que é este projeto
 
+<<<<<<< HEAD
 **Aetheria Codex** é um códice de personagens de fantasia autoral: **487 personagens** distribuídos em **22 categorias/raças**, cada um com ficha em Markdown (história + descrição visual detalhada) e arte `.png`. Sobre esse acervo roda um site galeria estático — sem backend, sem dependências, só HTML/CSS/JS puro.
+=======
+**Aetheria Codex** é um códice de personagens de fantasia autoral: **487 personagens** distribuídos em **22 categorias/raças**, cada um com ficha em Markdown (história + descrição visual detalhada) e arte `.webp`/`.png`. Sobre esse acervo roda um site galeria estático — sem backend, sem dependências, só HTML/CSS/JS puro.
+>>>>>>> dd7898ec3c4eb0a6e5900c7e4b394768e33b44fb
 
 O fluxo é: **fichas `.md` nas pastas → scripts PowerShell geram `characters-api.json` e `README.md` → `index.html` consome a API JSON**.
 
@@ -662,7 +666,11 @@ Para compreender completamente este projeto, leia os seguintes arquivos na ordem
 25. **package.json** + **.prettierrc** + **eslint.config.js** + **.markdownlint.json** — tooling de qualidade (`npm run lint`, `npm run format:check`)
 26. **docs/screenshots/** (28 capturas JPEG: 11 galeria base + 17 Q4/2026) + **docs/relatorio-arte.md** — material visual e diagnóstico de conteúdo
 27. **graphify-out/** — grafo de conhecimento (`/graphify` — 298 nós / 311 arestas / 72 comunidades)
+<<<<<<< HEAD
 28. **codex/** — fichas `.md` e imagens `.png`/`.webp` dos 487 personagens (fonte primária; 22 pastas numeradas)
+=======
+28. **codex/** — fichas `.md` e imagens `.webp`/`.png`/`.webp` dos 487 personagens (fonte primária; 22 pastas numeradas)
+>>>>>>> dd7898ec3c4eb0a6e5900c7e4b394768e33b44fb
 29. **Historia/** — lore autoral do mundo (4 `.md`: Aetheria_Codex_do_Mundo, Aetheria_Dados_do_Mundo, Aetheria_Geografia_e_Batalhas, Aetheria_Super_Historia)
 
 ---
@@ -670,8 +678,12 @@ Para compreender completamente este projeto, leia os seguintes arquivos na ordem
 ## 🌐 Link Publicado
 
 Site publicado: https://bsmiguell.github.io/Codex/
-Sitemap: https://bsmiguell.github.io/Temporario/sitemap.xml
+Sitemap: https://bsmiguell.github.io/Codex/sitemap.xml
 
 ---
 
+<<<<<<< HEAD
 *Última geração: 08/09/2026 01:09 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
+=======
+*Última geração: 08/09/2026 04:07 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
+>>>>>>> dd7898ec3c4eb0a6e5900c7e4b394768e33b44fb
