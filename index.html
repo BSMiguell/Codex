@@ -1,0 +1,3734 @@
+﻿<!doctype html>
+<html lang="pt-BR" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="Aetheria Codex — 489 personagens de fantasia distribuídos em 22 raças. Códice autoral com fichas, arte, lore, mapa do mundo e galeria interativa."
+    />
+    <meta
+      name="keywords"
+      content="fantasia, personagens, código, lore, rpg, worldbuilding, aetheria, galeria, código de fantasia"
+    />
+    <meta name="author" content="BSMiguell" />
+    <link rel="canonical" href="https://bsmiguell.github.io/Temporario/" />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml" />
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bsmiguell.github.io/Temporario/" />
+    <meta property="og:title" content="Aetheria Codex — Códice de 489 Personagens" />
+    <meta
+      property="og:description"
+      content="Códice de fantasia autoral: 489 personagens em 22 raças, com arte, lore, mapa do mundo e galeria interativa."
+    />
+    <meta
+      property="og:image"
+      content="https://bsmiguell.github.io/Temporario/assets/og-cover.jpg"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Capa do Aetheria Codex" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Aetheria Codex" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Aetheria Codex — Códice de 489 Personagens" />
+    <meta
+      name="twitter:description"
+      content="Códice de fantasia autoral: 489 personagens em 22 raças, com arte, lore, mapa do mundo e galeria interativa."
+    />
+    <meta
+      name="twitter:image"
+      content="https://bsmiguell.github.io/Temporario/assets/og-cover.jpg"
+    />
+    <meta name="twitter:image:alt" content="Capa do Aetheria Codex" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#1a120e" />
+  <meta name="view-transition" content="same-origin" />
+
+    <title>Aetheria Codex — Códice de 489 Personagens</title>
+
+    <!-- characters-api.json: NÃO usa <link rel="preload>.
+         O Service Worker (sw.js) já serve cache-first o JSON em <50ms após a 1ª visita.
+         Em hardware lento + DevTools aberto, o <link rel="preload"> causava warning
+         'preloaded but not used within a few seconds' porque o fetch() no JS demorava
+         mais que o timeout do Chrome. Removido o preload; SW cuida do cache. -->
+
+    <!-- Preload fontes críticas -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Space+Grotesk:wght@300..700&display=swap"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Space+Grotesk:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- §1.2 — CSS extraído para cache cross-page; v=YYYYMMDD para cache-bust -->
+    <link rel="preload" as="style" href="assets/codex.css?v=20260903" />
+    <link rel="stylesheet" href="assets/transitions.css">
+    <link rel="stylesheet" href="assets/codex.css?v=20260903" />
+
+  </head>
+  <body>
+    <script>
+      // §11.6 Q4/2026: bootstrap do toggle de motion (no-fx) antes do primeiro frame
+      // restaura localStorage.noFx pra evitar flicker de animacao no reload
+      try {
+        if (localStorage.getItem("noFx") === "1") {
+          document.body.classList.add("no-fx");
+        }
+      } catch (e) {
+        // private window / storage bloqueado: silencioso
+      }
+    </script>
+    <a class="skip-link" href="#characterGrid">Pular para o conteúdo principal</a>
+    <div class="grid-lines"></div>
+    <div class="paper-grain" aria-hidden="true"></div>
+    <div id="ambientGlow" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ===== ONBOARDING PRIMEIRA VISITA (plano §4.3) ===== -->
+    <div
+      class="onboard-overlay"
+      id="onboardOverlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboardTitle"
+      hidden
+    >
+      <div class="onboard-card">
+        <header class="onboard-head">
+          <h2 id="onboardTitle"><span aria-hidden="true">📜</span> Bem-vindo ao Aetheria</h2>
+          <button type="button" class="onboard-skip" id="onboardSkip" aria-label="Pular onboarding">
+            Pular
+          </button>
+        </header>
+        <div class="onboard-body">
+          <section class="onboard-step is-active" data-step="0">
+            <span class="step-icon" aria-hidden="true">📖</span>
+            <h3>Um códice vivo de fantasia</h3>
+            <p>
+              <span id="onboardChars">487</span> personagens autorais distribuídos em
+              <span id="onboardRaces">22</span> raças, cada um com ficha, arte e lore. Role, filtre,
+              favorite — sua visita, seu ritmo.
+            </p>
+            <p class="step-hint">
+              Use as setas do teclado ou os dots abaixo para passar pelos passos.
+            </p>
+          </section>
+
+          <section class="onboard-step" data-step="1">
+            <span class="step-icon" aria-hidden="true">🔮</span>
+            <h3>Busca global com <kbd>Ctrl</kbd>+<kbd>K</kbd></h3>
+            <p>
+              A paleta de comandos procura por personagem, raça <em>e</em> ação no mesmo ranking.
+              Digite "aat" e o Aatrox aparece; "dem" traz a raça Demônios e a ação "Ir para
+              Demônios".
+            </p>
+            <p class="step-hint">
+              Atalho: <kbd>Ctrl</kbd>+<kbd>K</kbd> no desktop, ou <kbd>/</kbd> em qualquer lugar.
+            </p>
+          </section>
+
+          <section class="onboard-step" data-step="2">
+            <span class="step-icon" aria-hidden="true">🎴</span>
+            <h3>Filtre por raça e favorite</h3>
+            <p>
+              Os chips coloridos acima filtram a galeria. O coração em cada carta adiciona aos
+              favoritos — o botão <strong>♥</strong> no header ativa o modo "só favoritos" (fica
+              salvo no seu navegador).
+            </p>
+            <p class="step-hint">Dica: <kbd>Alt</kbd>+<kbd>1</kbd>…<kbd>9</kbd> pula pra raça N.</p>
+          </section>
+
+          <section class="onboard-step" data-step="3">
+            <span class="step-icon" aria-hidden="true">🗺️</span>
+            <h3>Mapa do mundo e rituais</h3>
+            <p>
+              O
+              <a href="Mapa_Aetheria.html" target="_blank" rel="noopener">Mapa de Guerra Arcana</a>
+              mostra regiões, batalhas e céus — clique em qualquer pin para ver a lore e os
+              personagens daquela região. Algumas raças (Onis, Demônios, Meio-Sangue…) ganham
+              rituais de invocação ao abrir a carta.
+            </p>
+            <p class="step-hint">Pronto pra explorar?</p>
+          </section>
+        </div>
+        <footer class="onboard-foot">
+          <div
+            class="onboard-dots"
+            id="onboardDots"
+            role="tablist"
+            aria-label="Progresso do onboarding"
+          >
+            <button type="button" role="tab" class="is-active" data-go="0" aria-label="Passo 1 de 4" aria-selected="true"></button>
+            <button type="button" role="tab" data-go="1" aria-label="Passo 2 de 4" aria-selected="false"></button>
+            <button type="button" role="tab" data-go="2" aria-label="Passo 3 de 4" aria-selected="false"></button>
+            <button type="button" role="tab" data-go="3" aria-label="Passo 4 de 4" aria-selected="false"></button>
+          </div>
+          <div class="onboard-actions">
+            <button type="button" class="onboard-btn" id="onboardPrev">Voltar</button>
+            <button type="button" class="onboard-btn primary" id="onboardNext">Próximo</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <button id="backToTop" class="back-to-top" aria-label="Voltar ao topo" hidden>↑</button>
+
+    <!-- ===== DIALOG: SOBRE O AETHERIA ===== -->
+    <dialog id="aboutDialog" class="about-dialog" aria-labelledby="aboutTitle">
+      <article>
+        <header>
+          <h2 id="aboutTitle">Sobre o Aetheria Codex</h2>
+          <button type="button" class="about-close" aria-label="Fechar">×</button>
+        </header>
+        <div class="about-body">
+          <p>
+            <strong>Aetheria Codex</strong> é um códice vivo de fantasia autoral —
+            <span id="aboutChars">489</span> personagens distribuídos em
+            <span id="aboutRaces">22</span> raças, escritos e ilustrados por
+            <a href="https://github.com/BSMiguell" target="_blank" rel="noopener">BSMiguell</a>.
+          </p>
+          <h3>O que você encontra aqui</h3>
+          <ul>
+            <li>📖 Fichas detalhadas com atributos, lore e arte</li>
+            <li>
+              🗺️ <a href="Mapa_Aetheria.html">Mapa do mundo</a> interativo com pinos de personagens
+            </li>
+            <li>🔮 Paleta de comandos (Ctrl+K) para buscar, filtrar e navegar</li>
+            <li>🎴 Sistema de favoritos (localStorage) — fica no seu navegador</li>
+            <li>📜 Rituais de invocação ao abrir certas raças (Onis, Demônios, Akuma-Gani…)</li>
+          </ul>
+          <h3>Atalhos de teclado</h3>
+          <ul>
+            <li><kbd>Ctrl</kbd>+<kbd>K</kbd> ou <kbd>/</kbd> — abre a paleta de comandos</li>
+            <li>
+              <kbd>Alt</kbd>+<kbd>1</kbd>…<kbd>9</kbd> — pula pra raça N (1=Humanos, 2=Mutantes, …)
+            </li>
+            <li><kbd>Esc</kbd> — fecha modal/paleta/dialog</li>
+            <li><kbd>←</kbd>/<kbd>→</kbd> (com modal aberto) — navega entre personagens</li>
+            <li><kbd>Ctrl</kbd>+<kbd>P</kbd> — imprime uma versão limpa da página atual</li>
+          </ul>
+          <h3>Como tudo é construído</h3>
+          <p>
+            Site estático puro (HTML/CSS/JS), sem backend. As fichas vivem em
+            <code>codex/</code> como Markdown, e um script PowerShell gera o
+            <code>characters-api.json</code> consumido pelo site. O ciclo
+            <em>edita ficha → roda build → publica</em> leva menos de 1 minuto.
+          </p>
+          <p>
+            Todo o código-fonte, scripts e o próprio conteúdo do mundo (lore, história) estão no
+            <a href="https://github.com/BSMiguell/Temporario" target="_blank" rel="noopener"
+              >repositório público</a
+            >.
+          </p>
+        </div>
+      </article>
+    </dialog>
+
+    <!-- ===== HEADER ===== -->
+    <header class="site-header">
+      <a href="#" class="logo">Aetheria<sup>Codex</sup></a>
+      <div class="header-controls">
+        <a class="map-link" href="Mapa_Aetheria.html" title="Mapa do Mundo de Aetheria"
+          >&#128506;&#65039; Mapa</a
+        >
+        <a class="map-link" href="Linha_do_Tempo.html" title="Linha do Tempo do Mundo"
+          >&#128203; Linha do Tempo</a
+        >
+        <button
+          class="map-link"
+          id="codexBtn"
+          type="button"
+          title="Codex Completo — progresso de exploração"
+          aria-label="Ver progresso do códice"
+        >
+          &#128214; Codex
+        </button>
+        <button
+          class="map-link"
+          id="installBtn"
+          type="button"
+          title="Instalar o Aetheria Codex como aplicativo (PWA)"
+          aria-label="Instalar o Aetheria Codex como aplicativo"
+          hidden
+        >
+          &#128229; Instalar
+        </button>
+        <button
+          class="map-link"
+          id="noFxBtn"
+          type="button"
+          title="Modo sem efeitos"
+          aria-label="Alternar modo sem efeitos"
+          aria-pressed="false"
+        >
+          ◑ Efeitos
+        </button>
+        <button
+          class="palette-trigger"
+          id="paletteTrigger"
+          type="button"
+          aria-haspopup="dialog"
+          aria-label="Buscar personagens, raças e ações"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <span class="pt-label">Buscar no códice…</span>
+          <kbd class="pt-kbd">Ctrl K</kbd>
+        </button>
+        <button
+          class="favorites-toggle"
+          id="favoritesToggle"
+          aria-label="Mostrar favoritos"
+          title="Favoritos"
+        >
+          ♥
+        </button>
+        <button class="header-pin" id="headerPin" aria-pressed="true" title="Desafixar cabeçalho">
+          &#128204;
+        </button>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Alternar tema"
+          aria-pressed="false"
+          title="Modo escuro"
+        >
+          &#127769;
+        </button>
+      </div>
+      <div class="filters-wrapper">
+        <div class="filters-scroller" id="filtersScroller">
+          <div class="filters" id="filterContainer">
+            <!-- gerado via JS -->
+          </div>
+          <button
+            class="filters-arrow prev"
+            id="filtPrev"
+            aria-label="Rolar filtros para a esquerda"
+          >
+            &#8249;
+          </button>
+          <button
+            class="filters-arrow next"
+            id="filtNext"
+            aria-label="Rolar filtros para a direita"
+          >
+            &#8250;
+          </button>
+        </div>
+        <div class="sort-control">
+          <select class="sort-select" id="sortSelect" aria-label="Ordenar por">
+            <option value="nameAsc">Nome (A-Z)</option>
+            <option value="nameDesc">Nome (Z-A)</option>
+            <option value="numberAsc">Número (crescente)</option>
+            <option value="numberDesc">Número (decrescente)</option>
+            <option value="groupAsc">Grupo (A-Z)</option>
+          </select>
+        </div>
+      </div>
+      <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+    </header>
+
+    <!-- ===== CONTEÚDO ===== -->
+    <main>
+      <!-- ===== HERO DO CÓDICE ===== -->
+      <section class="hero-codex" id="heroCodex" aria-label="Abertura do códice">
+        <div class="hero-copy">
+          <p class="hero-eyebrow"><span aria-hidden="true">✦</span> Códice vivo de Aetheria</p>
+          <h1 class="hero-title">O Códice de <em>Aetheria</em></h1>
+          <p class="hero-sub">
+            <span class="hero-stat"><b id="statChars">0</b> personagens</span>
+            <span class="hero-sep" aria-hidden="true">·</span>
+            <span class="hero-stat"><b id="statRaces">0</b> raças</span>
+            <span class="hero-sep" aria-hidden="true">·</span>
+            <span class="hero-date" id="statDate">—</span>
+          </p>
+          <div
+            id="heroTimeline"
+            class="hero-timeline"
+            aria-label="Linha do tempo da raça destacada"
+          ></div>
+          <canvas
+            id="heroCanvas"
+            class="hero-canvas"
+            aria-label="Constelação do dia"
+            width="420"
+            height="80"
+          ></canvas>
+          <div class="hero-ctas">
+            <a class="hero-cta" href="Mapa_Aetheria.html">🗺️ Explorar o mapa</a>
+            <button class="hero-cta ghost" id="surpriseBtn" type="button">🎲 Surpreenda-me</button>
+          </div>
+        </div>
+        <figure class="hero-feature" id="heroFeature">
+          <div class="hero-stack" id="heroStack">
+            <div class="stack-card stack-back-2" aria-hidden="true">
+              <img class="stack-card-img" id="stackImg2" alt="" />
+            </div>
+            <div class="stack-card stack-back-1" aria-hidden="true">
+              <img class="stack-card-img" id="stackImg1" alt="" />
+            </div>
+            <div class="stack-card stack-front" id="featureMediaFront">
+              <button
+                class="feature-media"
+                id="featureMedia"
+                type="button"
+                aria-label="Abrir o personagem em destaque"
+              >
+                <span class="corner tl" aria-hidden="true"></span>
+                <span class="corner tr" aria-hidden="true"></span>
+                <span class="corner bl" aria-hidden="true"></span>
+                <span class="corner br" aria-hidden="true"></span>
+                <span class="feature-chip"
+                  ><span aria-hidden="true">✨</span> Destaque de hoje</span
+                >
+                <!-- §4.6 — container com 2 layers (current + incoming)
+                     para cross-fade cinematográfico da arte. JS popula
+                     no boot via renderFeature → swapFeatureMedia. -->
+                <span class="feature-art" id="featureArt" aria-hidden="false">
+                  <span
+                    class="feature-art-layer is-incoming"
+                    id="featureArtIncoming"
+                    data-role="incoming"
+                  ></span>
+                  <span
+                    class="feature-art-layer is-current"
+                    id="featureArtCurrent"
+                    data-role="current"
+                  ></span>
+                </span>
+              </button>
+            </div>
+          </div>
+          <figcaption class="feature-caption">
+            <span class="feature-name" id="featureName">—</span>
+            <a class="feature-race" id="featureRaceLink" href="#">—</a>
+            <button
+              class="feature-reroll"
+              id="featureReroll"
+              type="button"
+              title="Sortear outro destaque"
+              aria-label="Sortear outro destaque"
+            >
+              🎲
+            </button>
+          </figcaption>
+          <span
+            id="featureLive"
+            aria-live="polite"
+            aria-atomic="true"
+            style="position: absolute; left: -9999px"
+          ></span>
+          <div
+            class="hero-periods"
+            id="heroPeriods"
+            role="group"
+            aria-label="Destaques por período do dia"
+          ></div>
+        </figure>
+      </section>
+
+      <!-- ===== VITRINE DE RAÇAS (COLEÇÕES POR RAÇA) — §9.2 ===== -->
+      <section class="hero-races" aria-label="Coleções por raça">
+        <div class="hero-races-inner">
+          <header class="hero-races-head">
+            <h2 class="hero-races-title">Coleções <em>por</em> Raça</h2>
+            <p class="hero-races-sub">
+              22 coleções automáticas — uma por raça. Cada card leva à página
+              dedicada com os personagens daquela raça.
+            </p>
+          </header>
+          <div
+            class="hero-races-scroller"
+            id="heroRaces"
+            role="list"
+            aria-label="Lista de raças"
+          ></div>
+        </div>
+      </section>
+
+      <!-- ===== PREVIEW DO MAPA (CONEXÃO LORE) ===== -->
+      <section class="map-preview" aria-label="Conexão ao mapa do mundo">
+        <div class="map-preview-inner">
+          <a href="Mapa_Aetheria.html" class="map-preview-card">
+            <span class="map-preview-icon" aria-hidden="true">🗺️</span>
+            <h3 class="map-preview-title">Explorar Aetheria</h3>
+            <p class="map-preview-desc">
+              Navegue pelo mapa 3D interativo — 16 regiões, batalhas e céus.
+            </p>
+            <span class="map-preview-arrow">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ===== LINHA DE RESULTADOS ===== -->
+      <div class="results-line">
+        <h2 class="results-title">Galeria <em>dos</em> Personagens</h2>
+        <span class="result-count-pill" id="resultCount" aria-live="polite" role="status"
+          >Carregando…</span
+        >
+      </div>
+      <div class="character-grid" id="characterGrid">
+        <!-- Skeleton loading -->
+        <div class="skeleton-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-info">
+            <div class="sk-line"></div>
+            <div class="sk-line short"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-info">
+            <div class="sk-line"></div>
+            <div class="sk-line short"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-info">
+            <div class="sk-line"></div>
+            <div class="sk-line short"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-info">
+            <div class="sk-line"></div>
+            <div class="sk-line short"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-info">
+            <div class="sk-line"></div>
+            <div class="sk-line short"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="sk-thumb"></div>
+          <div class="sk-info">
+            <div class="sk-line"></div>
+            <div class="sk-line short"></div>
+          </div>
+        </div>
+      </div>
+      <div class="load-more-wrap" id="loadMoreWrap"></div>
+      <div id="loadSentinel" aria-hidden="true"></div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer">
+      <span class="foot-brand">Aetheria<sup>Codex</sup></span>
+      <span class="foot-note" id="footNote">códice vivo · atualizado com o códice completo</span>
+      <nav class="foot-links" aria-label="Links do rodapé">
+        <a href="Mapa_Aetheria.html">🗺️ Mapa do mundo</a>
+        <a href="#" id="backToTopFooter">⬆️ Voltar ao topo</a>
+        <a href="#" id="aboutLink">📜 Sobre o Aetheria</a>
+      </nav>
+    </footer>
+
+    <!-- ===== PALETA DE COMANDOS (Ctrl+K) ===== -->
+    <div class="palette" id="palette" aria-hidden="true">
+      <div class="palette-bg" id="paletteBg"></div>
+      <div class="palette-panel" role="dialog" aria-modal="true" aria-label="Paleta de comandos">
+        <div class="palette-input-row">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input
+            type="text"
+            class="palette-input"
+            id="paletteInput"
+            role="combobox"
+            aria-expanded="false"
+            aria-controls="paletteList"
+            aria-activedescendant=""
+            aria-autocomplete="list"
+            placeholder="Buscar personagens, raças e ações…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <kbd class="pt-kbd">Esc</kbd>
+        </div>
+        <ul class="palette-list" id="paletteList" role="listbox" aria-label="Resultados"></ul>
+        <div class="palette-foot">
+          <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+          <span><kbd>↵</kbd> abrir</span>
+          <span><kbd>Esc</kbd> fechar</span>
+        </div>
+        <span class="sr-only" aria-live="polite" id="paletteLive"></span>
+      </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div
+      class="modal"
+      id="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalName"
+      aria-hidden="true"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-bg" id="modalBg"></div>
+      <div class="modal-panel" id="modalPanel">
+        <button class="modal-close" id="modalClose" aria-label="Fechar">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+          >
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+        <button class="modal-fav-btn" id="modalFavBtn" aria-label="Adicionar aos favoritos">
+          ♥
+        </button>
+        <button
+          class="modal-nav prev"
+          id="modalNavPrev"
+          type="button"
+          aria-label="Personagem anterior"
+        >
+          ‹
+        </button>
+        <button
+          class="modal-nav next"
+          id="modalNavNext"
+          type="button"
+          aria-label="Próximo personagem"
+        >
+          ›
+        </button>
+        <div class="modal-media" id="modalMedia">
+          <img src="" alt="Personagem" id="modalImage" width="800" height="800" decoding="async" />
+          <div class="modal-glare" id="modalGlare" aria-hidden="true"></div>
+          <div class="modal-media-ph" id="modalMediaPh" hidden>
+            <span class="ph-initial" id="modalPhInitial">?</span>
+            <span class="ph-label" id="modalPhLabel"></span>
+          </div>
+        </div>
+        <div class="modal-info" id="modalInfo">
+          <div class="modal-topline">
+            <span class="modal-meta" id="modalMeta">Grupo</span>
+            <span class="modal-counter" id="modalCounter" aria-live="polite">1 / 1</span>
+            <button
+              id="modalShare"
+              class="modal-share"
+              type="button"
+              aria-label="Compartilhar este personagem"
+              title="Compartilhar"
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" y1="2" x2="12" y2="15" />
+              </svg>
+            </button>
+          </div>
+          <h2 class="modal-title" id="modalName">Nome</h2>
+          <p class="modal-sub" id="modalTitle">Título</p>
+          <div class="modal-detail">
+            <span>Nº <span id="modalNumber">0</span></span>
+            <span id="modalFolder">Pasta</span>
+            <button
+              class="modal-share"
+              id="modalShareBtn"
+              type="button"
+              title="Copiar o link direto deste personagem"
+            >
+              🔗 Copiar link
+            </button>
+          </div>
+          <div class="modal-tabs" role="tablist" aria-label="Seções do personagem">
+            <button
+              class="modal-tab active"
+              id="tabHistoria"
+              role="tab"
+              aria-selected="true"
+              aria-controls="paneHistoria"
+              type="button"
+            >
+              📜 História
+            </button>
+            <button
+              class="modal-tab"
+              id="tabFicha"
+              role="tab"
+              aria-selected="false"
+              aria-controls="paneFicha"
+              type="button"
+            >
+              🧬 Ficha técnica
+            </button>
+          </div>
+          <section
+            class="modal-pane"
+            id="paneHistoria"
+            role="tabpanel"
+            aria-labelledby="tabHistoria"
+          >
+            <p class="modal-description" id="modalDescription"></p>
+            <aside class="race-lore" id="raceLore" hidden>
+              <span class="race-lore-title" id="raceLoreTitle"></span>
+              <p id="raceLoreText"></p>
+              <span class="race-lore-regioes" id="raceLoreRegioes" hidden></span>
+            </aside>
+            <div class="modal-links">
+              <a class="modal-race-link" id="modalRaceLink" href="#">Ver página da raça ↗</a>
+              <a class="modal-race-link" id="modalMapLink" href="Mapa_Aetheria.html" hidden
+                >Ver no mapa 🗺️</a
+              >
+            </div>
+          </section>
+          <section
+            class="modal-pane"
+            id="paneFicha"
+            role="tabpanel"
+            aria-labelledby="tabFicha"
+            hidden
+          >
+            <dl class="sheet-list" id="sheetList"></dl>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ============================================================
+      //  CONFIGURAÇÕES
+      // ============================================================
+      const API_URL = "characters-api.json";
+      const HISTORIA_API_URL = "historia-api.json";
+      // Fonte canônica de temas: data/themes.json (lida também por build_racas.ps1).
+      // Em caso de falha de fetch (file://, offline), getGroupTheme() cai no
+      // fallback genérico {label, color: "#e3491b", icon: "📁"} definido mais
+      // abaixo. Atualizar o tema = mexer em data/themes.json.
+      const THEMES_URL = "data/themes.json";
+      const INITIAL_BATCH = 18;
+      const LOAD_MORE_BATCH = 18;
+      // Respeito a movimento reduzido consultado UMA vez no boot
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Temas de cores e ícones para cada raça (grupo). Inicia vazio;
+      // preenchido dinamicamente a partir de data/themes.json (fonte canônica
+      // compartilhada com build_racas.ps1) em loadThemes(). Em caso de falha
+      // de fetch (file://, offline), getGroupTheme() cai no fallback
+      // {label, color: "#e3491b", icon: "📁"} definido mais abaixo.
+      let groupThemes = [];
+
+      // Carrega os temas do JSON canônico e devolve uma Promise. A primeira
+      // chamada a getGroupTheme() antes da resolução devolve o fallback
+      // genérico; após resolver, os temas são reindexados via
+      // THEME_BY_KEY, e filtros/buttons/cards passam a usar as cores/ícones
+      // reais (re-render do createFilterButtons é disparado pelo caller).
+      async function loadThemes() {
+        try {
+          const r = await fetch(THEMES_URL);
+          if (!r.ok) throw new Error(`HTTP ${r.status}`);
+          const data = await r.json();
+          if (Array.isArray(data.themes)) {
+            groupThemes = data.themes.map((t) => ({
+              label: t.label,
+              color: t.color,
+              icon: t.icon
+            }));
+          }
+        } catch (err) {
+          // file:// ou offline — mantém groupThemes vazio; getGroupTheme()
+          // retorna o fallback. console.warn em vez de error para não
+          // assustar quem abre o site localmente com duplo-clique no
+          // index.html (regra zero-dependências: nada pode quebrar aqui).
+          console.warn("[themes] falha ao carregar", THEMES_URL, err);
+        }
+        return groupThemes;
+      }
+
+      // slug("09_Semi_Deuses") === slug("Semideuses") — ignora prefixo
+      // numérico da pasta, acentos e separadores (espaço/hífen)
+      function slugify(s) {
+        return (
+          s
+            .normalize("NFD")
+            // remove marcas diacríticas: NFD decompõe "ç"/"ã" em base + mark,
+            // então basta descartar todo não-ASCII da string decomposta
+            .replace(/[^ -~]/g, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "")
+            .replace(/^\d+/, "")
+        );
+      }
+
+      const THEME_BY_KEY = Object.fromEntries(groupThemes.map((t) => [slugify(t.label), t]));
+
+      // getGroupTheme reindexa THEME_BY_KEY a cada chamada. groupThemes é
+      // mutado por loadThemes() (carregado do JSON canônico), então uma cópia
+      // congelada na hora do boot ficaria desatualizada — recalcular o índice
+      // aqui é O(N) onde N=22 raças, e getGroupTheme é chamado em O(M)
+      // cards/filtros durante o render, então o custo total é desprezível.
+      function getGroupTheme(folder) {
+        // Reindexa sob demanda (idempotente — sobrescreve as mesmas chaves).
+        for (const t of groupThemes) {
+          THEME_BY_KEY[slugify(t.label)] = t;
+        }
+        return (
+          THEME_BY_KEY[slugify(folder)] || {
+            label: folder,
+            color: "#e3491b",
+            icon: "📁"
+          }
+        );
+      }
+
+      // Nome bonito da categoria, sem o prefixo numérico da pasta
+      function prettyGroup(folder) {
+        return folder.replace(/^\d+_/, "").replace(/_/g, " ");
+      }
+
+      // Texto preto ou branco conforme a luminância do fundo (contraste)
+      function bestInk(hex) {
+        const n = parseInt(hex.slice(1), 16);
+        const lin = (v) => {
+          v /= 255;
+          return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        };
+        const L =
+          0.2126 * lin((n >> 16) & 255) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
+        // Threshold 0.18 (era 0.4): o branco so vence em cores muito escuras.
+        // Cores claras (amarelo, laranja saturado, teal medio) ficam com preto
+        // — ratio >= 4.5:1 em todos os 22 temas (smoke Check 9).
+        return L > 0.18 ? "#171310" : "#ffffff";
+      }
+
+      // Estado global
+      let allCharacters = [];
+      let groups = [];
+      let filteredCharacters = [];
+      let displayedCount = INITIAL_BATCH;
+      let renderedCount = 0;
+      let selectedGroup = "__all__";
+      let currentSort = "nameAsc";
+      let searchTerm = "";
+      let isFavoritesOnly = false;
+      let favorites = new Set(JSON.parse(localStorage.getItem("favorites") || "[]"));
+      let currentModalChar = null;
+
+      // §2.3 — captura valores originais das meta tags para restauração
+      const ORIGINAL_META = (() => {
+        const get = (sel) => document.querySelector(sel)?.getAttribute("content") || "";
+        return {
+          title: document.title,
+          description: get('meta[name="description"]'),
+          ogTitle: get('meta[property="og:title"]'),
+          ogDescription: get('meta[property="og:description"]'),
+          ogUrl: get('meta[property="og:url"]'),
+          ogType: get('meta[property="og:type"]'),
+          ogImage: get('meta[property="og:image"]'),
+          twTitle: get('meta[name="twitter:title"]'),
+          twDescription: get('meta[name="twitter:description"]'),
+          twImage: get('meta[name="twitter:image"]')
+        };
+      })();
+
+      // §2.3 — helper: cobre OG (property=) e Twitter (name=) no mesmo seletor
+      function setMeta(propAttr, key, value) {
+        const el = document.querySelector(`meta[${propAttr}="${key}"]`);
+        if (el) el.setAttribute("content", value);
+      }
+
+      // §2.3 — atualiza meta tags para refletir o char aberto no modal.
+      // og:image/twitter:image ficam com a capa genérica (1200x630) —
+      // trocar para arte 1:1 do char faria center-crop jogar fora 40% do visual.
+      // og:type continua "website" (não temos article:published_time/author/section).
+      function updateMetaTagsForChar(char) {
+        if (!char) return;
+        const slug = char.slug || char.id || char.name;
+        const baseUrl = `${location.origin}${location.pathname}`;
+        const charUrl = `${baseUrl}#${encodeURIComponent(slug)}`;
+        const title = `${char.name} — Aetheria Codex`;
+        const desc = (char.description || "Nenhuma descrição disponível.").slice(0, 200);
+
+        document.title = title;
+        setMeta("name", "description", desc);
+        setMeta("property", "og:title", title);
+        setMeta("property", "og:description", desc);
+        setMeta("property", "og:url", charUrl);
+        setMeta("name", "twitter:title", title);
+        setMeta("name", "twitter:description", desc);
+      }
+
+      // §2.3 — restaura meta tags genéricas quando o modal fecha.
+      // Não restaura og:image/twitter:image/og:type (nunca foram modificados).
+      function restoreMetaTags() {
+        document.title = ORIGINAL_META.title;
+        setMeta("name", "description", ORIGINAL_META.description);
+        setMeta("property", "og:title", ORIGINAL_META.ogTitle);
+        setMeta("property", "og:description", ORIGINAL_META.ogDescription);
+        setMeta("property", "og:url", ORIGINAL_META.ogUrl);
+        setMeta("name", "twitter:title", ORIGINAL_META.twTitle);
+        setMeta("name", "twitter:description", ORIGINAL_META.twDescription);
+      }
+
+      // DOM Elements
+      const grid = document.getElementById("characterGrid");
+      const filterContainer = document.getElementById("filterContainer");
+      const resultCount = document.getElementById("resultCount");
+      const paletteTrigger = document.getElementById("paletteTrigger");
+      const palette = document.getElementById("palette");
+      const paletteBg = document.getElementById("paletteBg");
+      const paletteInput = document.getElementById("paletteInput");
+      const paletteList = document.getElementById("paletteList");
+      const paletteLive = document.getElementById("paletteLive");
+      const sortSelect = document.getElementById("sortSelect");
+      const favoritesToggle = document.getElementById("favoritesToggle");
+      const themeToggle = document.getElementById("themeToggle");
+      const noFxBtn = document.getElementById("noFxBtn");
+      const loadMoreWrap = document.getElementById("loadMoreWrap");
+      const modal = document.getElementById("modal");
+      const modalPanel = document.getElementById("modalPanel");
+      const modalBg = document.getElementById("modalBg");
+      const modalClose = document.getElementById("modalClose");
+      const modalFavBtn = document.getElementById("modalFavBtn");
+      const modalImage = document.getElementById("modalImage");
+      const modalMeta = document.getElementById("modalMeta");
+      const modalName = document.getElementById("modalName");
+      const modalTitle = document.getElementById("modalTitle");
+      const modalNumber = document.getElementById("modalNumber");
+      const modalFolder = document.getElementById("modalFolder");
+      const modalDescription = document.getElementById("modalDescription");
+      const modalMediaPh = document.getElementById("modalMediaPh");
+      const modalMedia = document.getElementById("modalMedia");
+      const modalGlare = document.getElementById("modalGlare");
+      const modalPhInitial = document.getElementById("modalPhInitial");
+      const modalPhLabel = document.getElementById("modalPhLabel");
+      const modalCounter = document.getElementById("modalCounter");
+      const modalRaceLink = document.getElementById("modalRaceLink");
+      const headerPin = document.getElementById("headerPin");
+      const filtersScroller = document.getElementById("filtersScroller");
+      const filtPrev = document.getElementById("filtPrev");
+      const filtNext = document.getElementById("filtNext");
+
+      // ============================================================
+      //  DELEGAÇÃO DE EVENTOS DA GRADE — anexada UMA vez
+      // ============================================================
+      grid.addEventListener("click", (e) => {
+        const favBtn = e.target.closest(".fav-btn");
+        if (favBtn) {
+          const nowFav = toggleFavorite(favBtn.dataset.charId);
+          updateFavButtons();
+          showToast(nowFav ? "Adicionado aos favoritos" : "Removido dos favoritos");
+          if (isFavoritesOnly && !nowFav) {
+            displayedCount = INITIAL_BATCH;
+            applyFilterAndRender();
+          }
+          return;
+        }
+        // <a class="card-link"> envolve o thumb+info: clica e abre modal
+        // sem navegar pro href. Handler de "keydown" também intercepta
+        // Enter/Space quando o foco está no link.
+        if (e.target.closest("[data-card-link]")) {
+          e.preventDefault();
+          const card = e.target.closest(".character-card");
+          if (!card) return;
+          const data = allCharacters.find((it) => (it.id || it.name) === card.dataset.charId);
+          if (data) openModalWithVT(data, card);
+          return;
+        }
+        const card = e.target.closest(".character-card");
+        if (!card) return;
+        const data = allCharacters.find((it) => (it.id || it.name) === card.dataset.charId);
+        if (data) openModalWithVT(data, card);
+      });
+
+      grid.addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        if (e.target.closest(".fav-btn")) return;
+        if (e.target.tagName === "A") return; // link da página da raça navega sozinho
+        const card = e.target.closest(".character-card");
+        if (!card) return;
+        e.preventDefault();
+        const data = allCharacters.find((it) => (it.id || it.name) === card.dataset.charId);
+        if (data) openModalWithVT(data, card);
+      });
+
+      // ============================================================
+      //  BLUR-UP — 'load' não borbulha: escuta em fase de captura
+      // ============================================================
+      grid.addEventListener(
+        "load",
+        (e) => {
+          if (e.target.tagName === "IMG") e.target.classList.add("ready");
+        },
+        true
+      );
+
+      // ============================================================
+      //  VIEW TRANSITIONS — morph card → modal (com fallback)
+      //  O nome é atribuído SÓ durante a transição e removido depois:
+      //  nomes duplicados na grade quebrariam o snapshot.
+      // ============================================================
+      const supportsVT = typeof document.startViewTransition === "function" && !reducedMotion;
+      let isTransitionActive = false; // guarda contra duplicata view-transition-name
+
+      function openModalWithVT(char, sourceEl) {
+        if (isTransitionActive) return; // evita clique rápido duplicado
+        if (!supportsVT) {
+          openModal(char);
+          return;
+        }
+        isTransitionActive = true;
+        let artEl = null;
+        if (sourceEl && char.image && !sourceEl.querySelector(".thumb-placeholder")) {
+          artEl = sourceEl.querySelector(".thumb");
+        }
+        // === FIX CRÍTICO VT API ===
+        // A regra da View Transitions API (single-doc) é: durante o snapshot
+        // ANTES, o `view-transition-name` deve ser ÚNICO na página. Se 2
+        // elementos têm o mesmo nome simultaneamente, o browser aborta com
+        // "Unexpected duplicate view-transition-name" + InvalidStateError.
+        //
+        // Antes: artEl e modalMedia recebiam "char-art" juntos ANTES do
+        // startViewTransition, ambos vivos no DOM (modalMedia existe no HTML
+        // inicial, só está com display:none). Resultado: snapshot pegava os
+        // 2 e abortava a VT.
+        //
+        // Agora: APENAS o artEl (origem do morph) recebe o nome ANTES do
+        // snapshot. O modalMedia (destino) recebe o nome DENTRO do callback
+        // da VT (depois do snapshot ANTES, antes do DEPOIS) — e o artEl é
+        // limpo na mesma hora, evitando 2 nomes simultâneos.
+        if (artEl) artEl.style.viewTransitionName = "char-art";
+        // === RITUAL DE INVOCACAO (Fase A) ===
+        if (
+          window.runRitual &&
+          char &&
+          char.folder &&
+          char.folder !== "05_Demonios" &&
+          char.folder !== "04_Onis"
+        ) {
+          window.runRitual(
+            char.folder,
+            sourceEl || document.querySelector(".character-card"),
+            modalPanel,
+            getGroupTheme(char.folder).color
+          );
+        }
+        let vt;
+        try {
+          vt = document.startViewTransition(() => {
+            // Limpa o nome da origem (a grade continua visível com o card
+            // clicado, mas sem o nome — evita colisão com o destino).
+            if (artEl) artEl.style.viewTransitionName = "";
+            openModal(char);
+            // Atribui o nome ao destino (modalMedia) SÓ DEPOIS do openModal
+            // ter rodado. O snapshot DEPOIS vai pegar o modalMedia com o nome,
+            // e o browser faz o morph do estado anterior (artEl) para este.
+            if (char.image) modalMedia.style.viewTransitionName = "char-art";
+          });
+        } catch (e) {
+          // InvalidStateError pode ocorrer se o browser ainda está em uma
+          // VT anterior (race). Limpa e cai no openModal direto.
+          if (artEl) artEl.style.viewTransitionName = "";
+          modalMedia.style.viewTransitionName = "";
+          isTransitionActive = false;
+          openModal(char);
+          return;
+        }
+        vt.finished.finally(() => {
+          // Limpa o nome do destino (modalMedia) — o card original (artEl)
+          // já foi limpo dentro do callback. Nenhum nome deve sobreviver
+          // à transição, senão o próximo openModal conflita.
+          modalMedia.style.viewTransitionName = "";
+          if (artEl) artEl.style.viewTransitionName = "";
+          isTransitionActive = false;
+          // View Transitions reseta o foco para o elemento que disparou o click
+          // (o <article class="character-card">). Re-aplica o foco no botao
+          // fechar do modal para o focus trap iniciar no lugar certo.
+          // Guard: so foca se o modal ainda estiver aberto (evita roubar foco
+          // apos closeModal() ter rodado).
+          if (modal.classList.contains("open")) modalClose.focus();
+        });
+      }
+
+      // Transição de grade em mudanças de filtro/ordenação/favoritos
+      // (NÃO na digitação da busca — snapshot a cada tecla seria pesado)
+      function applyFiltersWithTransition() {
+        if (!supportsVT) {
+          applyFilterAndRender();
+          return;
+        }
+        document.startViewTransition(() => applyFilterAndRender());
+      }
+
+      // ============================================================
+      //  TILT 3D DOS CARDS — mesma família do tilt do modal, mais
+      //  discreto (±4°). Um único loop rAF para o card sob o cursor.
+      // ============================================================
+      const CARD_TILT_MAX = 4;
+      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      const cardFx = { el: null, tx: 0, ty: 0, cx: 0, cy: 0, raf: null };
+
+      function cardTiltFrame() {
+        const f = cardFx;
+        f.cx += (f.tx - f.cx) * 0.14;
+        f.cy += (f.ty - f.cy) * 0.14;
+        const el = f.el;
+        if (el) {
+          el.style.setProperty("--cry", `${(f.cx * CARD_TILT_MAX).toFixed(2)}deg`);
+          el.style.setProperty("--crx", `${(-f.cy * CARD_TILT_MAX).toFixed(2)}deg`);
+          el.style.setProperty("--gx", `${(50 + f.cx * 34).toFixed(1)}%`);
+          el.style.setProperty("--gy", `${(50 + f.cy * 34).toFixed(1)}%`);
+          el.style.setProperty("--ga", `${(40 + f.cx * 60).toFixed(0)}`);
+        }
+        if (Math.abs(f.tx - f.cx) > 0.002 || Math.abs(f.ty - f.cy) > 0.002) {
+          f.raf = requestAnimationFrame(cardTiltFrame);
+        } else {
+          f.raf = null;
+        }
+      }
+
+      function resetCardFx() {
+        const f = cardFx;
+        if (f.el) {
+          ["--crx", "--cry", "--gx", "--gy", "--ga"].forEach((v) => f.el.style.removeProperty(v));
+        }
+        f.el = null;
+        f.tx = f.ty = f.cx = f.cy = 0;
+        if (f.raf !== null) {
+          cancelAnimationFrame(f.raf);
+          f.raf = null;
+        }
+      }
+
+      if (finePointer && !reducedMotion) {
+        grid.addEventListener("pointermove", (e) => {
+          const card = e.target.closest(".character-card");
+          if (!card) {
+            if (cardFx.el) {
+              resetCardFx();
+            }
+            return;
+          }
+          if (cardFx.el !== card) {
+            resetCardFx();
+            cardFx.el = card;
+          }
+          const r = card.getBoundingClientRect();
+          cardFx.tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+          cardFx.ty = ((e.clientY - r.top) / r.height) * 2 - 1;
+          if (cardFx.raf === null) cardFx.raf = requestAnimationFrame(cardTiltFrame);
+        });
+        grid.addEventListener("pointerleave", resetCardFx);
+      }
+
+      // ============================================================
+      //  UTILITÁRIOS
+      // ============================================================
+      // showToast("mensagem") ou showToast("msg", { color: "#E74C3C" }) —
+      // emoji inicial da mensagem vira o ícone do toast automaticamente
+      function showToast(message, opts = {}) {
+        const container = document.getElementById("toastContainer");
+        let icon = opts.icon || "";
+        let msg = String(message);
+        // Se uma chave de grupo é fornecida e a mensagem é uma chave de micro-copy, substitui
+        if (opts.group) {
+          const themed = themeMicro(opts.group, msg);
+          if (themed) msg = themed;
+        }
+        if (!icon) {
+          const m = msg.match(/^([^\p{L}\p{N}\s"'“(](?:️)?)\s*(.*)$/u);
+          if (m && m[1].trim()) {
+            icon = m[1];
+            msg = m[2];
+          }
+        }
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        if (opts.color) toast.style.setProperty("--toast-color", opts.color);
+        toast.innerHTML = `<span class="toast-bar" aria-hidden="true"></span>${
+          icon ? `<span class="toast-icon" aria-hidden="true">${icon}</span>` : ""
+        }<span class="toast-msg"></span>`;
+        toast.querySelector(".toast-msg").textContent = msg;
+        container.appendChild(toast);
+        const ttl = Number.isFinite(opts.duration) ? opts.duration : 2500;
+        setTimeout(() => {
+          toast.classList.add("out");
+          setTimeout(() => toast.remove(), 400);
+        }, ttl);
+      }
+
+      function saveFavorites() {
+        localStorage.setItem("favorites", JSON.stringify([...favorites]));
+      }
+
+      function toggleFavorite(charId) {
+        const char = allCharacters.find((c) => (c.id || c.name) === charId);
+        if (favorites.has(charId)) {
+          favorites.delete(charId);
+          saveFavorites();
+          if (char) showToast(`Removido dos favoritos: ${char.name}`);
+          return false;
+        }
+        favorites.add(charId);
+        saveFavorites();
+        if (char) showToast(`★ ${char.name} adicionado aos favoritos`);
+        return true;
+      }
+
+      function isFavorite(charId) {
+        return favorites.has(charId);
+      }
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("theme", theme);
+        themeToggle.innerHTML = theme === "dark" ? "&#127774;" : "&#127769;";
+        themeToggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+        themeToggle.title = theme === "dark" ? "Modo claro" : "Modo escuro";
+        themeToggle.setAttribute(
+          "aria-label",
+          theme === "dark" ? "Trocar para tema claro" : "Trocar para tema escuro"
+        );
+      }
+
+      // ============================================================
+      //  FUNDAÇÃO VISUAL — scroll (header compacto + progresso) e
+      //  glow ambiente na cor da raça ativa
+      // ============================================================
+      const scrollProgress = document.getElementById("scrollProgress");
+      const backToTop = document.getElementById("backToTop");
+      let scrollTick = false;
+      function onScroll() {
+        if (scrollTick) return;
+        scrollTick = true;
+        requestAnimationFrame(() => {
+          scrollTick = false;
+          const y = window.scrollY;
+          document.body.classList.toggle("is-scrolled", y > 8);
+          const max = document.documentElement.scrollHeight - window.innerHeight;
+          scrollProgress.style.setProperty("--scroll-p", max > 0 ? (y / max).toFixed(4) : 0);
+          // back-to-top: aparece apos 600px de scroll
+          if (backToTop) {
+            if (y > 600) backToTop.removeAttribute("hidden");
+            else backToTop.setAttribute("hidden", "");
+          }
+        });
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      if (backToTop) {
+        backToTop.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
+
+      // Glow ambiente atrás do conteúdo, tingido pela raça ativa
+      function setAmbient(color) {
+        if (color) {
+          document.body.classList.add("has-ambient");
+          document.documentElement.style.setProperty(
+            "--ambient-color",
+            `color-mix(in srgb, ${color} 16%, transparent)`
+          );
+        } else {
+          document.body.classList.remove("has-ambient");
+        }
+      }
+
+      // ============================================================
+      //  HERO — contadores animados + destaque do dia
+      // ============================================================
+      function animateCount(el, target) {
+        if (reducedMotion || !el) {
+          if (el) el.textContent = target;
+          return;
+        }
+        const dur = 1100;
+        const t0 = performance.now();
+        function tick(now) {
+          const p = Math.min(1, (now - t0) / dur);
+          const eased = 1 - Math.pow(1 - p, 3); // ease-out cúbico
+          el.textContent = Math.round(target * eased);
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // Destaque do dia: determinístico pela data (estável durante o dia)
+      function dayPickIndex(total) {
+        const d = new Date();
+        const seed = d.getFullYear() * 372 + (d.getMonth() + 1) * 31 + d.getDate();
+        return seed % total;
+      }
+
+      let featuredChar = null;
+
+      // §4.6 — guarda contra cliques rápidos no swap cinematográfico.
+      // lastSwapToken é monotônico: cada swap incrementa. O animationend
+      // só age se o token ainda for o atual; caso contrário, foi cancelado.
+      let isSwapping = false;
+      let lastSwapToken = 0;
+
+      /**
+       * §4.6 — Troca a arte do destaque com cross-fade cinematográfico.
+       * Robusto a cliques rápidos: se uma troca está em curso, o token
+       * antigo invalida o cleanup e o novo swap reinicia as classes.
+       * @param {{mediaBtn: HTMLElement, artHTML: string, animate: boolean}} opts
+       */
+      function swapFeatureMedia({ mediaBtn, artHTML, animate }) {
+        if (!mediaBtn) return;
+        const artEl = mediaBtn.querySelector("#featureArt");
+        if (!artEl) return;
+        const current = artEl.querySelector("#featureArtCurrent");
+        const incoming = artEl.querySelector("#featureArtIncoming");
+        if (!current || !incoming) return;
+
+        const myToken = ++lastSwapToken;
+
+        if (!animate) {
+          // Reduced motion: swap instantâneo, sem cross-fade.
+          current.innerHTML = "";
+          incoming.innerHTML = artHTML;
+          incoming.classList.add("is-current");
+          incoming.classList.remove("is-incoming");
+          current.classList.remove("is-current", "is-incoming", "is-leaving", "is-swapping");
+          current.classList.add("is-incoming");
+          isSwapping = false;
+          return;
+        }
+
+        // Reset: current visível, incoming vazio + invisível.
+        // No boot, current está vazio (a "saída" sobre nada é invisível,
+        // só vemos o warp in da incoming). Em regime, current tem a arte
+        // antiga que vai fazer featureArtOut.
+        current.classList.remove("is-leaving", "is-swapping", "is-incoming");
+        current.classList.add("is-current");
+        incoming.classList.remove("is-current", "is-leaving", "is-swapping", "is-incoming");
+        incoming.innerHTML = artHTML;
+        void incoming.offsetWidth; // reflow antes da anim
+
+        // Inicia cross-fade sobreposto. A `current` (arte antiga) faz
+        // featureArtOut (550ms); a `incoming` (nova) faz featureArtIn (700ms).
+        // Cleanup é disparado por setTimeout com a duração do featureArtIn
+        // + margem (mais robusto que animationend, que tem jitter em
+        // headless/browsers ocupados). O token invalida timeouts de
+        // swaps cancelados.
+        isSwapping = true;
+        current.classList.add("is-swapping", "is-leaving");
+        incoming.classList.add("is-swapping", "is-incoming");
+
+        const SWAP_IN_MS = 700; // duração do @keyframes featureArtIn
+        setTimeout(() => {
+          if (myToken !== lastSwapToken) return; // swap cancelado por clique rápido
+          // Move incoming → current, esvazia current.
+          current.innerHTML = "";
+          current.classList.remove("is-swapping", "is-leaving", "is-current");
+          current.classList.add("is-incoming");
+          incoming.classList.remove("is-swapping", "is-incoming");
+          incoming.classList.add("is-current");
+          isSwapping = false;
+        }, SWAP_IN_MS + 30);
+      }
+
+      function renderFeature(char) {
+        if (!char) return;
+        featuredChar = char;
+        const theme = getGroupTheme(char.folder);
+        document.getElementById("heroCodex").style.setProperty("--hero-color", theme.color);
+        document.getElementById("featureMedia").style.setProperty("--group-color", theme.color);
+        const mediaBtn = document.getElementById("featureMedia");
+        const initial = firstLetter(char.name);
+
+        // §4.6 — calcula HTML da arte nova e dispara cross-fade cinematográfico.
+        // O chip "Destaque de hoje" e os 4 .corner ficam estáticos no botão
+        // (definidos no HTML). A arte entra/sai via #featureArt (current/incoming).
+        const artHTML = char.image
+          ? pictureHTML(
+              char,
+              `loading="eager" fetchpriority="high" decoding="async" onerror="cardImgErrorFeature(this)"`
+            )
+          : placeholderHTML(theme, initial, theme.icon, prettyGroup(char.folder));
+        // Defesa em profundidade: se #featureArt não existe (HTML mudou?),
+        // cria dinamicamente. Em produção sempre existe (HTML linhas 3463+).
+        if (!mediaBtn.querySelector("#featureArt")) {
+          const wrap = document.createElement("span");
+          wrap.className = "feature-art";
+          wrap.id = "featureArt";
+          wrap.innerHTML =
+            `<span class="feature-art-layer is-incoming" id="featureArtIncoming" data-role="incoming">${artHTML}</span>` +
+            `<span class="feature-art-layer is-current" id="featureArtCurrent" data-role="current"></span>`;
+          mediaBtn.appendChild(wrap);
+        }
+        swapFeatureMedia({ mediaBtn, artHTML, animate: !reducedMotion });
+
+        // §4.6 — fade rápido no nome (independente da arte, 200ms).
+        const nameEl = document.getElementById("featureName");
+        if (!reducedMotion) {
+          nameEl.classList.remove("is-swapping");
+          void nameEl.offsetWidth;
+          nameEl.classList.add("is-swapping");
+        }
+        nameEl.textContent = char.name;
+        const raceLink = document.getElementById("featureRaceLink");
+        raceLink.textContent = `${theme.icon} ${prettyGroup(char.folder)}`;
+        raceLink.href = `racas/${slugify(char.folder)}.html`;
+        raceLink.style.setProperty("--group-color", theme.color);
+        raceLink.style.setProperty("--group-ink", bestInk(theme.color));
+        // Timeline de lore (Fase C) — eventos relacionados à raça
+        const tlEl = document.getElementById("heroTimeline");
+        tlEl.innerHTML = "";
+        if (historiaData && historiaData.battles && char.folder) {
+          const folderSlug = char.folder;
+          const related = historiaData.battles
+            .filter((b) => {
+              const sides = Array.isArray(b.lados) ? b.lados.flat() : b.lados ? [b.lados] : [];
+              return sides.some((s) => s === folderSlug || s === char.folder);
+            })
+            .slice(0, 3);
+          if (related.length === 0 && historiaData.races) {
+            const raceInfo = historiaData.races.find(
+              (r) => r.id === folderSlug || r.id === char.folder
+            );
+            if (raceInfo && raceInfo.descricao) {
+              tlEl.innerHTML = `<span class="timeline-event">${raceInfo.descricao.slice(0, 120)}${raceInfo.descricao.length > 120 ? "..." : ""}</span>`;
+            } else {
+              tlEl.innerHTML = `<span class="timeline-event">Lenda: ${prettyGroup(folderSlug || char.folder)}</span>`;
+            }
+          } else {
+            tlEl.innerHTML = related
+              .map(
+                (b) =>
+                  `<span class="timeline-event" title="${escapeHTML(b.resumo || "")}">${escapeHTML(b.nome || b.id || "Evento")}</span>`
+              )
+              .join("");
+          }
+        } else {
+          tlEl.innerHTML = `<span class="timeline-event">Lenda de ${prettyGroup(char.folder)}</span>`;
+        }
+        // Constelação do dia (Fase C) — desenho leve no hero
+        const canvas = document.getElementById("heroCanvas");
+        if (canvas) {
+          const ctx = canvas.getContext("2d");
+          const w = canvas.width || 420;
+          const h = canvas.height || 80;
+          ctx.clearRect(0, 0, w, h);
+          const color = theme.color || "#e3491b";
+          const count = 5; // 5-6 pontos relacionados
+          const points = [];
+          for (let i = 0; i < count; i++) {
+            points.push({
+              x: 40 + (w - 80) * (0.15 + 0.7 * ((i + 1) / count)),
+              y: h / 2 + (Math.random() - 0.5) * 30
+            });
+          }
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 1.2;
+          ctx.globalAlpha = 0.35;
+          for (let i = 0; i < points.length - 1; i++) {
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(points[i + 1].x, points[i + 1].y);
+            ctx.stroke();
+          }
+          ctx.globalAlpha = 0.9;
+          for (const p of points) {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+          }
+        }
+        const live = document.getElementById("featureLive");
+        if (live) live.textContent = `Destaque: ${char.name}, ${prettyGroup(char.folder || "")}`;
+      }
+
+      // ===== DESTAQUES POR PERÍODO DO DIA (manhã / tarde / noite) =====
+      // 3 períodos no fuso local: manhã 5-12 / tarde 12-18 / noite 18-5.
+      // Os 3 personagens são determinísticos pelo dia (seed * 7 + offset por período)
+      // — mesmo dia = mesmos 3 personagens (compartilháveis, reproduzíveis).
+      // O card do período atual fica com .is-active; reroll do destaque principal
+      // não mexe no is-active (referência temporal, não "qual está aberto").
+      function currentPeriod() {
+        const h = new Date().getHours();
+        if (h >= 5 && h < 12) return "morning";
+        if (h >= 12 && h < 18) return "afternoon";
+        return "night";
+      }
+
+      const PERIODS = [
+        { id: "morning", icon: "☀️", label: "Manhã" },
+        { id: "afternoon", icon: "🌤️", label: "Tarde" },
+        { id: "night", icon: "🌙", label: "Noite" }
+      ];
+
+      function periodPickIndex(total, periodOffset) {
+        const d = new Date();
+        const seed = d.getFullYear() * 372 + (d.getMonth() + 1) * 31 + d.getDate();
+        return (((seed * 7 + periodOffset * 31) % total) + total) % total;
+      }
+
+      let periodChars = [];
+
+      function renderPeriods() {
+        if (!allCharacters.length) return;
+        const withImage = allCharacters.filter((c) => c.image);
+        if (!withImage.length) return;
+        periodChars = PERIODS.map((_, i) => {
+          const idx = periodPickIndex(withImage.length, i + 1);
+          return withImage[idx];
+        });
+        const active = currentPeriod();
+        const el = document.getElementById("heroPeriods");
+        if (!el) return;
+        el.innerHTML = periodChars
+          .map((c, i) => {
+            const p = PERIODS[i];
+            const theme = getGroupTheme(c.folder);
+            const isActive = p.id === active;
+            return (
+              `<button type="button" class="period-card${isActive ? " is-active" : ""}"` +
+              ` data-period="${p.id}" data-idx="${i}" aria-pressed="${isActive}"` +
+              ` style="--hero-color:${theme.color};">` +
+              `<span class="period-icon" aria-hidden="true">${p.icon}</span>` +
+              `<span class="period-name" title="${escapeHTML(c.name)}">${escapeHTML(c.name)}</span>` +
+              `<span class="period-race">${escapeHTML(prettyGroup(c.folder))}</span>` +
+              `</button>`
+            );
+          })
+          .join("");
+
+        // Click handler — delegado no container (onclick reatribuído a cada
+        // renderPeriods(); sem leak de listeners).
+        el.onclick = (e) => {
+          const btn = e.target.closest(".period-card");
+          if (!btn) return;
+          const idx = +btn.dataset.idx;
+          const c = periodChars[idx];
+          if (!c) return;
+          featuredChar = c;
+          renderFeature(c);
+          renderPeriods();
+        };
+      }
+
+      // ===== VITRINE DE RAÇAS (22 coleções "por-raça") — §9.2 v2 =====
+      // Carrossel INFINITO horizontal no hero: 1 card por raça, link para a
+      // página dedicada em racas/<slug>.html. Sem curadoria especial
+      // ("Vilões do Norte" etc.) — cada coleção É "todos os personagens da
+      // raça X". A contagem vem de groups[] (já populado de
+      // characters-api.json em loadData: cada item = {id, label, count}).
+      // O match com groupThemes (label="Humanos") é via slugify() (prefixo
+      // numérico é descartado, então slugify("01_Humanos") === slugify("Humanos")).
+      //
+      // Carrossel infinito CSS-only: renderizamos 2 cópias dos 22 cards (44
+      // no DOM) dentro de .hero-races-track; o CSS anima translateX(0 →
+      // -50%) infinitamente. Quando chega em -50%, o ponto é visualmente
+      // idêntico a 0% (é o segundo clone), então o "salto" é invisível.
+      // Os 22 clones têm aria-hidden="true" para screen readers anunciarem
+      // só os 22 originais. Pausa no hover/focus via :hover/:focus-within.
+      // prefers-reduced-motion: reduce desabilita a animação (ver CSS).
+      // Render idempotente; re-chamável sem leak de listeners.
+      function renderRaces() {
+        if (!groupThemes.length || !groups.length) return;
+        const el = document.getElementById("heroRaces");
+        if (!el) return;
+        // Mapa rápido slug(folder) -> count (groups tem {id, label, count})
+        const countBySlug = new Map(groups.map((g) => [slugify(g.id), g.count]));
+        const buildCard = (t, hidden) => {
+          const slug = slugify(t.label);
+          const count = countBySlug.get(slug) ?? 0;
+          const href = `racas/${slug}.html`;
+          return (
+            `<a class="race-card" href="${href}" role="listitem"` +
+            ` style="--hero-color:${t.color};"` +
+            (hidden ? ` aria-hidden="true" tabindex="-1"` : "") +
+            ` aria-label="${escapeHTML(t.label)} — ${count} personagens">` +
+            `<span class="race-icon" aria-hidden="true">${t.icon}</span>` +
+            `<span class="race-name">${escapeHTML(t.label)}</span>` +
+            `<span class="race-count">${count} ${count === 1 ? "personagem" : "personagens"}</span>` +
+            `</a>`
+          );
+        };
+        // 22 originais + 22 clones (aria-hidden) = 44 cards no DOM
+        const original = groupThemes.map((t) => buildCard(t, false));
+        const clone = groupThemes.map((t) => buildCard(t, true));
+        el.innerHTML = `<div class="hero-races-track">${[...original, ...clone].join("")}</div>`;
+      }
+
+      // ===== PILHA 3D — fila real de personagens + animação no reroll =====
+      // stackQueue[0] = quem já está espiando em stack-back-1 (vira o próximo destaque)
+      // stackQueue[1] = quem está espiando em stack-back-2 (mais escondido)
+      let stackQueue = [];
+
+      function pickRandomWithImage(exclude = []) {
+        const excludeIds = new Set(exclude.filter(Boolean).map((c) => c.id || c.name || c.title));
+        const pool = allCharacters.filter(
+          (c) => c.image && !excludeIds.has(c.id || c.name || c.title)
+        );
+        const src = pool.length ? pool : allCharacters.filter((c) => c.image);
+        return src.length ? src[Math.floor(Math.random() * src.length)] : null;
+      }
+
+      function paintBackCard(imgEl, char) {
+        if (!imgEl) return;
+        if (char && char.image) {
+          imgEl.src = char.image;
+          imgEl.alt = char.name || "";
+        } else {
+          imgEl.removeAttribute("src");
+          imgEl.alt = "";
+        }
+      }
+
+      function ensureStackQueue() {
+        while (stackQueue.length < 2) {
+          const c = pickRandomWithImage([featuredChar, ...stackQueue]);
+          if (!c) break;
+          stackQueue.push(c);
+        }
+        paintBackCard(document.getElementById("stackImg1"), stackQueue[0]);
+        paintBackCard(document.getElementById("stackImg2"), stackQueue[1]);
+      }
+
+      let rerollCooldown = false;
+      function cycleStack() {
+        if (reducedMotion) {
+          const c = pickRandomWithImage([featuredChar]);
+          if (c) renderFeature(c);
+          return;
+        }
+        if (rerollCooldown) return;
+        const front = document.getElementById("featureMediaFront");
+        const b1 = document.querySelector(".stack-back-1");
+        const b2 = document.querySelector(".stack-back-2");
+        if (!front || !b1 || !b2) {
+          const c = pickRandomWithImage([featuredChar]);
+          if (c) renderFeature(c);
+          return;
+        }
+        ensureStackQueue();
+        if (!stackQueue.length) return; // sem personagens com imagem — nada a fazer
+        rerollCooldown = true;
+        const nextChar = stackQueue.shift();
+        const freshChar = pickRandomWithImage([featuredChar, nextChar, ...stackQueue]);
+        if (freshChar) stackQueue.push(freshChar);
+        renderFeature(nextChar);
+        paintBackCard(document.getElementById("stackImg1"), stackQueue[0]);
+        paintBackCard(document.getElementById("stackImg2"), stackQueue[1]);
+        // animação simples de "biblioteca" — translate leve via CSS
+        const media = document.getElementById("featureMediaFront");
+        if (media) {
+          media.classList.remove("reroll-pop");
+          // force reflow pra resetar a anim
+          void media.offsetWidth;
+          media.classList.add("reroll-pop");
+        }
+        rerollCooldown = false;
+      }
+
+      window.cardImgErrorFeature = function (img) {
+        img.replaceWith(
+          (() => {
+            const div = document.createElement("div");
+            div.innerHTML = placeholderHTML(
+              getGroupTheme(featuredChar.folder),
+              firstLetter(featuredChar.name),
+              getGroupTheme(featuredChar.folder).icon,
+              prettyGroup(featuredChar.folder)
+            );
+            return div.firstElementChild;
+          })()
+        );
+      };
+
+      function randomFeatured() {
+        const pool = allCharacters.filter((c) => c.image);
+        const src = pool.length ? pool : allCharacters;
+        renderFeature(src[Math.floor(Math.random() * src.length)]);
+      }
+
+      function initHero(data) {
+        animateCount(document.getElementById("statChars"), allCharacters.length);
+        animateCount(document.getElementById("statRaces"), groups.length);
+        try {
+          const [y, m, d] = String(data.generatedAt || "")
+            .split("-")
+            .map(Number);
+          const dt = new Date(y, m - 1, d);
+          const today = new Date();
+          const daysAgo = Math.round((today - dt) / (1000 * 60 * 60 * 24));
+          const dateStr = dt.toLocaleDateString("pt-BR", {
+            day: "numeric",
+            month: "long"
+          });
+          document.getElementById("statDate").textContent =
+            daysAgo <= 7
+              ? `atualizado há ${daysAgo} dia${daysAgo === 1 ? "" : "s"}`
+              : "atualizado em " + dateStr;
+        } catch (_) {
+          /* data ausente: mantém o travessão */
+        }
+        renderFeature(allCharacters[dayPickIndex(allCharacters.length)]);
+        stackQueue = []; // reseta a fila (o array de personagens acabou de chegar)
+        ensureStackQueue(); // já pinta stack-back-1/2 com personagens reais e distintos
+        renderPeriods(); // popula os 3 mini-cards de período (manhã/tarde/noite)
+        renderRaces(); // popula a vitrine de raças (carrossel 22 "por-raça") §9.2
+      }
+
+      document.getElementById("surpriseBtn").addEventListener("click", () => {
+        const pool = allCharacters.filter((c) => c.image);
+        const src = pool.length ? pool : allCharacters;
+        openModalWithVT(src[Math.floor(Math.random() * src.length)], null);
+      });
+      document.getElementById("featureMedia").addEventListener("click", () => {
+        if (featuredChar) openModalWithVT(featuredChar, null);
+      });
+      document.getElementById("featureReroll").addEventListener("click", () => {
+        if (rerollCooldown) return; // debounce ~400ms via animação
+        cycleStack();
+      });
+      // ===== AUTOPLAY ALEATÓRIO DO HERO-CODEX =====
+      // Troca o personagem a cada 7 segundos (se a aba estiver visível)
+      setInterval(() => {
+        if (document.visibilityState === "visible") cycleStack();
+      }, 7000);
+
+      // ============================================================
+      //  CARREGA OS DADOS
+      // ============================================================
+      // ============================================================
+      //  ESTADO NA URL — #g=<pasta>&q=<busca>&sort=<x>&fav=1
+      //  Compatível com os deep-links antigos:
+      //    #<pasta>      → filtra a raça (links do Mapa continuam válidos)
+      //    #<personagem> → abre o modal direto no personagem
+      //  Voltar/Avançar do navegador restauram o estado (popstate).
+      // ============================================================
+      const VALID_SORTS = ["nameAsc", "nameDesc", "numberAsc", "numberDesc", "groupAsc"];
+
+      function parseHash() {
+        let raw;
+        try {
+          raw = decodeURIComponent(location.hash.slice(1));
+        } catch (_) {
+          return {};
+        }
+        if (!raw) return {};
+        if (raw.includes("=")) {
+          const p = new URLSearchParams(raw);
+          return {
+            g: p.get("g"),
+            q: p.get("q"),
+            sort: p.get("sort"),
+            fav: p.get("fav")
+          };
+        }
+        if (groups.some((g) => g.id === raw)) return { g: raw };
+        const ch = allCharacters.find((c) => (c.id || c.name) === raw);
+        if (ch) return { char: ch };
+        return {};
+      }
+
+      function buildHashFromState() {
+        const p = new URLSearchParams();
+        if (selectedGroup !== "__all__") p.set("g", selectedGroup);
+        if (searchTerm) p.set("q", searchTerm);
+        if (currentSort !== "nameAsc") p.set("sort", currentSort);
+        if (isFavoritesOnly) p.set("fav", "1");
+        return p.toString();
+      }
+
+      // push=true cria entrada no histórico; false só substitui a atual
+      function syncURL(push) {
+        const h = buildHashFromState();
+        const url = h ? "#" + h : location.pathname + location.search;
+        if (push && !modal.classList.contains("open")) {
+          history.pushState(null, "", url);
+        } else {
+          history.replaceState(null, "", url);
+        }
+      }
+
+      function applyHashState(opts) {
+        const { render = true, fromPop = false } = opts || {};
+        const st = parseHash();
+
+        if ("g" in st) {
+          selectedGroup = st.g && groups.some((g) => g.id === st.g) ? st.g : "__all__";
+        }
+        if (typeof st.q === "string") {
+          searchTerm = st.q.toLowerCase().trim();
+        }
+        if (st.sort && VALID_SORTS.includes(st.sort)) {
+          currentSort = st.sort;
+          sortSelect.value = st.sort;
+        }
+        if (st.fav !== undefined && st.fav !== null) {
+          isFavoritesOnly = st.fav === "1";
+          favoritesToggle.classList.toggle("active", isFavoritesOnly);
+        }
+
+        updateFilterButtons();
+        displayedCount = INITIAL_BATCH;
+
+        // Identidade visual global do grupo ativo
+        const active = selectedGroup === "__all__" ? null : getGroupTheme(selectedGroup).color;
+        setAmbient(active || "#e3491b");
+        document.documentElement.style.setProperty("--group-color", active || "#e3491b");
+
+        if (render) applyFilterAndRender();
+
+        // Deep-link de personagem tem precedência sobre filtros na URL
+        if (st.char) openModal(st.char);
+        else if (fromPop && modal.classList.contains("open")) closeModal();
+      }
+
+      // popstate e hashchange podem disparar juntos numa mesma navegação
+      let hashSyncScheduled = false;
+      function onUrlStateChange() {
+        if (hashSyncScheduled) return;
+        hashSyncScheduled = true;
+        queueMicrotask(() => {
+          hashSyncScheduled = false;
+          applyHashState({ fromPop: true });
+        });
+      }
+      window.addEventListener("popstate", onUrlStateChange);
+      window.addEventListener("hashchange", onUrlStateChange);
+
+      async function loadData() {
+        try {
+          console.log("Carregando dados da API...");
+          const res = await fetch(API_URL);
+          if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
+          const data = await res.json();
+          console.log("Dados carregados com sucesso:", data);
+
+          allCharacters = [];
+          data.groups.forEach((g) => {
+            g.characters.forEach((c) => {
+              allCharacters.push({
+                ...c,
+                title: c.title || "",
+                name: c.name || "",
+                groupName: prettyGroup(g.folder),
+                description: c.description || "Nenhuma descrição disponível para este personagem.",
+                attributes: c.attributes || {}
+              });
+            });
+          });
+
+          groups = data.groups.map((g) => ({
+            id: g.folder,
+            label: prettyGroup(g.folder),
+            count: g.count
+          }));
+
+          console.log(`Total de personagens: ${allCharacters.length}`);
+          console.log("Grupos:", groups);
+
+          // Deep-link unificado (#<pasta> antigo, #<personagem>, #g=&q=&sort=&fav=)
+          applyHashState({ render: false });
+
+          createFilterButtons();
+          updateFilterButtons();
+          applyFilterAndRender();
+          // Sincroniza glow ambiente/barra com o grupo inicial (inclui deep-link)
+          {
+            const active = selectedGroup === "__all__" ? null : getGroupTheme(selectedGroup).color;
+            setAmbient(active || "#e3491b");
+            document.documentElement.style.setProperty("--group-color", active || "#e3491b");
+          }
+          initHero(data);
+
+          // Hook de teste (§4.1+§4.2): permite forçar empty state programaticamente
+          // sem precisar de uma raça com 0 chars. Usado por tests/a11y-empty-check.mjs.
+          window.__forceEmptyState = function (groupKey) {
+            selectedGroup = groupKey || selectedGroup;
+            // Zera a grid antes do applyFilterAndRender re-derivar
+            // getFilteredAndSorted, e depois chama renderGrid direto pra
+            // pular a hidratação via getFilteredAndSorted.
+            filteredCharacters = [];
+            renderedCount = 0;
+            displayedCount = 0;
+            renderGrid(false);
+          };
+        } catch (err) {
+          console.error("Erro ao carregar dados:", err);
+          grid.innerHTML = `<div class="empty-state"><span class="empty-icon">⚠️</span>Erro ao carregar dados: <em>${err.message}</em><br><small>Verifique se o arquivo <strong>characters-api.json</strong> está na mesma pasta e tente novamente.</small></div>`;
+          resultCount.textContent = "0 personagens";
+          loadMoreWrap.innerHTML = "";
+        }
+      }
+
+      // ============================================================
+      //  FILTROS — criação única + atualização de classes
+      // ============================================================
+      function createFilterButtons() {
+        let html = `<button class="filter-btn all-clear" data-group="__all__">Todos <span class="count-badge">${allCharacters.length}</span></button>`;
+        groups.forEach((g) => {
+          const theme = getGroupTheme(g.id);
+          html += `<button class="filter-btn group-filter" data-group="${g.id}" style="--group-color:${theme.color};--group-ink:${bestInk(theme.color)};"><span class="g-icon">${theme.icon}</span> ${g.label} <span class="count-badge">${g.count}</span></button>`;
+        });
+        filterContainer.innerHTML = html;
+        updateFilterArrows();
+
+        // Adiciona listeners uma única vez
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectGroup(btn.dataset.group);
+          });
+        });
+      }
+
+      // Seleciona um grupo por id de pasta e atualiza tudo (usado pelos
+      // chips, pela paleta de comandos e pelo deep-link #<pasta>)
+      function selectGroup(groupId) {
+        selectedGroup = groupId;
+        updateFilterButtons();
+        displayedCount = INITIAL_BATCH;
+        applyFiltersWithTransition();
+        syncURL(true);
+        // Identidade visual global do grupo ativo (glow ambiente,
+        // barra de progresso, hero) — null = Todos
+        const active = selectedGroup === "__all__" ? null : getGroupTheme(selectedGroup).color;
+        setAmbient(active || "#e3491b");
+        document.documentElement.style.setProperty("--group-color", active || "#e3491b");
+        window.dispatchEvent(new CustomEvent("codex:groupchange", { detail: groupId }));
+      }
+
+      function updateFilterButtons() {
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          const groupId = btn.dataset.group;
+          btn.classList.toggle("active", selectedGroup === groupId);
+        });
+      }
+
+      // ============================================================
+      //  ORDENAÇÃO
+      // ============================================================
+      sortSelect.addEventListener("change", () => {
+        currentSort = sortSelect.value;
+        displayedCount = INITIAL_BATCH;
+        applyFiltersWithTransition();
+        syncURL(true);
+      });
+
+      // ============================================================
+      //  FAVORITOS
+      // ============================================================
+      favoritesToggle.addEventListener("click", () => {
+        isFavoritesOnly = !isFavoritesOnly;
+        favoritesToggle.classList.toggle("active", isFavoritesOnly);
+        displayedCount = INITIAL_BATCH;
+        applyFiltersWithTransition();
+        syncURL(true);
+        showToast(isFavoritesOnly ? "Mostrando apenas favoritos" : "Mostrando todos");
+      });
+
+      function updateFavButtons() {
+        document.querySelectorAll(".character-card").forEach((card) => {
+          const charId = card.dataset.charId;
+          if (charId) {
+            const favIndicator = card.querySelector(".fav-indicator");
+            if (favIndicator) {
+              favIndicator.style.display = isFavorite(charId) ? "block" : "none";
+            }
+            card.classList.toggle("is-fav", isFavorite(charId));
+          }
+        });
+        if (currentModalChar) {
+          modalFavBtn.classList.toggle(
+            "active",
+            isFavorite(currentModalChar.id || currentModalChar.name)
+          );
+        }
+      }
+
+      // ============================================================
+      //  PALETA DE COMANDOS (Ctrl+K ou /)
+      //  Uma única superfície de busca: personagens, raças e ações.
+      //  Contrato ARIA 1.2 combobox/listbox; matching fuzzy sem acento.
+      // ============================================================
+      const PALETTE_MAX_PER_GROUP = 5;
+
+      let paletteOpen = false;
+      let paletteItems = []; // opções achatadas [{type, ...}]
+      let paletteActive = 0;
+
+      // ============================================================
+      //  §9.3 — SEARCH SEMÂNTICA POR LORE (índice invertido)
+      //  Carregado lazy: só no primeiro Ctrl+K aberto. Se o fetch
+      //  falhar (file://, offline), loreIndex = null e a paleta
+      //  volta ao comportamento original (só chars/races/actions).
+      // ============================================================
+      let loreIndex = null;          // {docs, postings} ou null
+      let loreIndexLoading = null;   // Promise dedupe
+
+      async function ensureLoreIndex() {
+        if (loreIndex !== null) return loreIndex;
+        if (loreIndexLoading) return loreIndexLoading;
+        loreIndexLoading = fetch("data/search-index.json")
+          .then((r) => (r.ok ? r.json() : null))
+          .then((j) => {
+            loreIndex = j || null;
+            return loreIndex;
+          })
+          .catch(() => {
+            loreIndex = null;
+            return null;
+          });
+        return loreIndexLoading;
+      }
+
+      // BM25 simplificado: AND semantico entre os termos do query
+      // (todos precisam aparecer no mesmo doc). Score = soma(tf).
+      // AND e' decisao consciente (mais previsivel que OR); termo
+      // ausente -> lista vazia para esse doc.
+      function loreSearch(q) {
+        if (!loreIndex || !q) return [];
+        const terms = normText(q)
+          .split(/\s+/)
+          .filter((t) => t && t.length >= 2);
+        if (!terms.length) return [];
+        const candidates = new Map(); // docIdx -> { score, termsFound }
+        for (const term of terms) {
+          const p = loreIndex.postings[term];
+          if (!p) continue; // termo ausente nao zera; so nao contribui
+          for (const h of p.hits) {
+            const c = candidates.get(h.doc) || { score: 0, terms: [] };
+            c.score += h.tf;
+            c.terms.push({ term, pos: h.positions[0] || 0 });
+            candidates.set(h.doc, c);
+          }
+        }
+        if (!candidates.size) return [];
+        return [...candidates.entries()]
+          .map(([docIdx, c]) => ({
+            doc: loreIndex.docs[docIdx],
+            score: c.score,
+            terms: c.terms
+          }))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 6);
+      }
+
+      // Snippet highlighter: ~120 chars centrados na 1a posicao,
+      // com <mark> nos termos. Mantem o body como fonte para o
+      // highlight (body ja esta no indice, mas serializado fora
+      // do JSON para economizar ~150 KB).
+      const LORE_TYPE_ICONS = {
+        region: "📜",
+        battle: "⚔️",
+        celeste: "☄️",
+        race: "🛡️",
+        ritual: "🩸",
+        "char-lore": "🧬"
+      };
+      function loreIcon(type) {
+        return LORE_TYPE_ICONS[type] || "🔎";
+      }
+      function loreTypeLabel(type) {
+        return (
+          {
+            region: "Regiao",
+            battle: "Batalha",
+            celeste: "Ceu",
+            race: "Raca",
+            ritual: "Ritual",
+            "char-lore": "Personagem"
+          }[type] || "Lore"
+        );
+      }
+
+      function normText(s) {
+        return (
+          String(s || "")
+            .normalize("NFD")
+            // mesmo truque do slugify: descarta todo não-ASCII pós-NFD
+            .replace(/[^ -~]/g, "")
+            .toLowerCase()
+        );
+      }
+
+      function isSubsequence(hay, needle) {
+        let i = 0;
+        for (const ch of hay) {
+          if (ch === needle[i]) i++;
+          if (i === needle.length) return true;
+        }
+        return needle.length === 0;
+      }
+
+      function scoreText(fields, q) {
+        // fields em ordem de prioridade decrescente
+        let best = -1;
+        fields.forEach((text, prio) => {
+          if (!text) return;
+          const n = normText(text);
+          let s = -1;
+          if (n.startsWith(q)) s = 100 - prio * 10;
+          else if (n.split(/\s+/).some((w) => w.startsWith(q))) s = 85 - prio * 10;
+          else if (n.includes(q)) s = 65 - prio * 10;
+          else if (q.length >= 2 && isSubsequence(n, q)) s = 30 - prio;
+          if (s > best) best = s;
+        });
+        return best;
+      }
+
+      function paletteActions() {
+        return [
+          {
+            icon: "🌓",
+            label: "Alternar tema claro / escuro",
+            sub: "Aparência do códice",
+            run: () => themeToggle.click()
+          },
+          {
+            icon: "◑",
+            label: "Alternar efeitos",
+            sub: "Modo sem efeitos visuais (animações, transições, rituais)",
+            run: () => noFxBtn.click()
+          },
+          {
+            icon: "♥",
+            label: isFavoritesOnly ? "Ver todos os personagens" : "Ver apenas os favoritos",
+            sub: "Filtros",
+            run: () => favoritesToggle.click()
+          },
+          {
+            icon: "🎲",
+            label: "Surpreenda-me",
+            sub: "Abrir um personagem aleatório",
+            run: () => {
+              if (!allCharacters.length) return;
+              const c = allCharacters[Math.floor(Math.random() * allCharacters.length)];
+              openModalWithVT(c, null);
+            }
+          },
+          {
+            icon: "🗺️",
+            label: "Abrir o mapa de Aetheria",
+            sub: "Mapa_Aetheria.html",
+            run: () => (window.location.href = "Mapa_Aetheria.html")
+          },
+          {
+            icon: "🧹",
+            label: "Limpar filtros e busca",
+            sub: "Voltar à galeria completa",
+            run: clearAllFilters
+          },
+          {
+            icon: "⬆️",
+            label: "Voltar ao topo",
+            sub: "Início da página",
+            run: () =>
+              window.scrollTo({
+                top: 0,
+                behavior: reducedMotion ? "auto" : "smooth"
+              })
+          }
+        ];
+      }
+
+      function buildPaletteResults(q) {
+        const results = [];
+        if (!q) {
+          // Sem busca: só as ações rápidas
+          paletteActions().forEach((a) => results.push({ type: "action", ...a }));
+          return results;
+        }
+
+        // §9.3 — search semantica por lore (carregamento lazy)
+        // Garante que o fetch esta em voo (ou terminou) e usa o cache.
+        if (loreIndex === null && !loreIndexLoading) {
+          ensureLoreIndex();
+        }
+        if (loreIndex) {
+          loreSearch(q).forEach((r) =>
+            results.push({ type: "lore", lore: r, score: r.score })
+          );
+        } else if (loreIndexLoading && q) {
+          // Primeira chamada: fetch em voo. Quando resolver, re-renderiza
+          // a paleta com o indice agora disponivel (cobre o caso em que
+          // o usuario digitou antes dos ~300ms do fetch terminar).
+          loreIndexLoading.then(() => {
+            if (paletteOpen && normText(paletteInput.value.trim()) === q) {
+              renderPalette();
+            }
+          });
+        }
+
+        // Personagens / Raças / Ações competem no MESMO ranking de
+        // relevância — um prefixo exato numa ação vence uma subsequência
+        // fraca num nome distante.
+        allCharacters
+          .map((c) => ({
+            type: "char",
+            char: c,
+            score: scoreText([c.name, c.title, c.groupName], q)
+          }))
+          .filter((x) => x.score >= 30)
+          .forEach((x) => results.push(x));
+
+        groups
+          .map((g) => ({
+            type: "race",
+            group: g,
+            score: scoreText([prettyGroup(g.id), getGroupTheme(g.id).tipo || ""], q)
+          }))
+          .filter((x) => x.score >= 35)
+          .forEach((x) => results.push(x));
+
+        paletteActions()
+          .map((a) => ({
+            type: "action",
+            ...a,
+            score: scoreText([a.label], q)
+          }))
+          .filter((x) => x.score >= 60)
+          .forEach((x) => results.push(x));
+
+        // Relevância primeiro; empates mantêm Personagens > Raças > Ações
+        const tiebreak = { char: 0, race: 1, action: 2 };
+        results.sort((a, b) => b.score - a.score || tiebreak[a.type] - tiebreak[b.type]);
+        return results.slice(0, 10);
+      }
+
+      function clearAllFilters() {
+        selectedGroup = "__all__";
+        searchTerm = "";
+        currentSort = "nameAsc";
+        isFavoritesOnly = false;
+        sortSelect.value = currentSort;
+        favoritesToggle.classList.remove("active");
+        updateFilterButtons();
+        displayedCount = INITIAL_BATCH;
+        applyFiltersWithTransition();
+        syncURL(true);
+        const active = null;
+        setAmbient(active || "#e3491b");
+        document.documentElement.style.setProperty("--group-color", active || "#e3491b");
+        showToast("Filtros limpos ✨");
+      }
+
+      function renderPalette() {
+        const q = normText(paletteInput.value.trim());
+        paletteItems = buildPaletteResults(q);
+
+        if (!paletteItems.length) {
+          paletteList.innerHTML = `<li class="palette-empty" role="presentation">Nada encontrado para “${escapeHTML(
+            paletteInput.value.trim()
+          )}” no códice…</li>`;
+          paletteLive.textContent = "Nenhum resultado";
+          paletteActive = 0;
+          return;
+        }
+
+        let html = "";
+        let lastType = "";
+        paletteItems.forEach((item, i) => {
+          if (item.type !== lastType) {
+            lastType = item.type;
+            const label =
+              item.type === "char"
+                ? "Personagens"
+                : item.type === "race"
+                  ? "Raças"
+                  : item.type === "lore"
+                    ? "Lore (search semantica)"
+                    : "Ações";
+            html += `<li class="pal-group-label" role="presentation">${label}</li>`;
+          }
+          let visual = "",
+            name = "",
+            sub = "";
+          if (item.type === "char") {
+            const c = item.char;
+            const theme = getGroupTheme(c.folder);
+            visual = c.image
+              ? `<img class="pal-art" src="${c.image}" alt="" style="--group-color:${theme.color};" />`
+              : `<span class="pal-ph" style="--group-color:${theme.color};--group-ink:${bestInk(theme.color)};">${firstLetter(c.name)}</span>`;
+            name = escapeHTML(c.name);
+            sub = escapeHTML((c.title ? c.title + " · " : "") + c.groupName);
+          } else if (item.type === "race") {
+            const theme = getGroupTheme(item.group.id);
+            visual = `<span class="pal-race-dot" style="--group-color:${theme.color};">${theme.icon}</span>`;
+            name = escapeHTML(item.group.label);
+            sub = `${item.group.count} personagem${item.group.count === 1 ? "" : "s"}`;
+          } else if (item.type === "lore") {
+            const L = item.lore;
+            visual = `<span class="pal-icon pal-lore-icon" aria-hidden="true">${loreIcon(L.doc.type)}</span>`;
+            name = escapeHTML(L.doc.title);
+            // sub = tipo + categoria (e.g. "Batalha · Inverno Eterno, ano 0")
+            sub = escapeHTML(`${loreTypeLabel(L.doc.type)} · ${L.doc.sub}`);
+          } else {
+            visual = `<span class="pal-icon">${item.icon}</span>`;
+            name = escapeHTML(item.label);
+            sub = escapeHTML(item.sub || "");
+          }
+          html += `<li class="pal-option" id="pal-opt-${i}" role="option" aria-selected="${
+            i === paletteActive
+          }" data-index="${i}">${visual}<span class="pal-main"><span class="pal-name">${name}</span><span class="pal-sub">${sub}</span></span></li>`;
+        });
+        paletteList.innerHTML = html;
+        paletteLive.textContent = `${paletteItems.length} resultado${paletteItems.length === 1 ? "" : "s"}`;
+
+        paletteList.querySelectorAll(".pal-option").forEach((el) => {
+          el.addEventListener("mouseenter", () => setPaletteActive(+el.dataset.index));
+          el.addEventListener("click", () => choosePaletteItem(+el.dataset.index));
+        });
+        syncPaletteActive();
+      }
+
+      function setPaletteActive(i) {
+        if (!paletteItems.length) return;
+        paletteActive = (i + paletteItems.length) % paletteItems.length;
+        syncPaletteActive();
+      }
+
+      function syncPaletteActive() {
+        paletteList.querySelectorAll(".pal-option").forEach((el) => {
+          const active = +el.dataset.index === paletteActive;
+          el.setAttribute("aria-selected", String(active));
+          if (active) {
+            el.scrollIntoView({ block: "nearest" });
+            paletteInput.setAttribute("aria-activedescendant", el.id);
+          }
+        });
+      }
+
+      function choosePaletteItem(i) {
+        const item = paletteItems[i];
+        if (!item) return;
+        closePalette();
+        if (item.type === "char") {
+          openModalWithVT(item.char, null);
+        } else if (item.type === "race") {
+          selectGroup(item.group.id);
+        } else if (item.type === "lore") {
+          // §9.3 — navega para o href (mapa, pagina de raca, index de char, etc).
+          // location.assign em vez de href= para nao deixar entrada duplicada
+          // no historico de botao-voltar.
+          window.location.assign(item.lore.doc.href);
+        } else if (item.run) {
+          item.run();
+        }
+      }
+
+      function openPalette() {
+        if (modal.classList.contains("open")) closeModal();
+        paletteOpen = true;
+        palette.classList.add("open");
+        palette.setAttribute("aria-hidden", "false");
+        paletteInput.setAttribute("aria-expanded", "true");
+        paletteInput.value = searchTerm || "";
+        paletteActive = 0;
+        // §9.3 — pré-aquece o índice de lore em paralelo (não bloqueia a UI).
+        // Como o fetch leva ~100-300ms em 3G simulado, o usuário provavelmente
+        // já digitou quando o load termina; na próxima keystroke os resultados
+        // de lore aparecem magicamente.
+        if (loreIndex === null) ensureLoreIndex();
+        renderPalette();
+        document.body.style.overflow = "hidden";
+        setTimeout(() => paletteInput.focus(), reducedMotion ? 0 : 60);
+      }
+
+      function closePalette() {
+        if (!paletteOpen) return;
+        paletteOpen = false;
+        palette.classList.remove("open");
+        palette.setAttribute("aria-hidden", "true");
+        paletteInput.setAttribute("aria-expanded", "false");
+        paletteInput.setAttribute("aria-activedescendant", "");
+        if (!modal.classList.contains("open")) document.body.style.overflow = "";
+      }
+
+      paletteTrigger.addEventListener("click", openPalette);
+      paletteBg.addEventListener("click", closePalette);
+
+      paletteInput.addEventListener("input", () => {
+        paletteActive = 0;
+        renderPalette();
+      });
+
+      paletteInput.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          setPaletteActive(paletteActive + 1);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          setPaletteActive(paletteActive - 1);
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          setPaletteActive(0);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          setPaletteActive(paletteItems.length - 1);
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          choosePaletteItem(paletteActive);
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          closePalette();
+        }
+      });
+
+      // Atalhos globais: Ctrl+K alterna, "/" abre (fora de campos e do modal)
+      document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+          e.preventDefault();
+          paletteOpen ? closePalette() : openPalette();
+          return;
+        }
+        if (paletteOpen && e.key === "Escape") {
+          e.preventDefault();
+          closePalette();
+          return;
+        }
+        if (
+          e.key === "/" &&
+          !paletteOpen &&
+          !modal.classList.contains("open") &&
+          !(e.target.closest && e.target.closest("input, textarea, select"))
+        ) {
+          e.preventDefault();
+          openPalette();
+        }
+        // atalhos Alt+1..9 para pular para a raça n (1=Humanos, 2=Mutantes, ...)
+        if (
+          e.altKey &&
+          !e.ctrlKey &&
+          !e.metaKey &&
+          /^[1-9]$/.test(e.key) &&
+          !paletteOpen &&
+          !modal.classList.contains("open") &&
+          !(e.target.closest && e.target.closest("input, textarea, select"))
+        ) {
+          const idx = parseInt(e.key, 10) - 1;
+          const folders = Object.keys(groups).sort();
+          if (idx < folders.length) {
+            e.preventDefault();
+            selectedGroup = folders[idx];
+            syncURL();
+            applyFiltersWithTransition();
+          }
+        }
+      });
+
+      // ============================================================
+      //  FILTRAGEM + ORDENAÇÃO + PAGINAÇÃO
+      // ============================================================
+      function getFilteredAndSorted() {
+        let filtered = [...allCharacters];
+
+        if (selectedGroup !== "__all__") {
+          filtered = filtered.filter((c) => c.folder === selectedGroup);
+        }
+
+        if (isFavoritesOnly) {
+          filtered = filtered.filter((c) => isFavorite(c.id || c.name));
+        }
+
+        if (searchTerm) {
+          filtered = filtered.filter(
+            (c) =>
+              c.name.toLowerCase().includes(searchTerm) ||
+              (c.title || "").toLowerCase().includes(searchTerm) ||
+              c.folder.toLowerCase().includes(searchTerm)
+          );
+        }
+
+        switch (currentSort) {
+          case "nameAsc":
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+          case "nameDesc":
+            filtered.sort((a, b) => b.name.localeCompare(a.name));
+            break;
+          case "numberAsc":
+            filtered.sort((a, b) => (parseInt(a.number) || 0) - (parseInt(b.number) || 0));
+            break;
+          case "numberDesc":
+            filtered.sort((a, b) => (parseInt(b.number) || 0) - (parseInt(a.number) || 0));
+            break;
+          case "groupAsc":
+            filtered.sort(
+              (a, b) => a.folder.localeCompare(b.folder) || a.name.localeCompare(b.name)
+            );
+            break;
+        }
+
+        return filtered;
+      }
+
+      function applyFilterAndRender() {
+        filteredCharacters = getFilteredAndSorted();
+        if (displayedCount > filteredCharacters.length) {
+          displayedCount = filteredCharacters.length;
+        }
+        renderedCount = 0;
+        renderGrid(false);
+      }
+
+      function firstLetter(name) {
+        return (name.match(/[a-z0-9]/i) || ["?"])[0].toUpperCase();
+      }
+
+      // Placeholder local para personagem sem arte: monograma na cor da categoria
+      function placeholderHTML(theme, initial, icon, label) {
+        return `<div class="thumb-placeholder" style="--group-color:${theme.color};"><span class="ph-icon">${icon}</span><span class="ph-initial">${initial}</span><span class="ph-label">${label}</span></div>`;
+      }
+
+      // ===== Picture helper (WebP com fallback PNG) =====
+      // Quando a API expõe imageWebp, gera um <picture> com 2 sources.
+      // Caso contrário, devolve um <img> simples apontando pro PNG.
+      // §1.3 — injeta width/height intrínsecos (CLS=0) e aceita srcPrefix
+      // ("data-" troca src por data-src/data-srcset, gateado por LazyImgObserver).
+      // attrs: livre, vai pro <img> (alt, loading, fetchpriority, onerror, etc.).
+      const LAZY_DIMS = { w: 1024, h: 1024 }; // aspect-ratio 1/1 do .thumb (CSS sobrepõe 100%)
+      function pictureHTML(char, attrs = "", srcPrefix = "") {
+        if (!char.image) return "";
+        const srcAttr = srcPrefix + "src";
+        const srcsetAttr = srcPrefix + "srcset";
+        const w = char.width || LAZY_DIMS.w;
+        const h = char.height || LAZY_DIMS.h;
+        if (char.imageWebp) {
+          return `<picture>
+            <source ${srcsetAttr}="${char.imageWebp}" type="image/webp" width="${w}" height="${h}">
+            <img ${srcAttr}="${char.image}" alt="${char.name || ""}" ${attrs} width="${w}" height="${h}">
+          </picture>`;
+        }
+        return `<img ${srcAttr}="${char.image}" alt="${char.name || ""}" ${attrs} width="${w}" height="${h}">`;
+      }
+
+      window.cardImgError = function (img) {
+        const wrap = img.closest(".thumb");
+        if (!wrap || wrap.querySelector(".thumb-placeholder")) return;
+        const ph = document.createElement("div");
+        ph.className = "thumb-placeholder";
+        ph.innerHTML = `<span class="ph-icon">${img.dataset.icon || "📖"}</span><span class="ph-initial">${img.dataset.initial || "?"}</span><span class="ph-label">${img.dataset.glabel || ""}</span>`;
+        img.replaceWith(ph);
+      };
+      // Exposição mínima para testes E2E (lazy-check.mjs usa srcPrefix="data-"
+      // pra provar que o gate é aplicado no HTML estático).
+      window.pictureHTML = pictureHTML;
+
+      function cardHTML(c, index) {
+        const charId = c.id || c.name;
+        const theme = getGroupTheme(c.folder);
+        const isFav = isFavorite(charId);
+        const initial = firstLetter(c.name);
+        const groupLabel = prettyGroup(c.folder);
+        // §1.3 — 3 zonas de lazy-load:
+        //   0-5  : above the fold → eager + fetchpriority=high
+        //   6-17 : perto do fold → loading=lazy nativo (browser faz o gate até 300px)
+        //   18+  : longe do fold → src vira data-src, gateado por LazyImgObserver
+        //          (rootMargin 500px = prefetch no momento que o user começa a rolar)
+        const isEager = index < 6;
+        const isNativeLazy = !isEager && index < 18;
+        const isGated = !isEager && !isNativeLazy;
+        const loadAttrs = isEager
+          ? `loading="eager" fetchpriority="high" decoding="async"`
+          : isNativeLazy
+          ? `loading="lazy" decoding="async"`
+          : `decoding="async"`;
+        // data-initial/data-icon/data-glabel ficam em data-* (independentes do src)
+        const dataAttrs = `data-initial="${initial}" data-icon="${theme.icon}" data-glabel="${groupLabel}"`;
+        const media = c.image
+          ? pictureHTML(
+              c,
+              `${loadAttrs} ${dataAttrs} onerror="cardImgError(this)"`,
+              isGated ? "data-" : ""
+            )
+          : placeholderHTML(theme, initial, theme.icon, groupLabel);
+        return `
+            <article class="character-card ${isFav ? "is-fav" : ""}" data-char-id="${charId}" style="animation-delay:${(index % 10) * 55}ms; --group-color:${theme.color};--group-ink:${bestInk(theme.color)};">
+              <a class="card-link" data-card-link tabindex="0" href="#char/${charId}" aria-label="Ver detalhes de ${c.name}">
+                <div class="thumb">
+                  ${media}
+                  <div class="card-foil" aria-hidden="true"></div>
+                  <span class="fav-indicator" aria-hidden="true">♥</span>
+                  <div class="thumb-overlay">
+                    <span class="view-text">Ver detalhes</span>
+                  </div>
+                </div>
+                <div class="info">
+                  <div class="name">${c.name}</div>
+                  <div class="title">${c.title || ""}</div>
+                  <span class="epithet" aria-label="Classificação: ${groupLabel}">${groupLabel}</span>
+                  <span class="race-seal" aria-hidden="true" style="--group-color:${theme.color};"><svg width="22" height="22" viewBox="0 0 128 128" aria-hidden="true"><use href="assets/brand/aetheria-seal.svg#seal"/></svg></span>
+                </div>
+              </a>
+              <button class="fav-btn" data-char-id="${charId}" aria-label="Favoritar ${c.name}">♥</button>
+              <a class="badge" href="racas/${slugify(c.folder)}.html" title="Ver página da raça ${groupLabel}" onclick="event.stopPropagation()"><span class="g-icon">${theme.icon}</span> ${groupLabel}</a>
+              <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span><span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+            </article>
+          `;
+      }
+
+      function renderGrid(append) {
+        const total = filteredCharacters.length;
+        const visibleItems = filteredCharacters.slice(0, displayedCount);
+
+        resultCount.textContent = `${total} personagens`;
+
+        if (total === 0) {
+          // Estado vazio com sugestões clicáveis (sempre acessível sem JS de reveal).
+          // §4.2 — em vez de 1 raça aleatória, sugerimos as 3 raças mais populosas
+          // do codex (maior chance de o usuário achar algo que curte). O selectedGroup
+          // (se setado) é filtrado — não sugerimos a raça que ele já está vendo vazia.
+          const candidatas = groups
+            .filter((g) => g.id !== (selectedGroup === "__all__" ? null : selectedGroup))
+            .slice()
+            .sort((a, b) => (b.count || 0) - (a.count || 0))
+            .slice(0, 3);
+          const topRaces = candidatas
+            .map((g) => {
+              const t = getGroupTheme(g.id);
+              return `<button class="empty-chip" data-action="race" data-group="${g.id}" type="button" style="--group-color:${t.color};--group-ink:${bestInk(t.color)}">${t.icon} ${escapeHTML(g.label || g.id)} (${g.count || 0})</button>`;
+            })
+            .join("");
+          grid.innerHTML = `
+            <div class="empty-state">
+              <span class="empty-icon">🧭</span>
+              <p class="empty-title">Nenhum personagem encontrado${
+                searchTerm ? ` para <em>“${escapeHTML(searchTerm)}”</em>` : ""
+              }</p>
+              <p class="empty-hint">${selectedGroup && selectedGroup !== "__all__" ? themeMicro(selectedGroup, "empty") || "Tente um destes caminhos" : "Tente um destes caminhos"}</p>
+              <div class="empty-suggestions">
+                ${
+                  searchTerm
+                    ? `<button class="empty-chip" data-action="clear" type="button">🧹 Limpar a busca</button>`
+                    : ""
+                }
+                <button class="empty-chip" data-action="fav" type="button">♥ Ver favoritos</button>
+                ${topRaces}
+              </div>
+            </div>`;
+          grid.querySelectorAll(".empty-chip").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              if (btn.dataset.action === "clear") clearAllFilters();
+              else if (btn.dataset.action === "fav") favoritesToggle.click();
+              else if (btn.dataset.action === "race") selectGroup(btn.dataset.group);
+            });
+          });
+          loadMoreWrap.innerHTML = "";
+          return;
+        }
+
+        // append=true insere só os cards novos — a grade já visível
+        // não é reanimada (sem flash no "Carregar mais")
+        const start = append ? renderedCount : 0;
+        if (!append) grid.innerHTML = "";
+        let html = "";
+        visibleItems.forEach((c, index) => {
+          if (index < start) return;
+          html += cardHTML(c, index);
+        });
+        grid.insertAdjacentHTML("beforeend", html);
+        // §1.3 — gate das <img data-src> que entraram agora (cards 18+).
+        // setupLazyImages é no-op se já foram observadas (re-render no append
+        // só insere as novas). unobserve dentro do callback garante 1 fetch por img.
+        if (typeof setupLazyImages === "function") setupLazyImages(grid);
+        renderedCount = visibleItems.length;
+
+        updateFavButtons();
+
+        if (displayedCount < total) {
+          loadMoreWrap.innerHTML = `<button class="load-more-btn" id="loadMoreBtn">Carregar mais (${total - displayedCount} restantes)</button>`;
+          document.getElementById("loadMoreBtn").addEventListener("click", () => {
+            displayedCount += LOAD_MORE_BATCH;
+            renderGrid(true);
+          });
+        } else {
+          loadMoreWrap.innerHTML = "";
+        }
+      }
+
+      // ============================================================
+      //  LAZY-IMG OBSERVER (§1.3) — gate por IO das <img data-src>
+      //  dos cards 18+ (zona fora do fold). 500px = 1.66× o threshold
+      //  nativo de loading=lazy (300px), começando o fetch no momento
+      //  que o user inicia o scroll. Sem IO = no-op (cards 18+ ficam
+      //  com src='' até o user usar o botão "Carregar mais" — graceful
+      //  degradation). Sem reduced-motion = mesma coisa (a11y sagrado).
+      // ============================================================
+      let setupLazyImages = null;
+      if ("IntersectionObserver" in window && !reducedMotion) {
+        const lazyImgObserver = new IntersectionObserver(
+          (entries, obs) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              const img = e.target;
+              const src = img.dataset.src;
+              const srcset = img.dataset.srcset;
+              if (srcset) img.srcset = srcset;
+              if (src) img.src = src;
+              img.removeAttribute("data-src");
+              img.removeAttribute("data-srcset");
+              obs.unobserve(img);
+            }
+          },
+          { rootMargin: "500px 0px" }
+        );
+        setupLazyImages = (container) => {
+          if (!container) return;
+          container.querySelectorAll("img[data-src]").forEach((img) => {
+            // já observado? (re-render não duplica) — checa via flag
+            if (img.dataset.lazyObserved) return;
+            img.dataset.lazyObserved = "1";
+            lazyImgObserver.observe(img);
+          });
+        };
+      }
+
+      // ============================================================
+      //  AUTO-LOAD — sentinel carrega o próximo lote ao aproximar do
+      //  fim (o botão "Carregar mais" permanece como fallback/a11y e
+      //  é o único caminho com prefers-reduced-motion ou sem IO)
+      // ============================================================
+      if ("IntersectionObserver" in window && !reducedMotion) {
+        const autoLoader = new IntersectionObserver(
+          (entries) => {
+            if (
+              entries.some((e) => e.isIntersecting) &&
+              displayedCount < filteredCharacters.length &&
+              !document.querySelector("#modal.open")
+            ) {
+              displayedCount += LOAD_MORE_BATCH;
+              renderGrid(true);
+            }
+          },
+          { rootMargin: "900px 0px" }
+        );
+        autoLoader.observe(document.getElementById("loadSentinel"));
+      }
+
+      // ============================================================
+      //  RODAPÉ — voltar ao topo (link do footer complementa o botao flutuante)
+      // ============================================================
+      document.getElementById("backToTopFooter")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: reducedMotion ? "auto" : "smooth"
+        });
+      });
+
+      // ============================================================
+      //  DIALOG "SOBRE" — informacoes do projeto
+      // ============================================================
+      const aboutDialog = document.getElementById("aboutDialog");
+      const aboutLink = document.getElementById("aboutLink");
+      const aboutClose = aboutDialog?.querySelector(".about-close");
+      if (aboutDialog && aboutLink) {
+        aboutLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          // preenche com contagens vivas (caso o JSON atualize)
+          const chars = document.getElementById("aboutChars");
+          const races = document.getElementById("aboutRaces");
+          if (chars) chars.textContent = allCharacters.length;
+          if (races) races.textContent = groups.length;
+          if (typeof aboutDialog.showModal === "function") {
+            aboutDialog.showModal();
+          } else {
+            // fallback navegador antigo: usa o atributo open
+            aboutDialog.setAttribute("open", "");
+          }
+        });
+        aboutClose?.addEventListener("click", () => aboutDialog.close());
+        // Esc fecha (dialog ja faz isso, mas reforcamos pra fallback)
+        aboutDialog.addEventListener("click", (e) => {
+          if (e.target === aboutDialog) aboutDialog.close();
+        });
+      }
+
+      // ============================================================
+      //  ONBOARDING PRIMEIRA VISITA (plano §4.3)
+      // ============================================================
+      // 4 passos, persistido em localStorage.aetheria.onboarded. Se a versão
+      // dos passos mudar, re-mostra. Respeita prefers-reduced-motion (CSS
+      // desliga a animação). Nunca aparece no smoke (headless) porque o
+      // teste injeta localStorage.onboarded antes do load.
+      (function initOnboarding() {
+        const STORAGE_KEY = "aetheria.onboarded";
+        const VERSION = "1";
+        const overlay = document.getElementById("onboardOverlay");
+        if (!overlay) return;
+
+        // ja viu o onboarding desta versao? sai em silencio
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+          if (saved && saved.version === VERSION) return;
+        } catch (_) {
+          /* localStorage indisponivel - mostra */
+        }
+
+        // preenche contagens vivas (caso o JSON atualize entre sessoes)
+        const oc = document.getElementById("onboardChars");
+        const or = document.getElementById("onboardRaces");
+        if (oc && typeof allCharacters !== "undefined" && allCharacters.length) {
+          oc.textContent = allCharacters.length;
+        }
+        if (or && groups && groups.length) {
+          or.textContent = groups.length;
+        }
+
+        const steps = overlay.querySelectorAll(".onboard-step");
+        const dots = overlay.querySelectorAll(".onboard-dots button");
+        const prevBtn = document.getElementById("onboardPrev");
+        const nextBtn = document.getElementById("onboardNext");
+        const skipBtn = document.getElementById("onboardSkip");
+        const TOTAL = steps.length;
+        let current = 0;
+        let lastFocus = null;
+
+        function show(i) {
+          if (i < 0) i = 0;
+          if (i >= TOTAL) {
+            close(true);
+            return;
+          }
+          current = i;
+          steps.forEach((s, idx) => s.classList.toggle("is-active", idx === i));
+          dots.forEach((d, idx) => {
+            d.classList.toggle("is-active", idx === i);
+            d.setAttribute("aria-selected", idx === i ? "true" : "false");
+          });
+          prevBtn.disabled = i === 0;
+          prevBtn.style.visibility = i === 0 ? "hidden" : "visible";
+          nextBtn.textContent = i === TOTAL - 1 ? "Começar a explorar" : "Próximo";
+        }
+
+        function persist() {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: VERSION, at: Date.now() }));
+          } catch (_) {}
+        }
+
+        function open() {
+          lastFocus = document.activeElement;
+          overlay.hidden = false;
+          show(0);
+          (skipBtn || nextBtn).focus();
+        }
+
+        function close(advance) {
+          overlay.hidden = true;
+          if (advance) persist();
+          if (lastFocus && typeof lastFocus.focus === "function") {
+            try {
+              lastFocus.focus();
+            } catch (_) {}
+          }
+        }
+
+        prevBtn?.addEventListener("click", () => show(current - 1));
+        nextBtn?.addEventListener("click", () => {
+          if (current === TOTAL - 1) close(true);
+          else show(current + 1);
+        });
+        // Pular/Esc/backdrop tambem persistem — senao o overlay persegue o
+        // usuario em cada reload ate ele clicar "Comecar a explorar"
+        skipBtn?.addEventListener("click", () => close(true));
+        dots.forEach((d) => {
+          d.addEventListener("click", () => show(parseInt(d.dataset.go, 10) || 0));
+        });
+
+        // Esc fecha (e marca como visto)
+        document.addEventListener("keydown", (e) => {
+          if (overlay.hidden) return;
+          if (e.key === "Escape") {
+            e.preventDefault();
+            e.stopPropagation();
+            close(true);
+          }
+        });
+
+        // Click no backdrop fecha
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) close(true);
+        });
+
+        // expõe para testes e devtools
+        window.__AETHERIA_OPEN_ONBOARD = open;
+        window.__AETHERIA_RESET_ONBOARD = function () {
+          try {
+            localStorage.removeItem(STORAGE_KEY);
+          } catch (_) {}
+        };
+
+        // Dispara no proximo frame (deixa loadData pintar a grade antes)
+        requestAnimationFrame(() => requestAnimationFrame(open));
+      })();
+
+      // ============================================================
+      //  MODAL
+      // ============================================================
+      let lastFocusedElement = null;
+
+      function openModal(char) {
+        currentModalChar = char;
+        lastFocusedElement = document.activeElement;
+        const theme = getGroupTheme(char.folder);
+        const charKey = char.slug || char.id || char.name;
+        // Identidade da raça no painel inteiro (glow, filete, marca d'água)
+        modalPanel.style.setProperty("--group-color", theme.color);
+        modalPanel.style.setProperty("--group-ink", bestInk(theme.color));
+        modalPanel.style.setProperty("--group-icon", `"${theme.icon}"`);
+        modalMeta.textContent = `${theme.icon} ${prettyGroup(char.folder)}`;
+        modalMeta.style.setProperty("--group-color", theme.color);
+        // Contador de posição na lista filtrada atual
+        const idx = filteredCharacters.indexOf(char);
+        modalCounter.textContent = idx >= 0 ? `${idx + 1} / ${filteredCharacters.length}` : "";
+        // Deep-link compartilhável por personagem (#<id>)
+        history.replaceState(null, "", "#" + encodeURIComponent(charKey));
+        // link para a página dedicada da raça (gerada por build_racas.ps1)
+        modalRaceLink.href = `racas/${slugify(char.folder)}.html`;
+        fillRaceLore(char.folder);
+        splitReveal(modalName, char.name);
+        modalTitle.textContent = char.title || "";
+        modalNumber.textContent = char.number || "--";
+        modalFolder.textContent = `📁 ${prettyGroup(char.folder)}`;
+        // Marcador de página — folha do códice
+        const markEl = document.createElement("span");
+        markEl.className = "manuscript-mark";
+        markEl.setAttribute("aria-label", "Folha do códice: " + char.name);
+        markEl.textContent = "✦ Folha do Códice";
+        const infoDiv = document.getElementById("modalInfo");
+        if (infoDiv && !infoDiv.querySelector(".manuscript-mark")) infoDiv.prepend(markEl);
+        if (char.image) {
+          modalImage.style.display = "";
+          modalMediaPh.hidden = true;
+          // WebP-first com fallback automatico via onerror
+          modalImage.dataset.fallback = char.image;
+          modalImage.src = char.imageWebp || char.image;
+          modalMedia.classList.remove("is-zoomed");
+        } else {
+          showModalPlaceholder(char, theme);
+        }
+        modalImage.alt = char.name;
+        resetTilt();
+        modalDescription.textContent = char.description || "Nenhuma descrição disponível.";
+        renderSheet(char);
+        modalFavBtn.classList.toggle("active", isFavorite(char.id || char.name));
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        // §2.3 — atualiza meta tags (title, og:*, twitter:*) pro char aberto
+        updateMetaTagsForChar(char);
+        modalClose.focus();
+      }
+
+      function closeModal() {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        resetTilt();
+        currentModalChar = null;
+        // §2.3 — restaura meta tags genéricas ao fechar modal
+        restoreMetaTags();
+        // Restaura o hash dos filtros (a abertura do modal o trocou por #<personagem>)
+        syncURL(false);
+        if (lastFocusedElement && document.contains(lastFocusedElement)) {
+          lastFocusedElement.focus();
+        }
+      }
+
+      // ===== Share: copia URL canonica (#<id>) do personagem atual =====
+      const modalShare = document.getElementById("modalShare");
+      let shareResetTimer = null;
+      if (modalShare) {
+        modalShare.addEventListener("click", async () => {
+          if (!currentModalChar) return;
+          const url = `${location.origin}${location.pathname}#${encodeURIComponent(currentModalChar.id || currentModalChar.name)}`;
+          try {
+            if (navigator.share) {
+              // API nativa de share (mobile/desktop modernos)
+              await navigator.share({
+                title: `${currentModalChar.name} - Aetheria Codex`,
+                text: `${currentModalChar.title || currentModalChar.name} (${prettyGroup(currentModalChar.folder)})`,
+                url
+              });
+            } else {
+              await navigator.clipboard.writeText(url);
+              modalShare.classList.add("is-copied");
+              clearTimeout(shareResetTimer);
+              shareResetTimer = setTimeout(() => modalShare.classList.remove("is-copied"), 1500);
+            }
+          } catch (err) {
+            // usuario cancelou share ou clipboard bloqueado - silencioso
+          }
+        });
+      }
+
+      // Sem arte no modal: mostra o placeholder (também em erro de carga)
+      function showModalPlaceholder(char, theme) {
+        modalImage.style.display = "none";
+        modalImage.removeAttribute("src");
+        modalMediaPh.style.setProperty("--group-color", theme.color);
+        modalPhInitial.textContent = firstLetter(char.name);
+        modalPhLabel.textContent = prettyGroup(char.folder);
+        modalMediaPh.hidden = false;
+      }
+
+      modalImage.addEventListener("error", () => {
+        // Fallback: se o WebP falhou, tenta o PNG antes de virar placeholder
+        const img = modalImage;
+        if (img.dataset.fallback && img.src !== img.dataset.fallback) {
+          img.src = img.dataset.fallback;
+          return;
+        }
+        if (currentModalChar)
+          showModalPlaceholder(currentModalChar, getGroupTheme(currentModalChar.folder));
+      });
+
+      // ============================================================
+      //  MODAL FOLHEÁVEL — lore da raça, ficha completa, abas,
+      //  navegação ←→, copiar link, lightbox e focus trap
+      // ============================================================
+
+      // --- historia-api.json carregado em paralelo (lore das raças) ---
+      let historiaData = null;
+      (async () => {
+        try {
+          const r = await fetch(HISTORIA_API_URL);
+          if (r.ok) historiaData = await r.json();
+        } catch (_) {
+          /* sem lore (file:// ou arquivo ausente) — o modal funciona igual */
+        }
+      })();
+
+      function fillRaceLore(folder) {
+        const box = document.getElementById("raceLore");
+        const mapLink = document.getElementById("modalMapLink");
+        const info =
+          historiaData && Array.isArray(historiaData.races)
+            ? historiaData.races.find((r) => r.id === folder)
+            : null;
+        if (!info) {
+          box.hidden = true;
+          mapLink.hidden = true;
+          return;
+        }
+        document.getElementById("raceLoreTitle").textContent = "⚔ Lore · " + info.nome;
+        document.getElementById("raceLoreText").textContent = info.descricao || "";
+        // regioes pode virar string única no JSON (ex.: 04_Onis) — normaliza
+        const regioes = Array.isArray(info.regioes)
+          ? info.regioes
+          : info.regioes
+            ? [info.regioes]
+            : [];
+        const regNames = regioes
+          .map((rid) => {
+            const reg = (historiaData.regions || []).find((x) => x.id === rid);
+            return reg ? reg.nome : null;
+          })
+          .filter(Boolean);
+        const regEl = document.getElementById("raceLoreRegioes");
+        regEl.hidden = regNames.length === 0;
+        regEl.textContent = regNames.length ? "Regiões: " + regNames.join(" · ") : "";
+        box.hidden = false;
+        mapLink.hidden = false;
+      }
+
+      // --- título letra-a-letra (quebra por palavras p/ não partir nomes) ---
+      function splitReveal(el, text) {
+        if (reducedMotion || !text) {
+          el.textContent = text;
+          return;
+        }
+        el.textContent = "";
+        let ci = 0;
+        const words = text.split(" ");
+        words.forEach((word, wi) => {
+          const w = document.createElement("span");
+          w.className = "word";
+          for (const ch of word) {
+            const s = document.createElement("span");
+            s.className = "char";
+            s.style.setProperty("--ci", ci++);
+            s.textContent = ch;
+            w.appendChild(s);
+          }
+          el.appendChild(w);
+          if (wi < words.length - 1) el.appendChild(document.createTextNode(" "));
+        });
+      }
+
+      // --- ficha técnica: os 6 atributos ---
+      function escapeHTML(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;"
+            })[c]
+        );
+      }
+      const SHEET_FIELDS = [
+        ["race", "🧬", "Raça / Linhagem"],
+        ["physical", "💪", "Físico & Postura"],
+        ["faceAndHair", "👤", "Rosto & Cabelo"],
+        ["outfit", "🎽", "Vestuário"],
+        ["palette", "🎨", "Paleta de Cores"],
+        ["equipment", "⚔️", "Equipamento"]
+      ];
+      function renderSheet(char) {
+        sheetList.innerHTML = SHEET_FIELDS.map(([key, icon, label]) => {
+          const val = (char.attributes && char.attributes[key]) || "";
+          let body;
+          if (!val) {
+            body = "<em>Sem registro no códice.</em>";
+          } else if (key === "palette") {
+            const chips = val
+              .split(/\s*,\s*|\s+e\s+/i)
+              .map((t) => t.replace(/\s*[.;:]+\s*$/, "").trim())
+              .filter(Boolean);
+            body =
+              '<span class="palette-chips">' +
+              chips.map((t) => `<span>${escapeHTML(t)}</span>`).join("") +
+              "</span>";
+          } else {
+            body = escapeHTML(val);
+          }
+          return `<div class="sheet-item"><dt><span aria-hidden="true">${icon}</span>${label}</dt><dd>${body}</dd></div>`;
+        }).join("");
+      }
+
+      // --- abas História | Ficha ---
+      const tabHistoria = document.getElementById("tabHistoria");
+      const tabFicha = document.getElementById("tabFicha");
+      const paneHistoria = document.getElementById("paneHistoria");
+      const paneFicha = document.getElementById("paneFicha");
+      const sheetList = document.getElementById("sheetList");
+
+      function switchTab(which) {
+        const hist = which === "hist";
+        tabHistoria.classList.toggle("active", hist);
+        tabHistoria.setAttribute("aria-selected", String(hist));
+        tabFicha.classList.toggle("active", !hist);
+        tabFicha.setAttribute("aria-selected", String(!hist));
+        paneHistoria.hidden = !hist;
+        paneFicha.hidden = hist;
+      }
+      tabHistoria.addEventListener("click", () => switchTab("hist"));
+      tabFicha.addEventListener("click", () => switchTab("ficha"));
+
+      // --- navegação ←→ dentro da lista filtrada atual ---
+      function stepModal(delta) {
+        if (!currentModalChar || filteredCharacters.length < 2) return;
+        let idx = filteredCharacters.indexOf(currentModalChar);
+        if (idx < 0) idx = 0;
+        idx = (idx + delta + filteredCharacters.length) % filteredCharacters.length;
+        openModal(filteredCharacters[idx]);
+      }
+      document.getElementById("modalNavPrev").addEventListener("click", () => stepModal(-1));
+      document.getElementById("modalNavNext").addEventListener("click", () => stepModal(1));
+
+      // --- swipe touch: navega entre chars no mobile (setas nao dao tap) ---
+      // Reusa stepModal. 50px = gesto intencional, ignora toque acidental.
+      // So horizontal: |dy| > |dx| e vertical-scroll, ignora.
+      // {passive:true} = melhor perf mobile. lightbox (click) NAO conflita:
+      // navegador cancela o click quando o dedo move >~10px.
+      let _swipeX = 0,
+        _swipeY = 0;
+      const SWIPE_THRESHOLD = 50;
+      modalMedia.addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.touches.length !== 1) return;
+          _swipeX = e.touches[0].clientX;
+          _swipeY = e.touches[0].clientY;
+        },
+        { passive: true }
+      );
+      modalMedia.addEventListener(
+        "touchend",
+        (e) => {
+          if (e.changedTouches.length !== 1) return;
+          const dx = e.changedTouches[0].clientX - _swipeX;
+          const dy = e.changedTouches[0].clientY - _swipeY;
+          if (Math.abs(dx) < SWIPE_THRESHOLD) return;
+          if (Math.abs(dy) > Math.abs(dx)) return; // mais vertical que horizontal
+          stepModal(dx < 0 ? 1 : -1);
+        },
+        { passive: true }
+      );
+
+      // --- copiar o link direto do personagem ---
+      document.getElementById("modalShareBtn").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(location.href);
+          showToast("🔗 Link do personagem copiado!");
+        } catch (_) {
+          showToast("Não consegui copiar o link 😅");
+        }
+      });
+
+      // --- lightbox: clique na arte alterna cover ↔ contain ---
+      modalMedia.addEventListener("click", () => {
+        if (!currentModalChar || !modalMediaPh.hidden) return; // sem arte, nada p/ ampliar
+        modalMedia.classList.toggle("is-zoomed");
+      });
+
+      // --- focus trap: Tab cicla dentro do diálogo (não escapa mais) ---
+      // Listener em `document` (não em `modalPanel`) cobre o caso de o foco
+      // estar momentaneamente fora do panel — ex.: extensão que rouba foco,
+      // ou foco no body via deep-link. Guard `modalOpen` mantém custo zero
+      // quando o modal está fechado.
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Tab" || !modal.classList.contains("open")) return;
+        const focusables = [
+          ...modalPanel.querySelectorAll('button, a[href], [tabindex]:not([tabindex="-1"])')
+        ].filter((el) => !el.disabled && el.offsetParent !== null);
+        if (!focusables.length) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+
+      // ============================================================
+      //  TILT 3D NO MODAL (sem bibliotecas: CSS 3D + rAF)
+      //  A imagem inclina suavemente na direção do mouse e recebe
+      //  um brilho (glare) que acompanha o ponto de luz.
+      // ============================================================
+      const TILT_MAX = 6; // graus de inclinação máxima
+      const TILT_LERP = 0.12; // fator de suavização por frame
+
+      let tiltTx = 0,
+        tiltTy = 0; // alvo do mouse (-1..1)
+      let tiltCx = 0,
+        tiltCy = 0; // posição atual suavizada
+      let tiltRaf = null;
+
+      function tiltFrame() {
+        tiltCx += (tiltTx - tiltCx) * TILT_LERP;
+        tiltCy += (tiltTy - tiltCy) * TILT_LERP;
+        modalMedia.style.setProperty("--ry", `${(tiltCx * TILT_MAX).toFixed(2)}deg`);
+        modalMedia.style.setProperty("--rx", `${(-tiltCy * TILT_MAX).toFixed(2)}deg`);
+        modalGlare.style.setProperty("--gx", `${(50 + tiltCx * 32).toFixed(1)}%`);
+        modalGlare.style.setProperty("--gy", `${(50 + tiltCy * 32).toFixed(1)}%`);
+        if (Math.abs(tiltTx - tiltCx) > 0.001 || Math.abs(tiltTy - tiltCy) > 0.001) {
+          tiltRaf = requestAnimationFrame(tiltFrame);
+        } else {
+          tiltRaf = null;
+        }
+      }
+
+      function startTilt() {
+        if (tiltRaf === null) tiltRaf = requestAnimationFrame(tiltFrame);
+      }
+
+      function resetTilt() {
+        tiltTx = tiltTy = tiltCx = tiltCy = 0;
+        if (tiltRaf !== null) {
+          cancelAnimationFrame(tiltRaf);
+          tiltRaf = null;
+        }
+        modalMedia.classList.remove("is-tilting");
+        ["--rx", "--ry"].forEach((v) => modalMedia.style.removeProperty(v));
+        ["--gx", "--gy"].forEach((v) => modalGlare.style.removeProperty(v));
+      }
+
+      // Só ativa com mouse real e se o usuário não pediu menos movimento
+      if (
+        window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        modalMedia.addEventListener("mousemove", (e) => {
+          // placeholder (sem arte) não inclina
+          if (modalImage.style.display === "none") return;
+          const r = modalMedia.getBoundingClientRect();
+          tiltTx = ((e.clientX - r.left) / r.width) * 2 - 1;
+          tiltTy = ((e.clientY - r.top) / r.height) * 2 - 1;
+          modalMedia.classList.add("is-tilting");
+          startTilt();
+        });
+        modalMedia.addEventListener("mouseleave", () => {
+          tiltTx = 0;
+          tiltTy = 0;
+          modalMedia.classList.remove("is-tilting");
+          startTilt();
+        });
+      }
+
+      modalBg.addEventListener("click", closeModal);
+      modalClose.addEventListener("click", closeModal);
+      modalFavBtn.addEventListener("click", () => {
+        if (!currentModalChar) return;
+        const charId = currentModalChar.id || currentModalChar.name;
+        const nowFav = toggleFavorite(charId);
+        modalFavBtn.classList.toggle("active", nowFav);
+        updateFavButtons();
+        showToast(nowFav ? "Adicionado aos favoritos" : "Removido dos favoritos", {
+          color: getGroupTheme(currentModalChar.folder).color,
+          icon: "♥"
+        });
+        if (isFavoritesOnly && !nowFav) {
+          displayedCount = INITIAL_BATCH;
+          applyFilterAndRender();
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        const modalOpen = modal.classList.contains("open");
+        if (!modalOpen) return;
+        if (e.key === "Escape") closeModal();
+        else if (e.key === "ArrowRight") stepModal(1);
+        else if (e.key === "ArrowLeft") stepModal(-1);
+      });
+
+      // ============================================================
+      //  TEMA (DARK MODE)
+      // ============================================================
+      themeToggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        applyTheme(current === "dark" ? "light" : "dark");
+      });
+
+      (function initTheme() {
+        const saved = localStorage.getItem("theme");
+        if (saved) {
+          applyTheme(saved);
+        } else {
+          // 1ª visita: respeita a preferência do sistema
+          applyTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        }
+      })();
+
+      // ============================================================
+      //  MOTION (MODO SEM EFEITOS / NO-FX)  — §11.6 Q4/2026
+      // ============================================================
+      function applyNoFx(on) {
+        document.body.classList.toggle("no-fx", on);
+        noFxBtn.setAttribute("aria-pressed", on ? "true" : "false");
+        noFxBtn.title = on ? "Restaurar efeitos" : "Modo sem efeitos";
+      }
+
+      noFxBtn.addEventListener("click", () => {
+        const on = !document.body.classList.contains("no-fx");
+        applyNoFx(on);
+        try { localStorage.setItem("noFx", on ? "1" : "0"); } catch (e) {}
+        showToast(
+          on ? "Modo sem efeitos ativo" : "Efeitos restaurados",
+          { icon: "◑" }
+        );
+      });
+
+      // sincroniza aria-pressed com a classe que o script do <body> pode ter aplicado
+      (function initNoFx() {
+        applyNoFx(document.body.classList.contains("no-fx"));
+      })();
+
+      // ============================================================
+      //  CONTROLES DO CABEÇALHO (fixar/desafixar + rolagem de filtros)
+      // ============================================================
+      function applyHeaderPinned(pinned) {
+        document.body.classList.toggle("header-free", !pinned);
+        headerPin.classList.toggle("active", pinned);
+        headerPin.setAttribute("aria-pressed", String(pinned));
+        headerPin.title = pinned ? "Desafixar cabeçalho" : "Fixar cabeçalho";
+        localStorage.setItem("headerPinned", pinned ? "1" : "0");
+      }
+
+      headerPin.addEventListener("click", () => {
+        // livre -> fixa | fixo -> desafixa
+        applyHeaderPinned(document.body.classList.contains("header-free"));
+      });
+
+      applyHeaderPinned(localStorage.getItem("headerPinned") !== "0");
+
+      function updateFilterArrows() {
+        const el = filterContainer;
+        const overflow = el.scrollWidth - el.clientWidth > 4;
+        filtersScroller.classList.toggle("scrollable", overflow);
+        filtPrev.classList.toggle("show", overflow && el.scrollLeft > 4);
+        filtNext.classList.toggle(
+          "show",
+          overflow && el.scrollLeft < el.scrollWidth - el.clientWidth - 4
+        );
+      }
+
+      filtPrev.addEventListener("click", () => {
+        filterContainer.scrollBy({
+          left: -filterContainer.clientWidth * 0.8,
+          behavior: "smooth"
+        });
+      });
+
+      filtNext.addEventListener("click", () => {
+        filterContainer.scrollBy({
+          left: filterContainer.clientWidth * 0.8,
+          behavior: "smooth"
+        });
+      });
+
+      filterContainer.addEventListener("scroll", updateFilterArrows, {
+        passive: true
+      });
+      window.addEventListener("resize", updateFilterArrows);
+      window.addEventListener("load", updateFilterArrows);
+
+      // ============================================================
+      //  MICRO-COPY TEMÁTICO (Fase B) — mensagens por raça
+      // ============================================================
+      const MICRO_COPY = {
+        "01_Humanos": {
+          empty: "Nenhum humano encontrado neste codice.",
+          toast: "Civilizacao registrada."
+        },
+        "02_Mutantes": {
+          empty: "Nenhum mutante reage a esta busca.",
+          toast: "Gene anomalo catalogado."
+        },
+        "03_Ordens_E_Guerreiros": {
+          empty: "Nenhum guerreiro encontrado nesta terra.",
+          toast: "A ordem esta registrada."
+        },
+        "04_Onis": {
+          empty: "Nenhum oni respondeu a esta busca.",
+          toast: "Pacto de sangue selado."
+        },
+        "05_Demonios": {
+          empty: "Nenhum demonio despertou para este chamado.",
+          toast: "Invocacao contida."
+        },
+        "06_Desconhecidos": {
+          empty: "Nenhum Desconhecido deixou rastros aqui.",
+          toast: "Sombra catalogada."
+        },
+        "07_Gigantes": {
+          empty: "Nenhum gigante avistado nas montanhas.",
+          toast: "Passo retumbante registrado."
+        },
+        "08_Monstros": {
+          empty: "Nenhum monstro nas sombras.",
+          toast: "Mandibula selada."
+        },
+        "09_Semi_Deuses": {
+          empty: "Nenhum semideus desceu a este nivel.",
+          toast: "Aura divina reconhecida."
+        },
+        "10_Os_Observadores": {
+          empty: "Nenhum Observador revelou-se aqui.",
+          toast: "Vigilancia registrada."
+        },
+        "11_Seres_Do_Vazio": {
+          empty: "Nenhum ser do Vazio atravessou esta fronteira.",
+          toast: "Fenda selada."
+        },
+        "12_Magos": {
+          empty: "Nenhum mago deixou eco nesta busca.",
+          toast: "Feitico arquivado."
+        },
+        "13_Deuses": {
+          empty: "Nenhum Deus respondeu a este mortal.",
+          toast: "Oraculo registrado."
+        },
+        "14_Demonios_Do_Caos": {
+          empty: "Nenhum caos encontrado neste vazio.",
+          toast: "Fratura contida."
+        },
+        "15_Os_Aspectos": {
+          empty: "Nenhum Aspecto pronunciou sentenca aqui.",
+          toast: "Julgamento arquivado."
+        },
+        "16_Alvamortos": {
+          empty: "Nenhum Alvamorto retornou a este plano.",
+          toast: "Memoria preservada."
+        },
+        "17_Meio_Sangue": {
+          empty: "Nenhum sangue misto nesta busca.",
+          toast: "Duas metades unidas."
+        },
+        "18_Canibais": {
+          empty: "Nenhum canibal deixou rastro nesta terra.",
+          toast: "Caca interrompida."
+        },
+        "19_Barbaros": {
+          empty: "Nenhum barbaro nesta terra.",
+          toast: "Machado abaixado."
+        },
+        "20_Amaldiçoados": {
+          empty: "Nenhum amaldicoado foi tocado por esta busca.",
+          toast: "Maldicao contida."
+        },
+        "21_Demonios_Akuma-Gani": {
+          empty: "Nenhum Akuma-Gani respondeu a este chamado.",
+          toast: "Brasa apagada."
+        },
+        "22_Bersek": {
+          empty: "Nenhum Bersek foi encontrado nesta terra.",
+          toast: "Furia domada."
+        }
+      };
+      function themeMicro(groupKey, type) {
+        const entry = MICRO_COPY[groupKey] || MICRO_COPY[Object.keys(MICRO_COPY)[0]] || {};
+        return entry[type] || entry.empty || entry.toast || "";
+      }
+      // ============================================================
+      //  CODEX COMPLETO (Fase D) — progresso de exploração local
+      // ============================================================
+      (function initCodexComplete() {
+        const btn = document.getElementById("codexBtn");
+        if (!btn) return;
+        btn.addEventListener("click", () => {
+          let visited = JSON.parse(localStorage.getItem("visitedRaces") || "[]");
+          const group = selectedGroup && selectedGroup !== "__all__" ? selectedGroup : null;
+          if (group && !visited.includes(group)) {
+            visited.push(group);
+            localStorage.setItem("visitedRaces", JSON.stringify(visited));
+          }
+          const total = groups.length || 22;
+          const progress = visited.length;
+          showToast(`Codex Completo: ${progress}/${total} raças exploradas`, {
+            icon: "📖"
+          });
+        });
+      })();
+
+      // ============================================================
+      //  CARTÃO COMPARTILHÁVEL (Fase D) — canvas PNG do card atual
+      // ============================================================
+      document.getElementById("modalShareBtn").addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(location.href);
+          showToast("🔗 Link do personagem copiado!");
+        } catch (_) {
+          showToast("Não consegui copiar o link 😅");
+        }
+      });
+      // Botão extra no modal: gerar cartão PNG
+      const shareBtn = document.getElementById("modalShareBtn");
+      if (shareBtn) {
+        const cardBtn = document.createElement("button");
+        cardBtn.type = "button";
+        cardBtn.className = "hero-cta ghost";
+        cardBtn.style.marginTop = "0.5rem";
+        cardBtn.textContent = "📇 Gerar cartão PNG";
+        cardBtn.addEventListener("click", () => {
+          if (!currentModalChar) return;
+          const c = document.createElement("canvas");
+          c.width = 400;
+          c.height = 220;
+          const ctx = c.getContext("2d");
+          ctx.fillStyle = "#1d1916";
+          ctx.fillRect(0, 0, 400, 220);
+          const theme = getGroupTheme(currentModalChar.folder);
+          ctx.fillStyle = theme.color || "#e3491b";
+          ctx.fillRect(0, 0, 400, 6);
+          ctx.fillStyle = "#f0ece4";
+          ctx.font = "bold 22px 'Fraunces', serif";
+          ctx.fillText(currentModalChar.name, 20, 55);
+          ctx.font = "14px 'Space Grotesk', sans-serif";
+          ctx.fillStyle = "#b8b0a4";
+          ctx.fillText(currentModalChar.title || theme.label, 20, 80);
+          ctx.fillStyle = "#b8b0a4";
+          ctx.font = "12px 'Space Grotesk', sans-serif";
+          ctx.fillText("Aetheria Codex · " + new Date().getFullYear(), 20, 105);
+          const a = document.createElement("a");
+          a.href = c.toDataURL("image/png");
+          a.download = currentModalChar.name + "_card.png";
+          a.click();
+          showToast("📇 Cartão PNG gerado!", { icon: "📇" });
+        });
+        shareBtn.parentNode.appendChild(cardBtn);
+
+        // §4.4 — Botão "📋 Embed": copia um <iframe> pronto pra colar em blog.
+        // Mesmo padrão visual do cardBtn (hero-cta ghost), agrupando as 2
+        // ações "conteúdo" do modal (PNG + HTML).
+        const embedBtn = document.createElement("button");
+        embedBtn.type = "button";
+        embedBtn.className = "hero-cta ghost";
+        embedBtn.style.marginTop = "0.5rem";
+        embedBtn.id = "embedBtn";
+        embedBtn.textContent = "📋 Embed";
+        embedBtn.title = "Copiar um <iframe> pronto pra colar em blog";
+        embedBtn.addEventListener("click", async () => {
+          if (!currentModalChar) return;
+          const charKey = currentModalChar.slug || currentModalChar.id || currentModalChar.name;
+          const src = `${location.origin}${location.pathname}#${encodeURIComponent(charKey)}`;
+          const safeTitle = escapeHTML(currentModalChar.name);
+          const html = `<iframe src="${src}" width="400" height="500" frameborder="0" style="border-radius:8px;border:0" loading="lazy" title="${safeTitle} — Aetheria Codex"></iframe>`;
+          try {
+            await navigator.clipboard.writeText(html);
+            showToast("📋 Embed copiado!");
+          } catch (_) {
+            showToast("Não consegui copiar o embed 😅");
+          }
+        });
+        shareBtn.parentNode.appendChild(embedBtn);
+      }
+
+      // ============================================================
+      //  INICIALIZAÇÃO
+      // ============================================================
+      // Carrega temas ANTES de loadData() para que createFilterButtons()
+      // (chamado dentro do loadData) já tenha as cores/ícones certas.
+      // Em file:// ou offline, groupThemes fica vazio e getGroupTheme()
+      // retorna o fallback genérico — não quebra, só perde cor/ícone
+      // até a próxima carga online.
+      loadThemes().finally(() => loadData());
+    </script>
+    <script src="assets/rituals.js"></script>
+    <script src="assets/transitions.js"></script>
+    <script>
+      // ============================================================
+      //  PWA — botão "📲 Instalar" (plano §3.3)
+      // ============================================================
+      // Fluxo:
+      //  - Chromium/Android/Desktop dispara `beforeinstallprompt` → guardamos o
+      //    evento, mostramos o botão, e chamamos .prompt() no clique.
+      //  - iOS Safari NÃO dispara o evento; detectamos standalone e oferecemos
+      //    um toast com passo-a-passo (Compartilhar → Adicionar à Tela de Início).
+      //  - Já instalado (display-mode: standalone) → botão fica oculto.
+      //  - `appinstalled` → some o botão e mostra confirmação.
+      (function installPwa() {
+        const btn = document.getElementById("installBtn");
+        if (!btn) return;
+
+        // Já está rodando como app? Some o botão pra sempre.
+        const isStandalone =
+          window.matchMedia && window.matchMedia("(display-mode: standalone)").matches;
+        const isIOSStandalone = window.navigator.standalone === true;
+        if (isStandalone || isIOSStandalone) {
+          btn.hidden = true;
+          return;
+        }
+
+        // Detecção iOS (sem beforeinstallprompt)
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+
+        let deferredPrompt = null;
+
+        window.addEventListener("beforeinstallprompt", (e) => {
+          // Chrome exige preventDefault para disparar o prompt depois
+          e.preventDefault();
+          deferredPrompt = e;
+          btn.hidden = false;
+        });
+
+        window.addEventListener("appinstalled", () => {
+          btn.hidden = true;
+          deferredPrompt = null;
+          if (typeof showToast === "function") {
+            showToast("📲 Aetheria Codex instalado!", { icon: "📲" });
+          }
+        });
+
+        btn.addEventListener("click", async () => {
+          // Caminho Chromium: prompt nativo
+          if (deferredPrompt) {
+            btn.hidden = true;
+            deferredPrompt.prompt();
+            try {
+              const choice = await deferredPrompt.userChoice;
+              if (choice && choice.outcome === "accepted" && typeof showToast === "function") {
+                showToast("📲 Instalando Aetheria Codex…", { icon: "📲" });
+              }
+            } catch (_) {
+              // usuário cancelou ou erro do browser — restaura o botão
+              btn.hidden = false;
+            } finally {
+              deferredPrompt = null;
+            }
+            return;
+          }
+          // Caminho iOS: instrução via toast (Safari não tem prompt nativo)
+          if (isIOS && isSafari && typeof showToast === "function") {
+            showToast(
+              "No iPhone/iPad: toque em Compartilhar (↑) e escolha “Adicionar à Tela de Início”.",
+              { icon: "📲", duration: 7000 }
+            );
+            return;
+          }
+          // Desktop sem suporte (Firefox, etc.)
+          if (typeof showToast === "function") {
+            showToast(
+              "Seu navegador não suporta instalação direta. Use Chrome, Edge ou Safari para instalar.",
+              { icon: "📲", duration: 6000 }
+            );
+          }
+        });
+      })();
+
+      // registro do Service Worker (PWA)
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./sw.js")
+            .then((reg) => console.log("[SW] registrado:", reg.scope))
+            .catch((err) => console.warn("[SW] falhou:", err));
+        });
+      }
+    </script>
+
+  <script src="assets/page-entry.js" defer></script>
+  </body>
+</html>
