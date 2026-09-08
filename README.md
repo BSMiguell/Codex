@@ -669,7 +669,7 @@ Para compreender completamente este projeto, leia os seguintes arquivos na ordem
 
 ## ðŸŒ Link Publicado
 
-Site publicado: https://bsmiguell.github.io/Temporario/
+Site publicado: https://bsmiguell.github.io/Codex/
 Sitemap: https://bsmiguell.github.io/Temporario/sitemap.xml
 
 ---
