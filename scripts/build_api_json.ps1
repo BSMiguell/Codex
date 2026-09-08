@@ -131,7 +131,7 @@ foreach ($d in $dirs) {
     $webpCount = @(Get-ChildItem -LiteralPath $d.FullName -File -Filter '*.webp').Count
     $pngCount = @(Get-ChildItem -LiteralPath $d.FullName -File -Filter '*.png').Count
     $foldersWithoutSheet.Add("$($d.Name) ($webpCount WebP, $pngCount PNG, nenhuma ficha)")
-    Write-Warning ("Pasta '{0}' tem {1} WebP(s) e {2} PNG(s) mas NENHUM arquivo Aetheria_Codex_de_*.md — personagens sem ficha ficam fora do site." -f $d.Name, $webpCount, $pngCount)
+    Write-Warning ("Pasta '{0}' tem {1} WebP(s) e {2} PNG(s) mas NENHUM arquivo Aetheria_Codex_de_*.md - personagens sem ficha ficam fora do site." -f $d.Name, $webpCount, $pngCount)
     continue
   }
 
@@ -178,7 +178,7 @@ foreach ($d in $dirs) {
     if ($imagePng) { $image = $imagePng }
     elseif ($imageWebp) { $image = $imageWebp }
     else {
-      Write-Warning ("SEM IMAGEM: '$baseName' em '$($d.Name)' — ficha mantida na API com image=null")
+      Write-Warning ("SEM IMAGEM: '$baseName' em '$($d.Name)' - ficha mantida na API com image=null")
     }
 
     $attributes = [ordered]@{}
