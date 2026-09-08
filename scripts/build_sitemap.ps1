@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..")).TrimEnd("\")
-$base = "https://bsmiguell.github.io/Temporario"
+$base = "https://bsmiguell.github.io/Codex"
 $now  = (Get-Date).ToString("yyyy-MM-dd")
 
 # Pega mtime de cada HTML para lastmod (mais fiel que um unico stamp)
