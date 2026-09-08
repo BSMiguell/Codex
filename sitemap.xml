@@ -1,139 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/</loc>
+    <loc>https://bsmiguell.github.io/Codex/</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/alvamortos.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/alvamortos.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/amaldicoados.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/amaldicoados.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/barbaros.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/barbaros.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/bersek.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/bersek.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/canibais.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/canibais.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bsmiguell.github.io/Codex/racas/demonios.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/demonios.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/demoniosakumagani.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/demoniosakumagani.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/demoniosdocaos.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/demoniosdocaos.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/desconhecidos.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/desconhecidos.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/deuses.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/deuses.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/gigantes.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/gigantes.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/humanos.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/humanos.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/magos.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/magos.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/meiosangue.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/meiosangue.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/monstros.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/monstros.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/mutantes.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/mutantes.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/onis.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/onis.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/ordenseguerreiros.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/ordenseguerreiros.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/osaspectos.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/osaspectos.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/osobservadores.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/osobservadores.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/semideuses.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/semideuses.html</loc>
-    <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://bsmiguell.github.io/Temporario/racas/seresdovazio.html</loc>
+    <loc>https://bsmiguell.github.io/Codex/racas/seresdovazio.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
