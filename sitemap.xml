@@ -33,7 +33,6 @@
   <url>
     <loc>https://bsmiguell.github.io/Codex/racas/canibais.html</loc>
     <lastmod>2026-09-02</lastmod>
-    <changefreq>monthly</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -71,7 +70,7 @@
     <loc>https://bsmiguell.github.io/Codex/racas/gigantes.html</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.7
   </url>
   <url>
     <loc>https://bsmiguell.github.io/Codex/racas/humanos.html</loc>
