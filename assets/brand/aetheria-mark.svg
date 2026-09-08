@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-label="Marca Aetheria Codex" viewBox="0 0 128 128">
+  <title>Aetheria Codex — Marca</title>
+  <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="64" cy="64" r="50" fill="none" stroke-dasharray="280 40" stroke-dashoffset="10" stroke-width="1.5"/>
+    <ellipse cx="64" cy="64" fill="none" stroke-dasharray="4 3" stroke-width=".75" opacity=".7" rx="58" ry="20" transform="rotate(-18 64 64)"/>
+    <rect width="12" height="12" x="58" y="58" fill="none" rx="1"/>
+    <path stroke-width=".75" d="M58 64h12m-6-6v12"/>
+  </g>
+</svg>

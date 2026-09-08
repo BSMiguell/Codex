@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" aria-label="Rosa dos ventos" viewBox="0 0 80 80">
+  <title>Rosa dos ventos</title>
+  <g fill="none" stroke="currentColor" stroke-width=".75" opacity=".75">
+    <circle cx="40" cy="40" r="30"/>
+    <path d="M40 10v60M10 40h60M18 18l44 44m-44 0 44-44"/>
+    <circle cx="40" cy="40" r="4" fill="currentColor" stroke="none" opacity=".9"/>
+  </g>
+</svg>

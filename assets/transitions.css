@@ -1,0 +1,145 @@
+/* Aetheria Codex — Page-to-Page Directional Transitions (Q4/2026 §11.12 v5)
+ *
+ * Estratégia: Cross-document View Transitions API (Chrome 111+, 2026
+ * universal). O browser cuida do ciclo: snapshota a página A, faz nav
+ * hard, snapshota a B, e anima A saindo + B entrando em paralelo. Nós
+ * só definimos a DIREÇÃO via keyframes CSS que leem
+ * `data-transition-direction` do <html> (setado por page-entry.js no
+ * clique, baseado na posição espacial do <a>).
+ *
+ * Por que VT API e não SPA (cloneNode+replaceChild) — Lição 20ª (05/09):
+ *   VT API é mantida pelo browser, ZERO re-exec de scripts. O problema
+ *   do v3 (const CARD_TILT_MAX has already been declared) some
+ *   completamente porque a página A é DESTRUIDA pelo browser antes de
+ *   a B existir, e a B é FRESH do disco.
+ *
+ * Por que VT API e não WAAPI — Lição 21ª (05/09):
+ *   WAAPI exige animar o body (ou outro elemento); animar `transform`
+ *   no body CRIA containing block e quebra todos os `position: fixed`
+ *   do site (.modal abria com 6924px em vez de 720px). VT API anima
+ *   pseudo-elementos do browser (::view-transition-old/new(root)) que
+ *   são renderizados fora da árvore do DOM — sem containing block.
+ *
+ * Direção (4 eixos) baseada em onde o <a> clicado estava na tela:
+ *   - link no terço superior    → A sai pra baixo, B entra de cima
+ *                                  (data-transition-direction="down")
+ *   - link no terço inferior    → A sai pra cima, B entra de baixo
+ *                                  (data-transition-direction="up")
+ *   - link na metade esquerda   → A sai pra esquerda, B entra da direita
+ *                                  (data-transition-direction="right")
+ *   - link na metade direita    → A sai pra direita, B entra da esquerda
+ *                                  (data-transition-direction="left")
+ *
+ * Fallback (browsers sem VT API — raro em 2026): simplesmente não há
+ * transição direcional. O page-entry.js tem um fallback de opacity
+ * no body pra dar pelo menos um fade-in.
+ *
+ * Respeita:
+ *   - body.no-fx: desativa TUDO (animation-duration: 0s)
+ *   - prefers-reduced-motion: idem
+ *
+ * Hierarquia: body.no-fx > prefers-reduced-motion > VT API default.
+ */
+
+/* 1) Ativa a feature no browser. Sem isso, o browser faz hard nav
+   normal sem transicionar. */
+@view-transition {
+  navigation: auto;
+}
+
+/* 2) Duração padrão. Curta pra não cansar. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  mix-blend-mode: normal;
+}
+
+/* 3) Direção "down" (link no topo → B entra de cima, A sai pra baixo).
+      old: sai da posição normal pra baixo (translateY 0 → 100%)
+      new: entra de cima (translateY -100% → 0) */
+html[data-transition-direction="down"]::view-transition-old(root) {
+  animation-name: vt-slide-out-down;
+}
+html[data-transition-direction="down"]::view-transition-new(root) {
+  animation-name: vt-slide-in-down;
+}
+
+/* 4) Direção "up" (link em baixo → B entra de baixo, A sai pra cima). */
+html[data-transition-direction="up"]::view-transition-old(root) {
+  animation-name: vt-slide-out-up;
+}
+html[data-transition-direction="up"]::view-transition-new(root) {
+  animation-name: vt-slide-in-up;
+}
+
+/* 5) Direção "right" (link à esquerda → B entra da direita, A sai pra esquerda). */
+html[data-transition-direction="right"]::view-transition-old(root) {
+  animation-name: vt-slide-out-left;
+}
+html[data-transition-direction="right"]::view-transition-new(root) {
+  animation-name: vt-slide-in-right;
+}
+
+/* 6) Direção "left" (link à direita → B entra da esquerda, A sai pra direita). */
+html[data-transition-direction="left"]::view-transition-old(root) {
+  animation-name: vt-slide-out-right;
+}
+html[data-transition-direction="left"]::view-transition-new(root) {
+  animation-name: vt-slide-in-left;
+}
+
+/* === Keyframes === */
+/* Direção "down": A sai pra BAIXO, B entra de CIMA */
+@keyframes vt-slide-out-down {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+@keyframes vt-slide-in-down {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(0); }
+}
+
+/* Direção "up": A sai pra CIMA, B entra de BAIXO */
+@keyframes vt-slide-out-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+@keyframes vt-slide-in-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* Direção "right": A sai pra ESQUERDA, B entra da DIREITA */
+@keyframes vt-slide-out-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+@keyframes vt-slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* Direção "left": A sai pra DIREITA, B entra da ESQUERDA */
+@keyframes vt-slide-out-right {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+@keyframes vt-slide-in-left {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+/* === Override de prefers-reduced-motion (kill switch global) === */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0s !important;
+  }
+}
+
+/* === Override de body.no-fx (toggle do usuário) === */
+body.no-fx::view-transition-old(root),
+body.no-fx::view-transition-new(root) {
+  animation-duration: 0s !important;
+}

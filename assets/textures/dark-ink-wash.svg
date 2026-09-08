@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 200 200">
+  <title>Mancha de tinta escura</title>
+  <path fill="#1a1714" d="M0 0h200v200H0z"/>
+  <filter id="a" width="100%" height="100%" x="0" y="0">
+    <feTurbulence baseFrequency=".7" numOctaves="5" result="noise" type="fractalNoise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" result="displaced" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <circle cx="100" cy="100" r="80" fill="#24201c" filter="url(#a)" opacity=".6"/>
+</svg>

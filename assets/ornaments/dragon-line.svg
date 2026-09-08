@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" aria-label="Ornamento de dragão" viewBox="0 0 300 60">
+  <title>Dragão linear oriental</title>
+  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.2" d="M10 30q50-20 110 0t120 0q40-10 50 0" opacity=".55"/>
+  <circle cx="120" cy="26" r="1.5" fill="currentColor" opacity=".7"/>
+</svg>
