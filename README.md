@@ -435,7 +435,7 @@ npm run format:check          # prettier --check . (CI mode)
 
 ## Resumo Por Categoria
 
-Total: **487 personagens** em **22 categorias** (API gerada em 2026-09-02).
+Total: **487 personagens** em **22 categorias** (API gerada em 2026-09-08).
 
 <details>
 <summary><strong>01_Humanos</strong> — 24 personagens <code>Aetheria_Codex_de_Humano.md</code></summary>
@@ -596,7 +596,7 @@ Ashura | Guts-V-1 | Kargan-V-1, o Portador do Voto Quebrado | Vhalor-V-1, o Devo
 ```json
 {
   "project": "Aetheria Codex",
-  "generatedAt": "2026-09-02",
+  "generatedAt": "2026-09-08",
   "totalGroups": 22,
   "totalCharacters": 487,
   "groups":  [ { "folder": "...", "file": "...", "count": N, "characters": [...] } ]
@@ -674,4 +674,4 @@ Sitemap: https://bsmiguell.github.io/Codex/sitemap.xml
 
 ---
 
-*Última geração: 08/09/2026 04:15 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
+*Última geração: 08/09/2026 04:28 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
