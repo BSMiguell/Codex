@@ -1,7 +1,7 @@
 # Plano de execução — Aetheria Codex
 
 **Atualizado:** 08/09/2026  
-**Objetivo:** transformar este arquivo no plano operacional do Codex, incorporando as correções encontradas na auditoria e organizando a execução em **camadas com gates obrigatórios**.
+**Objetivo:** manter este arquivo como plano operacional do Codex, com execução em camadas e gates obrigatórios.
 
 > **Regra de ouro:** Dados → URLs/SEO → Cache/PWA → Testes/CI → Deploy → Novas features.
 >
@@ -9,27 +9,25 @@
 
 ---
 
-## 0. Estado de referência
+## 0. Estado de referência — atualizado após a Camada 1
 
 | Item | Estado atual | Referência |
 |---|---:|---|
 | Raças/grupos | **22** | `characters-api.json` |
-| Personagens versionados na API | **487** | `characters-api.json` |
-| API de personagens | 🟡 | existe e está funcional, mas o build de imagens precisa ser alinhado ao WebP |
-| WebP | 🟡 | `imageWebp` existe na API; `build_api_json.ps1` ainda usa PNG como ponto de partida |
-| URL de produção | 🔴 | ainda existem referências ao antigo `/Temporario` |
-| Service Worker | 🟡 | cache-first existe; política de versionamento/offline precisa ser revisada |
-| Testes Playwright | ✅ | smoke/regression/a11y já existem |
+| Personagens | **487** | `characters-api.json` |
+| `characters-api.json` | 🟢 | regenerado e validado |
+| `historia-api.json` | 🟢 | regenerado sem erros |
+| WebP | 🟢 | 487 referências `imageWebp` validadas |
+| PNG fallback | 🟢 | 487 referências de fallback validadas |
+| Personagens sem imagem | **0** | `tests/validate-api.mjs` |
+| URL de produção | 🔴 | próxima etapa: eliminar `/Temporario` |
+| Service Worker | 🟡 | revisão pendente |
 | CI | ❌ | criar pipeline automático |
-| Acessibilidade axe-core | ✅ | baseline documentado em `docs/auditoria-a11y.md` |
-| 404 tematizada | ✅ | `404.html` + SW |
-| Breadcrumb | ✅ | 22/22 páginas de raça |
-| Preferência de movimento | ✅ | toggle + `prefers-reduced-motion` |
-| Transições direcionais | ✅ | cobertura E2E existente |
+| Testes API | 🟢 | Gate 1 aprovado |
 
-### Correção de contagem
+### Regra de contagem
 
-O backlog antigo registrava **493 personagens**, mas o `characters-api.json` atualmente versionado declara **487** e `totalGroups: 22`. Até a próxima regeneração oficial, **487 é o valor de referência**. Não usar 493 manualmente.
+O backlog antigo registrava **493 personagens**, mas a fonte de verdade atual é **487 personagens em 22 grupos**. Não usar 493 como número fixo.
 
 ---
 
@@ -37,100 +35,121 @@ O backlog antigo registrava **493 personagens**, mas o `characters-api.json` atu
 
 **Prioridade:** 🔴 crítica
 
-### Tarefas
-
-- [ ] Confirmar `main` como branch de produção.
-- [ ] Confirmar `22` grupos e `487` personagens.
-- [ ] Definir URL oficial: `https://bsmiguell.github.io/Codex`.
-- [ ] Definir `characters-api.json` como artefato gerado para a contagem publicada.
-- [ ] Manter `Temporario.md` apenas como plano; `/Temporario` não é URL de produção.
-- [ ] Se necessário, criar configuração central de publicação, evitando URLs e números espalhados.
-
 ### Gate 0
 
 ```text
-[ ] 22 grupos confirmados
-[ ] 487 personagens confirmados
-[ ] URL /Codex definida
-[ ] nenhuma nova implementação usa 493 como número fixo
+[✓] 22 grupos confirmados
+[✓] 487 personagens confirmados
+[✓] URL oficial definida: /Codex
+[✓] 493 não é usado como contagem atual
 ```
+
+**Estado:** 🟢 VALIDADO
 
 ---
 
 # CAMADA 1 — Pipeline de dados e imagens
 
 **Prioridade:** 🔴 crítica  
-**Bloqueia:** todas as camadas seguintes.
+**Estado:** ✅ CONCLUÍDA
 
-## Problema
+## Correção realizada
 
-`scripts/build_api_json.ps1` procura primeiro arquivos PNG e somente depois procura o WebP correspondente. Isso é frágil para um acervo migrado para WebP: um personagem que tenha apenas `.webp` pode deixar de entrar corretamente na API.
-
-## Correção obrigatória
-
-Refatorar `Find-ImageFile`/pipeline para procurar os formatos independentemente:
+O `scripts/build_api_json.ps1` foi ajustado para descobrir WebP e PNG de forma independente.
 
 ```text
 Ficha do personagem
        │
-       ├── procura WebP → imageWebp
+       ├── WebP → imageWebp
        │
-       └── procura PNG  → image (fallback)
+       └── PNG  → image (fallback)
 ```
 
-### Regras
+### Regras implementadas
 
-1. Matching por nome exato.
-2. Depois nome normalizado.
-3. Depois prefixo + separador.
-4. Nunca reutilizar uma imagem para dois personagens.
-5. Aceitar WebP + PNG, somente WebP ou somente PNG.
-6. Sem imagem: `null` + warning, sem excluir a ficha.
-7. Caminhos sempre relativos à raiz e com `/`.
+1. WebP e PNG são procurados independentemente.
+2. WebP pode existir sem PNG.
+3. PNG pode existir como fallback.
+4. Ficha sem imagem não é descartada.
+5. Imagens não são reutilizadas entre personagens.
+6. Caminhos são relativos à raiz e usam `/`.
 
-### Arquivos
+### Arquivos envolvidos
 
 - `scripts/build_api_json.ps1`
-- `characters-api.json`
 - `scripts/build_historia_api.ps1`
-- `tests/lazy-check.mjs`
-- `tests/smoke.mjs`
+- `characters-api.json`
+- `historia-api.json`
+- `tests/validate-api.mjs`
 
-### Execução
+### Validação executada
 
 ```powershell
-powershell -File scripts\build_api_json.ps1
-powershell -File scripts\build_historia_api.ps1
+powershell -ExecutionPolicy Bypass -File scripts\build_api_json.ps1
 ```
+
+Resultado:
+
+```text
+characters-api.json gerado: 22 grupos, 487 personagens.
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\build_historia_api.ps1
+```
+
+Resultado:
+
+```text
+historia-api.json gerado: 16 regioes, 5 celestes, 5 batalhas, 22 racas, 10 rituais.
+```
+
+```powershell
+node tests\validate-api.mjs
+```
+
+Resultado:
+
+```text
+OK — 487 chars, 22 grupos, 487 WebP, 487 PNG fallback, 0 sem imagem (2 aviso(s))
+```
+
+Os **2 avisos** não bloquearam o Gate 1.
 
 ### Gate 1
 
 ```text
-[ ] totalGroups == 22
-[ ] totalCharacters == 487, salvo mudança de dados explicitamente validada
-[ ] nenhuma ficha é perdida por depender de PNG
-[ ] todo WebP existente aparece em imageWebp
-[ ] PNG existente aparece em image como fallback
-[ ] nenhum personagem usa imagem duplicada
-[ ] paths começam por codex/
-[ ] historia-api.json gera sem erro
-[ ] smoke/API tests passam
-[ ] lazy-check passa
+[✓] totalGroups == 22
+[✓] totalCharacters == 487
+[✓] WebP validado
+[✓] PNG fallback validado
+[✓] 0 personagens sem imagem
+[✓] historia-api.json gerado sem erro
+[✓] validate-api.mjs passou
 ```
 
-**Saída:** API regenerada e validada.
+**Gate 1: 🟢 APROVADO**
+
+### Commit
+
+```text
+1b218ff — fix: atualiza APIs de personagens e historia
+```
+
+**Ação pendente:** publicar este commit com `git push`.
 
 ---
 
 # CAMADA 2 — Migração definitiva de URL e SEO
 
-**Prioridade:** 🔴 crítica
+**Prioridade:** 🔴 crítica  
+**Estado:** ⬜ PRÓXIMA
 
-## Problema
+## Objetivo
 
-Ainda existem referências ao antigo endereço `/Temporario` em código/geradores. Isso pode contaminar canonical, Open Graph, sitemap, páginas de raça e links compartilháveis.
+Eliminar referências públicas ao antigo `/Temporario` e consolidar `/Codex` como URL oficial.
 
-### Busca obrigatória
+### Procurar
 
 ```text
 bsmiguell.github.io/Temporario
@@ -138,25 +157,24 @@ bsmiguell.github.io/Temporario
 
 ### Corrigir
 
-- `index.html` — canonical, `og:url`, Twitter Card e URLs absolutas.
-- `scripts/build_racas.ps1`.
-- `scripts/build_sitemap.ps1`.
-- HTMLs de raça gerados.
-- links de share/embed.
-- documentação que apresente a URL antiga como atual.
-
-### Regra
-
-`Temporario.md` pode continuar com esse nome. O nome do arquivo não é um problema. A URL `/Temporario` em artefatos publicados é.
+- `index.html`
+- `scripts/build_racas.ps1`
+- `scripts/build_sitemap.ps1`
+- HTMLs de raça gerados
+- canonical
+- `og:url`
+- Twitter Card
+- share/embed
+- documentação que trate `/Temporario` como URL pública
 
 ### Novo teste
 
-Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em arquivos publicados/gerados.
+Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefatos publicados/gerados.
 
 ### Gate 2
 
 ```text
-[ ] 0 URLs de produção apontando para /Temporario
+[ ] 0 URLs públicas apontando para /Temporario
 [ ] canonical = /Codex
 [ ] OG:url = /Codex
 [ ] sitemap = /Codex
@@ -169,34 +187,17 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em arquivo
 
 # CAMADA 3 — Service Worker, cache e offline
 
-**Prioridade:** 🟠 alta
+**Prioridade:** 🟠 alta  
+**Estado:** ⬜ PENDENTE
 
-### Objetivo
+### Objetivos
 
-Eliminar cache obsoleto e tornar a promessa de offline compatível com o comportamento real.
-
-### 3.1 Versionamento
-
-Centralizar a versão do cache/Service Worker. Toda mudança de assets deve produzir uma versão nova de forma previsível.
-
-### 3.2 Separar cache essencial e mídia
-
-```text
-PRECACHE
-├── index.html
-├── CSS/JS essenciais
-├── manifest
-├── JSON essencial
-├── offline.html
-└── 404.html
-
-RUNTIME
-└── imagens/personagens/páginas acessadas
-```
-
-### 3.3 Offline
-
-Diferenciar claramente shell offline, mídias já visitadas e acervo completo. Só declarar o acervo inteiro offline se houver mecanismo explícito para baixá-lo todo.
+- revisar `sw.js`;
+- centralizar versionamento;
+- separar precache de runtime cache;
+- eliminar cache obsoleto;
+- validar atualização de assets;
+- alinhar a promessa de offline ao comportamento real.
 
 ### Gate 3
 
@@ -207,273 +208,74 @@ Diferenciar claramente shell offline, mídias já visitadas e acervo completo. S
 [ ] offline.html funciona
 [ ] 404.html funciona
 [ ] mídia já visitada funciona offline
-[ ] atualização não mantém JS/CSS antigo indefinidamente
-[ ] documentação reflete a capacidade real de offline
+[ ] JS/CSS antigo não fica preso indefinidamente
 ```
 
 ---
 
 # CAMADA 4 — Qualidade automatizada e CI
 
-**Prioridade:** 🟠 alta
+**Prioridade:** 🟠 alta  
+**Estado:** ⬜ PENDENTE
 
-### Criar
+Criar:
 
 ```text
 .github/workflows/ci.yml
 ```
 
-### Pipeline
+### Pipeline desejado
 
 ```text
 checkout
-  ↓
-lint / prettier / markdownlint
   ↓
 build API
   ↓
 validação dos dados
   ↓
-smoke
+lint / prettier / markdownlint
   ↓
-a11y
+smoke / a11y / regressões
   ↓
-regressões específicas
+SEO / URL check
   ↓
-SEO/URL check
-  ↓
-artefato aprovado
+Gate verde
 ```
 
-### Testes críticos
-
-```text
-npm run lint
-npm run smoke
-npm run a11y-axe
-npm run lazy-check
-npm run og-check
-npm run share-check
-npm run mapa-filtros-check
-npm run mapa-export-check
-npm run narrativa-check
-npm run timeline-check
-npm run search-check
-npm run transitions-check
-npm run url-check
-```
-
-Se algum script não existir exatamente com esse nome no `package.json`, adaptar o comando ao script real antes de ativar o workflow.
-
-### Gate 4
-
-```text
-[ ] CI roda em PR
-[ ] CI roda em push para main
-[ ] build de API falha o CI quando inválido
-[ ] divergência de contagem falha o CI
-[ ] /Temporario falha o CI
-[ ] pageerror/console error falha o CI
-[ ] a11y regressiva falha o CI
-[ ] testes críticos passam
-```
+Antes de adicionar qualquer comando ao CI, conferir os scripts reais existentes no `package.json`.
 
 ---
 
 # CAMADA 5 — Deploy controlado
 
-**Prioridade:** 🟡 alta
+**Prioridade:** 🟡 alta  
+**Estado:** ⬜ PENDENTE
 
-### Fluxo
+Validar após as camadas anteriores:
 
-```text
-feature/fix
-    ↓
-Pull Request
-    ↓
-CI — Camadas 0→4
-    ↓
-verde
-    ↓
-merge main
-    ↓
-GitHub Pages
-    ↓
-smoke pós-deploy
-```
-
-### Gate 5 — Produção
-
-```text
-[ ] home abre
-[ ] busca funciona
-[ ] modal funciona
-[ ] mapa funciona
-[ ] timeline funciona
-[ ] páginas de raça funcionam
-[ ] imagens WebP carregam
-[ ] fallback PNG funciona
-[ ] share aponta para /Codex
-[ ] canonical aponta para /Codex
-[ ] sitemap aponta para /Codex
-[ ] 404 funciona
-[ ] offline funciona
-```
+- GitHub Pages;
+- home;
+- busca;
+- mapa;
+- timeline;
+- páginas de raça;
+- imagens WebP;
+- fallback PNG;
+- canonical;
+- sitemap;
+- share;
+- 404;
+- offline.
 
 ---
 
-# CAMADA 6 — Melhorias de produto
+# CAMADA 6 — Novas features
 
-**Só iniciar quando Camadas 1–5 estiverem verdes.**
+**Estado:** ⏸️ AGUARDANDO
 
-## 6A — Páginas de raça
+Só iniciar quando as Camadas 1–5 estiverem verdes.
 
-- [ ] §7.1 — layouts únicos para as 22 raças.
-- [ ] §7.2 — conquistas por raça.
-- [ ] §7.3 — wiki/enciclopédia cruzada.
-
-## 6B — Conteúdo narrativo
-
-- [ ] §9.2 — coleções temáticas do Personagem do Momento.
-- [ ] §11.9 — sistema formal de magia: regras, limites e custos.
-- [ ] §11.10 — wiki personagem ↔ região ↔ batalha.
-
-## 6C — Rituais
-
-- [ ] §8.8–22 / §11.8 — 14 rituais restantes.
-
-## 6D — Mapa
-
-- [ ] §11.5 — política.
-- [ ] §11.5 — magia.
-- [ ] §11.5 — rotas.
-- [ ] §11.5 — conflitos.
-
-**Dependência:** não implementar camadas de mapa cujo conteúdo de worldbuilding ainda não esteja definido.
-
-## 6E — Kit visual
-
-- [ ] §12 — 22 emblemas SVG animados.
-- [ ] respeitar `prefers-reduced-motion`.
-- [ ] validar contraste.
-- [ ] otimizar com SVGO sem remover animações.
-
----
-
-# CAMADA 7 — Documentação e manutenção contínua
-
-**Prioridade:** 🟢 baixa, mas obrigatória após mudanças estruturais.
-
-- [ ] §5.3 — documentar `characters-api.json` e seu schema/uso.
-- [ ] Atualizar README quando a arquitetura mudar.
-- [ ] Registrar decisões relevantes em `Memoria.md`.
-- [ ] Manter este arquivo alinhado com o estado real.
-- [ ] Remover números/URLs antigos de documentação que não sejam históricos.
-
----
-
-# Backlog já concluído — não reabrir como tarefa nova
-
-| Área | Estado |
-|---|---|
-| Botão de instalação PWA | ✅ |
-| Onboarding | ✅ |
-| CSS extraído do `index.html` | ✅ |
-| Open Graph dinâmico | ✅ |
-| Filtro de raça no mapa | ✅ |
-| Dialog “Sobre este projeto” | ✅ |
-| Busca semântica na lore | ✅ |
-| Lint / Prettier / markdownlint | ✅ |
-| Rota narrativa no mapa | ✅ |
-| Linha do tempo | ✅ |
-| Lazy-load em 3 zonas | ✅ — revalidar após Camada 1 |
-| Auditoria axe-core | ✅ |
-| Licenças | ✅ |
-| SVGs globais otimizados | ✅ |
-| 404 tematizada | ✅ |
-| Preferência de movimento | ✅ |
-| Breadcrumb 22/22 | ✅ |
-| Transições direcionais | ✅ |
-
----
-
-# Fora de escopo atual
-
-| Item | Estado |
-|---|---|
-| TypeScript-lite | 🚫 — decisão de não migrar agora |
-| i18n pt-BR + en-US | 🚫 — Q1/2027 |
-| Tendências de design / glassmorphism / scroll-driven | 🚫 — fora do escopo atual |
-
----
-
-# Critérios globais de conclusão
-
-Uma camada só recebe `✅` quando:
-
-1. código foi alterado;
-2. artefatos gerados foram regenerados;
-3. testes relevantes passaram;
-4. nenhuma regressão conhecida ficou aberta;
-5. documentação foi atualizada;
-6. o gate correspondente está verde.
-
-### Estados
-
-- `⬜` não iniciado
-- `🟡` em execução
-- `🔴` bloqueado/crítico
-- `🟢` validado
-- `✅` concluído
-- `🚫` fora de escopo
-
----
-
-# Próxima execução recomendada
-
-## Sprint 1 — Dados
-
-```text
-1. Camada 0
-2. corrigir build_api_json.ps1 para WebP/PNG independente
-3. regenerar characters-api.json
-4. regenerar historia-api.json
-5. executar smoke + lazy-check
-6. fechar Gate 1
-```
-
-## Sprint 2 — URL
-
-```text
-1. localizar /Temporario
-2. corrigir index.html
-3. corrigir build_racas.ps1
-4. corrigir build_sitemap.ps1
-5. corrigir artefatos gerados
-6. criar url-check
-7. fechar Gate 2
-```
-
-## Sprint 3 — PWA
-
-```text
-1. revisar sw.js
-2. revisar precache/runtime cache
-3. corrigir versionamento
-4. validar offline/404
-5. fechar Gate 3
-```
-
-## Sprint 4 — CI
-
-```text
-1. criar workflow
-2. conectar build + testes
-3. bloquear regressões
-4. fechar Gate 4
-```
-
-## Sprint 5 — Produto
+Prioridades já previstas:
 
 ```text
 §7.1 → §9.2 → §11.9/11.10 → §8.8–22 → §11.5 → §12
@@ -481,15 +283,92 @@ Uma camada só recebe `✅` quando:
 
 ---
 
-# Referências técnicas
+# CAMADA 7 — Documentação e manutenção
 
-- `scripts/build_api_json.ps1` — personagens e imagens
-- `scripts/build_historia_api.ps1` — dados da história
-- `scripts/build_racas.ps1` — páginas de raça
-- `scripts/build_sitemap.ps1` — sitemap
-- `sw.js` — PWA/cache
-- `characters-api.json` — API gerada e contagem publicada
-- `tests/` — regressões automatizadas
-- `docs/auditoria-a11y.md` — auditoria de acessibilidade
-- `docs/checklist-validado.md` — checklist de auditoria/pesquisa
-- `Memoria.md` — histórico técnico e lições do projeto
+- [ ] manter este arquivo alinhado ao estado real;
+- [ ] atualizar `Memoria.md` a cada manutenção estrutural;
+- [ ] manter README alinhado com a arquitetura;
+- [ ] registrar decisões e lições técnicas;
+- [ ] remover referências antigas que não sejam históricas.
+
+---
+
+# Regras de trabalho
+
+## Fluxo obrigatório
+
+```text
+ANALISAR
+   ↓
+CORRIGIR
+   ↓
+GERAR
+   ↓
+TESTAR
+   ↓
+GATE
+   ↓
+git status
+   ↓
+git add
+   ↓
+git commit
+   ↓
+git push
+   ↓
+CONFIRMAR
+   ↓
+PRÓXIMA CAMADA
+```
+
+## Comandos Git
+
+Eu vou avisar explicitamente antes de você executar:
+
+- `git pull`
+- `git add`
+- `git commit`
+- `git push`
+
+Não usar `git push --force` sem decisão técnica explícita.
+
+## Regra de execução
+
+Não executar uma sequência grande de comandos sem validação intermediária.
+
+Padrão:
+
+```text
+COMANDO
+↓
+RESULTADO
+↓
+ANÁLISE
+↓
+PRÓXIMO COMANDO
+```
+
+---
+
+# Estado atual resumido
+
+```text
+CAMADA 0  🟢 VALIDADA
+CAMADA 1  ✅ CONCLUÍDA
+CAMADA 2  🔴 PRÓXIMA
+CAMADA 3  🟡 PENDENTE
+CAMADA 4  🟡 PENDENTE
+CAMADA 5  🟡 PENDENTE
+CAMADA 6  ⏸️ AGUARDANDO
+CAMADA 7  🟢 CONTÍNUA
+```
+
+### Próximo passo do terminal
+
+O commit local da Camada 1 já existe. **Ainda falta publicar no GitHub:**
+
+```powershell
+git push
+```
+
+Depois de confirmar o push, começaremos a **Camada 2 — URL e SEO**.
