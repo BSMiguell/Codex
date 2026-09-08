@@ -7,6 +7,7 @@ on:
       - 'characters-api.json'
       - 'scripts/build_readme.ps1'
       - 'Temporario.md'
+      - '.github/workflows/sync-readme.yml'
   workflow_dispatch:
 
 permissions:
