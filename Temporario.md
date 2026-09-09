@@ -136,7 +136,7 @@ Os **2 avisos** não bloquearam o Gate 1.
 1b218ff — fix: atualiza APIs de personagens e historia
 ```
 
-**Ação pendente:** publicar este commit com `git push`.
+**Status:** ✅ Todos os commits da referência (`1b218ff`, `ca4547de`) publicados no `main`. Nenhuma ação pendente.
 
 ---
 
@@ -414,10 +414,4 @@ CAMADA 7  🟢 CONTÍNUA
 
 ### Próximo passo do terminal
 
-O commit local da Camada 1 já existe. **Ainda falta publicar no GitHub:**
-
-```powershell
-git push
-```
-
-Depois de confirmar o push, começaremos a **Camada 2 — URL e SEO**.
+**Camada 6 concluída.** Próximo: `§11.9/11.10` (visual/documentação do mapa) → `§11.5` (camadas extras) → `§12`. Ver `docs/11.9_11.10.md` para base. Commit `a4547de` publicado.
