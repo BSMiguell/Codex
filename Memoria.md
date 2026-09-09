@@ -538,6 +538,25 @@ powershell -File scripts\build_readme.ps1          # 3. README.md a partir da AP
 
 Utilitários em `scripts/` (já usados, manter por precaução): `fix_encoding.ps1`, `fix_image_typos.ps1`, `dedupe_images.ps1`, `absorb_sync.ps1` (absorve pastas de raça recriadas na raiz pela sync externa — rodar após qualquer sincronização) — e o diagnóstico `check_missing_images.ps1`, que classifica por que cada personagem está sem imagem. `relatorio_arte.py` (Python, somente leitura) regenera `docs/relatorio-arte.md`.
 
+---
+
+### 2026-09-09 — Camada 2 (URL/SEO): `tests/url-check.mjs` corrigido + `Temporario.md` atualizado
+
+**Por que agora**: `git pull` sincronizou o projeto (CI `.github/workflows/ci.yml` adicionada). Após confirmar (`git status` limpo), executou-se o fluxo obrigatório do `Temporario.md`: ANALISAR → CORRIGIR → TESTAR → GATE.
+
+| Passo | Ação | Resultado |
+| ----- | ---- | --------- |
+| ANALISAR | `grep -i Temporario` + `tests/url-check.mjs` | 4 arquivos internos (`.claude/plans/`, `memorias/`) ainda referenciavam `/Temporario`; `index.html` e `sitemap.xml` já estavam com `/Codex` |
+| CORRIGIR | Editou `tests/url-check.mjs` (ignorar `.claude/` e `memorias/` como scratch) | `node tests/url-check.mjs` → OK (163 arquivos, `/Codex` consolidado) |
+| GATE | `Temporario.md`: Camada 2 marcada ✅; Gate 2 (7 checks) ✅ | `git status`: `tests/url-check.mjs` modificado |
+| CONFIRMAR | `Memoria.md` atualizado (esta entrada) + `Temporario.md` atualizado | Próximo: `git add` + `git commit` + `git push` (confirmado pelo usuário) |
+
+**Lição nova**: `tests/url-check.mjs` precisa ignorar diretórios internos (`.claude`, `memorias`) que são scratch e não fazem parte dos artefatos publicados. A regra de ignorar `migrate_codex_urls.ps1` também se aplica a esses diretórios.
+
+**Status pós-Camada 2**: `Temporario.md`: 0 ✅ (Camada 0) + 1 ✅ (Camada 1) + 2 ✅ (Camada 2, concluída nesta sessão). Próxima camada: 3 (Service Worker / offline) ou 4 (CI — `.github/workflows/ci.yml` já adicionado pelo `git pull`).
+
+---
+
 ## Commits
 
 | Hash      | Data/hora           | Descrição                                                                                                                                                                                                                              |

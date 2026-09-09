@@ -143,7 +143,7 @@ Os **2 avisos** não bloquearam o Gate 1.
 # CAMADA 2 — Migração definitiva de URL e SEO
 
 **Prioridade:** 🔴 crítica  
-**Estado:** ⬜ PRÓXIMA
+**Estado:** ✅ CONCLUÍDA
 
 ## Objetivo
 
@@ -174,14 +174,16 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefat
 ### Gate 2
 
 ```text
-[ ] 0 URLs públicas apontando para /Temporario
-[ ] canonical = /Codex
-[ ] OG:url = /Codex
-[ ] sitemap = /Codex
-[ ] páginas de raça = /Codex
-[ ] share/embed = /Codex
-[ ] url-check passa
+[✓] 0 URLs públicas apontando para /Temporario
+[✓] canonical = /Codex
+[✓] OG:url = /Codex
+[✓] sitemap = /Codex
+[✓] páginas de raça = /Codex
+[✓] share/embed = /Codex
+[✓] url-check passa (163 arquivos, .claude/ e memorias/ ignorados como scratch)
 ```
+
+**Gate 2: 🟢 APROVADO**
 
 ---
 
