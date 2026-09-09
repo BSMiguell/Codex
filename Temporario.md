@@ -1,80 +1,121 @@
-# Plano de execução — Aetheria Codex
+# Plano operacional — Aetheria Codex
 
-**Atualizado:** 08/09/2026  
-**Objetivo:** manter este arquivo como plano operacional do Codex, com execução em camadas e gates obrigatórios.
+**Atualizado:** 09/09/2026  
+**Objetivo:** manter este arquivo como a fonte operacional do trabalho: estado real do projeto, prioridades, gates, riscos, sequência de execução e próximos passos.
 
-> **Regra de ouro:** Dados → URLs/SEO → Cache/PWA → Testes/CI → Deploy → Novas features.
+> **Regra de ouro:** primeiro estabilizar o que existe; depois validar; só então adicionar novas features.
 >
-> Não iniciar a próxima camada enquanto o gate da camada atual não estiver verde.
+> **Ordem:** Dados → URLs/SEO → Cache/PWA → Testes/CI → Deploy → Features → Documentação/manutenção.
 
 ---
 
-## 0. Estado de referência — atualizado após a Camada 1
+# 1. Estado atual — fotografia do projeto
 
-| Item | Estado atual | Referência |
+## 1.1 Fonte de verdade técnica
+
+| Item | Estado | Referência |
 |---|---:|---|
-| Raças/grupos | **22** | `characters-api.json` |
-| Personagens | **487** | `characters-api.json` |
-| `characters-api.json` | 🟢 | regenerado e validado |
-| `historia-api.json` | 🟢 | regenerado sem erros |
-| WebP | 🟢 | 487 referências `imageWebp` validadas |
-| PNG fallback | 🟢 | 487 referências de fallback validadas |
-| Personagens sem imagem | **0** | `tests/validate-api.mjs` |
-| URL de produção | 🔴 | próxima etapa: eliminar `/Temporario` |
-| Service Worker | 🟡 | revisão pendente |
-| CI | ❌ | criar pipeline automático |
-| Testes API | 🟢 | Gate 1 aprovado |
+| Grupos/raças | 🟢 **22** | `characters-api.json` |
+| Personagens | 🟢 **487** | `characters-api.json` |
+| WebP | 🟢 **487/487** | `imageWebp` validado |
+| PNG fallback | 🟢 **487/487** | `image` validado |
+| Personagens sem imagem | 🟢 **0** | `tests/validate-api.mjs` |
+| `characters-api.json` | 🟢 | gerado e validado |
+| `historia-api.json` | 🟢 | regiões, celestes, batalhas, raças e rituais |
+| URL oficial | 🟢 `/Codex` | produção |
+| GitHub Pages | 🟢 | deploy atual publicado |
+| Service Worker | 🟢 `v1.4.0` | precache expandido |
+| Conquistas | 🟢 | 5 conquistas implementadas |
+| Rituais | 🟢 **22/22** declarados | `assets/rituals.js` |
+| Wiki/cross-links do mapa | 🟢 | `.map-crosslinks` |
+| Sistema de magia | 🟡 | base criada, integração pendente |
+| Camadas extras do mapa | 🟡 | política/mágica/rotas/conflitos pendentes |
+| NVDA real | 🟡 | documentação criada, teste manual pendente |
+| CI | 🔴 **não considerar verde ainda** | última sequência teve falhas em testes de regressão |
+| Documentação operacional | 🟡 | este arquivo está sendo ressincronizado |
+
+## 1.2 HEAD / publicação
+
+O repositório recebeu muitas atualizações depois da primeira implantação do CI. O estado atual inclui, entre outros:
+
+- sistema de conquistas;
+- 22 rituais;
+- cross-links do mapa;
+- evolução do mapa e minimapa;
+- base de magia;
+- documentação de política/magia;
+- documentação de testes NVDA;
+- Service Worker `v1.4.0`;
+- diagnóstico para transições;
+- atualizações de README por automação.
+
+**Regra:** não assumir que um gate antigo continua válido depois de dezenas de commits. Cada grande bloco de mudanças deve ser revalidado contra o HEAD atual.
+
+---
+
+# 2. Regras de estado e prioridade
+
+## 🔴 P0 — Bloqueadores
+
+Problemas que podem invalidar a confiança no projeto ou no CI.
+
+1. Resolver/verificar a estrutura de `assets/rituals.js`.
+2. Descobrir e corrigir os erros reais que ainda fazem `transitions-check` falhar.
+3. Rodar o CI contra o estado atual do `main` e obter um resultado verde real.
+4. Só depois atualizar os gates documentais para refletir o resultado comprovado.
+
+## 🟠 P1 — Alta prioridade
+
+- sincronizar `Temporario.md`, checklists e memórias;
+- revisar testes afetados pelas novas features;
+- confirmar Service Worker e cache após a expansão das features;
+- validar que os novos scripts estão cobertos pelo CI.
+
+## 🟡 P2 — Evolução
+
+- sistema formal de magia;
+- camadas extras do mapa;
+- teste manual com NVDA;
+- melhorias de documentação e UX.
+
+## 🟢 P3 — Futuro
+
+Novas features somente depois do circuito de estabilidade estar verde.
+
+---
+
+# 3. CAMADA 0 — Congelamento e fonte de verdade
+
+**Estado:** 🟢 VALIDADA
+
+```text
+[✓] 22 grupos
+[✓] 487 personagens
+[✓] fonte de verdade = characters-api.json
+[✓] 493 não é contagem atual
+[✓] URL oficial = /Codex
+```
 
 ### Regra de contagem
 
-O backlog antigo registrava **493 personagens**, mas a fonte de verdade atual é **487 personagens em 22 grupos**. Não usar 493 como número fixo.
+O backlog histórico pode conter 493, mas o número operacional atual é **487 personagens em 22 grupos**. Não reintroduzir 493 como meta ou total sem uma decisão explícita.
 
 ---
 
-# CAMADA 0 — Congelamento e fonte de verdade
+# 4. CAMADA 1 — Pipeline de dados e imagens
 
-**Prioridade:** 🔴 crítica
+**Estado:** 🟢 CONCLUÍDA
 
-### Gate 0
+### O que foi estabilizado
 
-```text
-[✓] 22 grupos confirmados
-[✓] 487 personagens confirmados
-[✓] URL oficial definida: /Codex
-[✓] 493 não é usado como contagem atual
-```
+- WebP e PNG são descobertos independentemente.
+- WebP é a imagem principal.
+- PNG é fallback.
+- Ficha sem imagem não é descartada.
+- Caminhos são relativos e normalizados com `/`.
+- Não há reutilização indevida de imagem entre personagens.
 
-**Estado:** 🟢 VALIDADO
-
----
-
-# CAMADA 1 — Pipeline de dados e imagens
-
-**Prioridade:** 🔴 crítica  
-**Estado:** ✅ CONCLUÍDA
-
-## Correção realizada
-
-O `scripts/build_api_json.ps1` foi ajustado para descobrir WebP e PNG de forma independente.
-
-```text
-Ficha do personagem
-       │
-       ├── WebP → imageWebp
-       │
-       └── PNG  → image (fallback)
-```
-
-### Regras implementadas
-
-1. WebP e PNG são procurados independentemente.
-2. WebP pode existir sem PNG.
-3. PNG pode existir como fallback.
-4. Ficha sem imagem não é descartada.
-5. Imagens não são reutilizadas entre personagens.
-6. Caminhos são relativos à raiz e usam `/`.
-
-### Arquivos envolvidos
+### Arquivos principais
 
 - `scripts/build_api_json.ps1`
 - `scripts/build_historia_api.ps1`
@@ -82,308 +123,581 @@ Ficha do personagem
 - `historia-api.json`
 - `tests/validate-api.mjs`
 
-### Validação executada
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_api_json.ps1
-```
-
-Resultado:
-
-```text
-characters-api.json gerado: 22 grupos, 487 personagens.
-```
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\build_historia_api.ps1
-```
-
-Resultado:
-
-```text
-historia-api.json gerado: 16 regioes, 5 celestes, 5 batalhas, 22 racas, 10 rituais.
-```
-
-```powershell
-node tests\validate-api.mjs
-```
-
-Resultado:
+### Validação conhecida
 
 ```text
 OK — 487 chars, 22 grupos, 487 WebP, 487 PNG fallback, 0 sem imagem (2 aviso(s))
 ```
 
-Os **2 avisos** não bloquearam o Gate 1.
-
 ### Gate 1
 
 ```text
-[✓] totalGroups == 22
-[✓] totalCharacters == 487
-[✓] WebP validado
-[✓] PNG fallback validado
-[✓] 0 personagens sem imagem
-[✓] historia-api.json gerado sem erro
-[✓] validate-api.mjs passou
+[✓] 22 grupos
+[✓] 487 personagens
+[✓] 487 WebP
+[✓] 487 PNG fallback
+[✓] 0 sem imagem
+[✓] historia-api.json gerado
+[✓] validate-api.mjs passa
 ```
 
 **Gate 1: 🟢 APROVADO**
 
-### Commit
-
-```text
-1b218ff — fix: atualiza APIs de personagens e historia
-```
-
-**Status:** ✅ Todos os commits da referência (`1b218ff`, `ca4547de`) publicados no `main`. Nenhuma ação pendente.
-
 ---
 
-# CAMADA 2 — Migração definitiva de URL e SEO
+# 5. CAMADA 2 — URL e SEO
 
-**Prioridade:** 🔴 crítica  
-**Estado:** ✅ CONCLUÍDA
+**Estado:** 🟢 CONCLUÍDA
 
-## Objetivo
+### Resultado
 
-Eliminar referências públicas ao antigo `/Temporario` e consolidar `/Codex` como URL oficial.
-
-### Procurar
+A produção foi consolidada em:
 
 ```text
-bsmiguell.github.io/Temporario
+https://bsmiguell.github.io/Codex/
 ```
 
-### Corrigir
+Foram alinhados:
 
-- `index.html`
-- `scripts/build_racas.ps1`
-- `scripts/build_sitemap.ps1`
-- HTMLs de raça gerados
-- canonical
-- `og:url`
-- Twitter Card
-- share/embed
-- documentação que trate `/Temporario` como URL pública
+- canonical;
+- `og:url`;
+- Twitter Card;
+- sitemap;
+- páginas de raça;
+- share/embed;
+- scripts geradores;
+- referências públicas de produção.
 
-### Novo teste
-
-Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefatos publicados/gerados.
+A única referência necessária ao antigo `/Temporario` é a própria lógica de migração histórica, que deve continuar preservada para que a ferramenta de migração possa localizar o valor antigo.
 
 ### Gate 2
 
 ```text
-[✓] 0 URLs públicas apontando para /Temporario
-[✓] canonical = /Codex
-[✓] OG:url = /Codex
-[✓] sitemap = /Codex
-[✓] páginas de raça = /Codex
-[✓] share/embed = /Codex
-[✓] url-check passa (163 arquivos, .claude/ e memorias/ ignorados como scratch)
+[✓] URLs públicas em /Codex
+[✓] canonical /Codex
+[✓] OG /Codex
+[✓] sitemap /Codex
+[✓] páginas de raça /Codex
+[✓] share/embed /Codex
+[✓] url-check validado
 ```
 
 **Gate 2: 🟢 APROVADO**
 
 ---
 
-# CAMADA 3 — Service Worker, cache e offline
+# 6. CAMADA 3 — Service Worker, cache e offline
 
-**Prioridade:** 🟠 alta  
-**Estado:** ✅ CONCLUÍDA (SW v1.4.0, precache expandido, análise completa)
+**Estado:** 🟢 CONCLUÍDA — manter sob regressão
 
-### Objetivos
+## Estado atual
 
-- revisar `sw.js`;
-- centralizar versionamento;
-- separar precache de runtime cache;
-- eliminar cache obsoleto;
-- validar atualização de assets;
-- alinhar a promessa de offline ao comportamento real.
+`sw.js` está em:
+
+```text
+const VERSION = "aetheria-v1.4.0";
+```
+
+O precache inclui, entre outros:
+
+- `index.html`;
+- `offline.html`;
+- `404.html`;
+- manifest;
+- sitemap;
+- CSS;
+- favicons;
+- `og-cover.jpg`;
+- `themes.json`;
+- `search-index.json`;
+- `rituals.js`;
+- `transitions.js`.
+
+A estratégia atual mantém:
+
+- network-first para navegação;
+- cache-first para assets publicados;
+- stale-while-revalidate para manifest/favicon;
+- limpeza de caches antigos;
+- fallback offline/404.
+
+### Atenção
+
+Existe um comentário interno em `sw.js` que ainda menciona **10 rituais**. O projeto agora declara 22. Isso não é bloqueador funcional, mas deve ser corrigido na manutenção documental.
 
 ### Gate 3
 
 ```text
-[✓] versão do SW mudou (aetheria-v1.3.0 → aetheria-v1.4.0)
-[✓] precache expandido (rituals.js, transitions.js adicionados)
-[✓] cache antigo removido (activate limpa versões antigas)
-[✓] shell abre offline (offline.html no precache)
-[✓] offline.html funciona (arquivo existe e é servido)
-[✓] 404.html funciona (arquivo existe e é servido)
-[✓] mídia já visitada funciona offline (cache-first para assets)
-[✓] JS/CSS antigo não fica preso (activate remove caches antigos)
+[✓] versão v1.4.0
+[✓] precache expandido
+[✓] limpeza de caches antigos
+[✓] fallback offline
+[✓] fallback 404
+[✓] WebP no runtime
+[✓] sem limite artificial MAX_RUNTIME
+[✓] manifest/favicon com revalidação
 ```
 
-**Gate 3: 🟢 APROVADO (versão atualizada + precache expandido + análise concluída)**
+**Gate 3: 🟢 APROVADO**
 
 ---
 
-# CAMADA 4 — Qualidade automatizada e CI
+# 7. CAMADA 4 — Qualidade automatizada e CI
 
-**Prioridade:** 🟠 alta  
-**Estado:** ✅ CONCLUÍDA (pipeline completo: checkout → build → validação → lint → smoke → url-check)
+**Estado:** 🔴 **ABERTA / EM ESTABILIZAÇÃO**
 
-Criar:
+> Não marcar esta camada como concluída enquanto o CI do estado atual não estiver verde.
 
-```text
-.github/workflows/ci.yml
-```
+## Pipeline atual
 
-### Gate 4
+`.github/workflows/ci.yml` executa Node 22, `npm ci`, instala Chromium e inicia servidores locais para os testes Playwright.
 
-```text
-[✓] checkout
-[✓] build API (scripts/build_api_json.ps1 + scripts/build_historia_api.ps1)
-[✓] validação dos dados (tests/validate-api.mjs)
-[✓] lint / prettier / markdownlint (lint:js + lint:md + format:check)
-[✓] smoke / a11y / regressões (npm run all — 58/58 verde)
-[✓] SEO / URL check (tests/url-check.mjs — 163 arquivos /Codex)
-[✓] `.github/workflows/ci.yml` atualizado com pipeline completo
-```
-
-**Gate 4: 🟢 APROVADO (CI atualizado + `npm run all` 58/58 verde)**
+O pipeline cobre:
 
 ```text
-checkout
+Checkout
   ↓
-build API
+Node 22
   ↓
-validação dos dados
+npm ci
   ↓
-lint / prettier / markdownlint
+Chromium
   ↓
-smoke / a11y / regressões
+Servidores locais 8124 + 8080
   ↓
-SEO / URL check
+Validação APIs
   ↓
-Gate verde
+Service Worker
+  ↓
+Open Graph
+  ↓
+Narrativa
+  ↓
+Mapas
+  ↓
+Timeline
+  ↓
+Transições
+  ↓
+Acessibilidade
+  ↓
+Share / About / Search / Lazy / Modal VT
+  ↓
+ESLint
+  ↓
+Prettier
+  ↓
+Gate
 ```
 
-Antes de adicionar qualquer comando ao CI, conferir os scripts reais existentes no `package.json`.
+## Histórico da estabilização do CI
+
+Foram corrigidos sucessivamente:
+
+1. validação de WebP/PNG no CI;
+2. instalação do Chromium;
+3. URLs/SEO usados pelo teste OG;
+4. servidor local para Playwright;
+5. porta necessária para o minimapa;
+6. diagnóstico dos erros de transição.
+
+### Último problema conhecido
+
+`transitions-check` apresentou **6 erros de console**, mesmo com a maior parte das verificações passando.
+
+O diagnóstico foi adicionado para revelar a mensagem real dos erros.
+
+### Próximo gate
+
+```text
+[ ] CI do HEAD atual verde
+[ ] transitions-check verde
+[ ] todos os testes críticos verdes
+[ ] lint verde
+[ ] format:check verde
+[ ] URL/SEO verde
+```
+
+**Gate 4: 🔴 NÃO APROVADO AINDA**
 
 ---
 
-# CAMADA 5 — Deploy controlado
+# 8. CAMADA 5 — Deploy controlado
 
-**Prioridade:** 🟡 alta  
-**Estado:** 🟢 CONCLUÍDA (todos os gates validados)
+**Estado:** 🟢 PUBLICADO / validar novamente após Gate 4
 
-Validar após as camadas anteriores:
+O GitHub Pages continua construindo e publicando com sucesso no estado atual.
 
-- GitHub Pages;
-- home;
-- busca;
-- mapa;
-- timeline;
-- páginas de raça;
-- imagens WebP;
-- fallback PNG;
-- canonical;
-- sitemap;
-- share;
-- 404;
-- offline.
-
-### Gate 5
+### Checklist
 
 ```text
-[✓] GitHub Pages (https://bsmiguell.github.io/Codex/)
-[✓] home (index.html — 200, canonical /Codex, SEO 487 chars)
-[✓] busca (Ctrl+K — 545 docs, BM25, paleta mobile)
-[✓] mapa (Mapa_Aetheria.html — 26 pins, câmera orbital, filtro)
-[✓] timeline (Linha_do_Tempo.html — 4 atos, 5 batalhas)
-[✓] páginas de raça (racas/*.html — 22 geradas)
-[✓] imagens WebP (characters-api.json — 487/487)
-[✓] fallback PNG (characters-api.json — 487/487)
-[✓] canonical (index.html: 4 refs /Codex)
-[✓] sitemap (sitemap.xml: 23 URLs /Codex)
-[✓] share (3 botões no modal — Web Share + clipboard + embed)
-[✓] 404 (404.html no precache + serve GH Pages 404)
-[✓] offline (offline.html no precache + network-first HTML)
+[✓] GitHub Pages publica
+[✓] home disponível
+[✓] /Codex
+[✓] WebP
+[✓] PNG fallback
+[✓] busca
+[✓] mapa
+[✓] minimapa
+[✓] timeline
+[✓] páginas de raça
+[✓] canonical
+[✓] sitemap
+[✓] 404
+[✓] offline
 ```
 
-**Gate 5: 🟢 APROVADO (todos os 12 itens validados, CI 58/58 verde)**
+### Regra
+
+Pages verde **não substitui** CI verde. O deploy comprova publicação; o CI comprova qualidade automatizada.
 
 ---
 
-# CAMADA 6 — Novas features
+# 9. CAMADA 6 — Features já implementadas
 
-**Estado:** ✅ CONCLUÍDA (todas as features previstas executadas)
+**Estado:** 🟢 IMPLEMENTADAS, mas algumas precisam de regressão antes de serem consideradas definitivamente fechadas.
 
-Prioridades concluídas:
+## §6.1 — Minimapa
+
+🟢 Implementado e corrigido para o servidor local usado pelo CI.
+
+## §7.1 — WebP / lazy-load
+
+🟢 Implementado.
+
+- 487 WebP;
+- lazy-load;
+- IntersectionObserver.
+
+## §7.2 — Conquistas
+
+🟢 Implementado.
+
+Arquivos principais:
+
+- `data/conquistas.json`
+- `assets/conquistas.js`
+- `index.html`
+
+Conquistas atuais:
+
+1. Primeiros Passos
+2. Leitor das 22 Raças
+3. Explorador do Mapa
+4. Colecionador
+5. Investigador
+
+## §7.3 — Wiki/cross-links
+
+🟢 Implementado no `Mapa_Aetheria.html`.
+
+## §8.8–22 — Rituais
+
+🟢 O projeto declara **22/22 rituais**.
+
+🔴 **Porém, revisar `assets/rituals.js` antes de fechar definitivamente:** há indícios de que parte das declarações dos rituais mais recentes ficou fora do escopo da IIFE que declara `RITUALS`, `prefersReduced` e `runAfter`.
+
+Esse ponto pode estar relacionado aos erros de console encontrados no `transitions-check` e deve ser investigado antes de novas features.
+
+---
+
+# 10. CAMADA 6A — Sistema de magia
+
+**Estado:** 🟡 EM CONSTRUÇÃO
+
+### Já existe
+
+- base de sistema;
+- tipos de magia;
+- regras/custos documentados;
+- relação conceitual com os rituais.
+
+### Ainda falta
 
 ```text
-§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §1.1 ✅ / §7.2 ✅ / §7.3 ✅ / §8.8-22 ✅
+[ ] data/magia.json como fonte estruturada
+[ ] retirar custos hardcoded quando apropriado
+[ ] integrar regras com execução dos rituais
+[ ] validar UI/UX da magia
+[ ] criar testes automatizados do sistema
+[ ] atualizar mapa/camadas que dependem da magia
 ```
 
-**Próximo passo:** §11.9/11.10 (visual/documentação do mapa) → §11.5 → §12
+**Não marcar §11.9 como concluído antes desses pontos essenciais.**
 
 ---
 
-## Registro adicional (09/09/2026)
+# 11. CAMADA 6B — Camadas extras do mapa
+
+**Estado:** 🟡 PLANEJADAS / PARCIAIS
+
+| Camada | Estado | Próxima ação |
+|---|---:|---|
+| Política | 🟡 | estruturar `factions[]` / dados reais |
+| Mágica | 🟡 | integrar sistema de magia |
+| Rotas | 🟡 | definir rotas e dados |
+| Conflitos | 🟡 | definir conflitos e relações |
+
+Documentação relacionada:
+
+- `docs/11.5.md`
+- documentação de mapa/magia correspondente.
+
+---
+
+# 12. CAMADA 6C — Acessibilidade / NVDA
+
+**Estado:** 🟡
+
+### Já feito
+
+- documentação de teste;
+- revisão de ARIA;
+- planejamento de validação.
+
+### Falta
 
 ```text
-§1.1  WebP / lazy-load    ✅ JÁ FEITO (487/487 WebP, lazy-load no index.html, IntersectionObserver)
-§7.2  Conquistas          ✅ COMPLETO (data/conquistas.json + assets/conquistas.js + #conquistasBtn)
-§7.3  Wiki cruzada         ✅ COMPLETO (.map-crosslinks no Mapa_Aetheria.html)
-§8.8-22 Rituais restantes  ✅ COMPLETO (rituals.js: 22/22 grupos — todos com rituais)
+[ ] executar teste manual real com NVDA
+[ ] registrar navegação por teclado
+[ ] verificar foco do modal
+[ ] verificar leitura do mapa
+[ ] verificar botões de conquistas
+[ ] verificar busca Ctrl+K
+[ ] registrar resultado na memória/documentação
 ```
-```
+
+Não transformar documentação de teste em aprovação de teste real.
 
 ---
 
-# CAMADA 7 — Documentação e manutenção
+# 13. CAMADA 7 — Documentação e manutenção
 
-- [ ] manter este arquivo alinhado ao estado real;
-- [ ] atualizar `Memoria.md` a cada manutenção estrutural;
-- [ ] manter README alinhado com a arquitetura;
-- [ ] registrar decisões e lições técnicas;
-- [ ] remover referências antigas que não sejam históricas.
+**Estado:** 🟡 EM SINCRONIZAÇÃO
+
+## Fontes documentais
+
+### `Memoria.md`
+
+Histórico/original. **Não apagar, substituir ou reescrever destrutivamente.**
+
+### `Temporario.md`
+
+Plano operacional atual, gates, prioridades e próximos passos.
+
+### `memorias/AAAA-MM-DD.md`
+
+Registro diário do que realmente aconteceu naquele dia.
+
+### `docs/checklist-validado.md`
+
+Checklist técnico; deve ser atualizado quando funcionalidades mudarem de estado.
+
+### `README.md`
+
+Documentação geral e visão pública do projeto.
+
+## Problema atual
+
+Alguns documentos ainda refletem estados antigos, por exemplo:
+
+- rituais como 7 + pendências;
+- wiki cruzada como ausente;
+- estados antigos das features;
+- gates antigos do CI.
+
+### Regra
+
+Não apagar o histórico para “corrigir” a documentação. Atualizar o estado atual e preservar a sequência histórica onde ela for necessária.
 
 ---
 
-# Regras de trabalho
+# 14. Plano de execução imediato
 
-## Fluxo obrigatório
+## FASE A — Estabilização
+
+### A1 — `assets/rituals.js`
+
+```text
+[ ] abrir arquivo atual
+[ ] confirmar escopo da IIFE
+[ ] confirmar declaração dos 22 rituais
+[ ] confirmar que RITUALS/prefersReduced/runAfter estão no escopo correto
+[ ] verificar erros de console
+```
+
+**Gate A1:** arquivo estruturalmente correto e sem erro causado por escopo.
+
+### A2 — Transitions
+
+Depois de A1:
+
+```text
+[ ] executar diagnóstico
+[ ] identificar os 6 erros reais
+[ ] corrigir causa, não mascarar teste
+[ ] executar transitions-check novamente
+```
+
+**Gate A2:** `transitions-check` verde.
+
+### A3 — CI
+
+```text
+[ ] aguardar/acionar execução no HEAD atual
+[ ] confirmar todos os jobs
+[ ] corrigir qualquer nova regressão
+```
+
+**Gate A3:** CI completo verde.
+
+---
+
+# 15. FASE B — Reconciliar documentação
+
+Depois de A3:
+
+```text
+[ ] atualizar Temporario.md com estado final
+[ ] revisar docs/checklist-validado.md
+[ ] revisar memória diária correspondente
+[ ] corrigir comentários/documentação obsoletos do SW
+[ ] confirmar README
+```
+
+**Gate B:** documentação não contradiz o estado do código.
+
+---
+
+# 16. FASE C — Magia
+
+Somente após CI verde:
+
+```text
+[ ] estruturar data/magia.json
+[ ] definir schema
+[ ] integrar dados com código
+[ ] integrar rituais
+[ ] adicionar testes
+[ ] validar UI
+[ ] atualizar mapa mágico
+```
+
+**Gate C:** sistema de magia testado e documentado.
+
+---
+
+# 17. FASE D — Mapa avançado
+
+Depois da magia:
+
+```text
+[ ] política
+[ ] facções
+[ ] magia
+[ ] rotas
+[ ] conflitos
+[ ] relações entre camadas
+[ ] testes das novas camadas
+```
+
+**Gate D:** camadas extras funcionais e documentadas.
+
+---
+
+# 18. FASE E — Acessibilidade real
+
+```text
+[ ] NVDA real
+[ ] teclado
+[ ] foco
+[ ] modal
+[ ] busca
+[ ] mapa
+[ ] conquistas
+[ ] registrar evidências
+```
+
+**Gate E:** teste manual registrado.
+
+---
+
+# 19. FASE F — Fechamento e manutenção
+
+```text
+[ ] CI verde
+[ ] Pages verde
+[ ] dados verdes
+[ ] URLs verdes
+[ ] SW verde
+[ ] regressões verdes
+[ ] documentação sincronizada
+[ ] memória diária registrada
+[ ] backlog reorganizado
+```
+
+Só então considerar a rodada encerrada.
+
+---
+
+# 20. Fluxo obrigatório de trabalho
 
 ```text
 ANALISAR
    ↓
+DEFINIR CAUSA
+   ↓
 CORRIGIR
    ↓
-GERAR
+GERAR / ATUALIZAR
    ↓
-TESTAR
+TESTAR LOCAL
    ↓
 GATE
    ↓
-git status
+VALIDAR GITHUB ACTIONS
    ↓
-git add
+CONFIRMAR DEPLOY
    ↓
-git commit
+ATUALIZAR MEMÓRIA / DOCUMENTAÇÃO
    ↓
-git push
-   ↓
-CONFIRMAR
-   ↓
-PRÓXIMA CAMADA
+PRÓXIMO BLOCO
 ```
 
-## Comandos Git
+## Regra anti-regressão
 
-Eu vou avisar explicitamente antes de você executar:
+Não corrigir apenas o teste para fazê-lo passar quando existe possibilidade de bug real no produto.
+
+O teste deve ser corrigido apenas quando houver:
+
+- falso positivo comprovado;
+- teste incompatível com a arquitetura atual;
+- requisito explicitamente alterado.
+
+---
+
+# 21. Regras Git
+
+Antes de qualquer operação Git destrutiva ou de sincronização, avisar explicitamente.
+
+### Avisar antes de:
 
 - `git pull`
 - `git add`
 - `git commit`
 - `git push`
 
-Não usar `git push --force` sem decisão técnica explícita.
+### Nunca
 
-## Regra de execução
+```text
+git push --force
+```
 
-Não executar uma sequência grande de comandos sem validação intermediária.
+sem decisão técnica explícita.
+
+### Execução em etapas
+
+Nunca entregar uma sequência grande de comandos sem validação intermediária.
 
 Padrão:
 
@@ -394,24 +708,46 @@ RESULTADO
 ↓
 ANÁLISE
 ↓
-PRÓXIMO COMANDO
+PRÓXIMO PASSO
 ```
 
 ---
 
-# Estado atual resumido
+# 22. Estado resumido dos gates
 
 ```text
 CAMADA 0  🟢 VALIDADA
-CAMADA 1  ✅ CONCLUÍDA
-CAMADA 2  ✅ CONCLUÍDA
-CAMADA 3  ✅ CONCLUÍDA
-CAMADA 4  ✅ CONCLUÍDA
-CAMADA 5  ✅ CONCLUÍDA
-CAMADA 6  ✅ CONCLUÍDA
-CAMADA 7  🟢 CONTÍNUA
+CAMADA 1  🟢 CONCLUÍDA
+CAMADA 2  🟢 CONCLUÍDA
+CAMADA 3  🟢 CONCLUÍDA
+CAMADA 4  🔴 ABERTA — CI ainda precisa ficar verde no estado atual
+CAMADA 5  🟢 PUBLICADO — depende de regressão após Gate 4
+CAMADA 6  🟡 FEATURES IMPLEMENTADAS + novas integrações em andamento
+CAMADA 7  🟡 DOCUMENTAÇÃO EM SINCRONIZAÇÃO
 ```
 
-### Próximo passo do terminal
+# 23. Próximo passo único
 
-**Camada 6 concluída.** Próximo: `§11.9/11.10` (visual/documentação do mapa) → `§11.5` (camadas extras) → `§12`. Ver `docs/11.9_11.10.md` para base. Commit `a4547de` publicado.
+> **Não começar magia, novas camadas do mapa ou novas features ainda.**
+
+O próximo trabalho é:
+
+```text
+assets/rituals.js
+      ↓
+transitions-check
+      ↓
+CI completo
+      ↓
+documentação
+      ↓
+Gate verde
+```
+
+Depois disso:
+
+```text
+magia → mapa avançado → NVDA → fechamento
+```
+
+**Objetivo da próxima rodada:** transformar o estado atual em um estado comprovadamente estável, sem apagar histórico e sem mascarar regressões.
