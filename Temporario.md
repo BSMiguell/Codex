@@ -315,7 +315,9 @@ Só iniciar quando as Camadas 1–5 estiverem verdes.
 Prioridades já previstas:
 
 ```text
-§7.1 → §9.2 → §11.9/11.10 → §8.8–22 → §11.5 → §12
+§7.1 ✅ CONCLUÍDO (9 raças dedicadas, build_racas.ps1 expandido)
+§9.2 ✅ CONCLUÍDO (vitrine/carrossel 22 coleções no hero — index.html + assets/codex.css)
+§11.9/11.10 → §8.8–22 → §11.5 → §12
 ```
 
 ---
