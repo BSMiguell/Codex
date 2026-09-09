@@ -42,8 +42,9 @@ for (const c of allChars) {
 
 // 3. Contrato de imagens:
 //    - imageWebp deve apontar para WebP quando o personagem possui WebP.
-//    - image deve ser o PNG quando houver PNG; caso contrario, cai para WebP.
-//    - nenhum arquivo referenciado pode faltar.
+//    - image e legado: pode apontar para PNG local quando esse acervo estiver presente;
+//      no CI, onde PNG e explicitamente ignorado pelo Git, a existencia do WebP e a garantia.
+//    - nenhum WebP versionado referenciado pode faltar.
 //    - a mesma imagem fisica nao pode ser reutilizada por personagens diferentes.
 const imageOwners = new Map();
 let withWebp = 0;
@@ -62,23 +63,36 @@ for (const c of allChars) {
   }
 
   if (c.image) {
-    if (!existsSync(join(root, c.image))) {
+    const imageExists = existsSync(join(root, c.image));
+    if (/\.png$/i.test(c.image)) {
+      withPngFallback++;
+      if (!imageExists) {
+        // PNGs sao deliberadamente ignorados pelo Git por serem um acervo local pesado.
+        // Nao transformar isso em falso erro no CI: imageWebp e a referencia publicada.
+        if (!c.imageWebp || !existsSync(join(root, c.imageWebp))) {
+          errors.push(`${c.id}: PNG '${c.image}' ausente e sem WebP valida para fallback`);
+        } else {
+          warnings.push(`${c.id}: PNG local '${c.image}' nao esta versionado; WebP valida usada no CI`);
+        }
+      }
+    } else if (!imageExists) {
       errors.push(`${c.id}: imagem '${c.image}' nao encontrada no disco`);
     }
-    if (/\.png$/i.test(c.image)) withPngFallback++;
 
-    if (imageOwners.has(c.image)) {
-      errors.push(`imagem duplicada: '${c.image}' usada por ${imageOwners.get(c.image)} e ${c.id}`);
-    } else {
-      imageOwners.set(c.image, c.id);
+    if (imageExists) {
+      if (imageOwners.has(c.image)) {
+        errors.push(`imagem duplicada: '${c.image}' usada por ${imageOwners.get(c.image)} e ${c.id}`);
+      } else {
+        imageOwners.set(c.image, c.id);
+      }
     }
   } else {
     withoutImage++;
     warnings.push(`${c.id}: ficha sem imagem`);
   }
 
-  // Se existe WebP, imageWebp deve ser uma referencia valida e diferente apenas
-  // quando o fallback principal for PNG.
+  // Se existe WebP, imageWebp deve ser uma referencia valida.
+  // image pode continuar sendo PNG para compatibilidade com consumidores legados.
   if (c.imageWebp && c.image === c.imageWebp) {
     // Valido para personagens WebP-only.
   } else if (c.imageWebp && c.image && !/\.png$/i.test(c.image)) {
