@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://bsmiguell.github.io/Temporario/data/characters.schema.json",
+  "$id": "https://bsmiguell.github.io/Codex/data/characters.schema.json",
   "title": "Aetheria Codex - Personagem",
   "description": "Schema de validacao para uma entrada de personagem no characters-api.json. Cada personagem deve ter no minimo nome, id e folder (pasta).",
   "type": "object",

@@ -18,8 +18,11 @@ function walk(dir) {
 walk(root);
 const bad = [];
 for (const file of files) {
+  const relative = path.relative(root, file);
+  if (relative === path.join("scripts", "migrate_codex_urls.ps1")) continue;
+
   const text = fs.readFileSync(file, "utf8");
-  if (text.includes(forbidden)) bad.push(path.relative(root, file));
+  if (text.includes(forbidden)) bad.push(relative);
 }
 
 if (bad.length) {
