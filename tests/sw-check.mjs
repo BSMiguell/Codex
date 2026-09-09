@@ -13,7 +13,7 @@ const checks = [
   ["favicon em revalidacao", /\/assets\/favicon\.svg/],
   ["WebP no runtime", /webp/],
   ["cache sem limite artificial", /cache-first sem limite artificial/],
-  ["videos fora do runtime", !/\.mp4|\.webm|\.mov/i.test(sw)],
+  ["videos fora do runtime", !/function isCacheableAsset[\s\S]*?(?:mp4|webm|mov)/i.test(sw)],
   ["limpeza de caches antigos", /startsWith\("aetheria-"\) && !key\.startsWith\(VERSION\)/],
   ["fallback offline", /offline\.html/],
   ["fallback 404", /404\.html/],
