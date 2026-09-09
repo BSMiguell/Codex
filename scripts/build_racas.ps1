@@ -239,7 +239,11 @@ $written = 0
 
 # W6.1: raças com layout dedicado (hero expandido, lore 2-col, ritual, ver no mapa).
 # Volume justifica o custom. Adicionar nova raça aqui se quiser o mesmo tratamento.
-$dedicatedFolders = @("04_Onis", "05_Demonios")
+$dedicatedFolders = @(
+    "01_Humanos", "04_Onis", "05_Demonios", "08_Monstros",
+    "09_Semi_Deuses", "13_Deuses", "17_Meio_Sangue",
+    "21_Demonios_Akuma-Gani", "22_Bersek"
+)
 
 # W8.2: raças com rituais (picker de pills na hero). Pode estar junto ou separado de $dedicatedFolders.
 # Hoje: 5 raças W8 (ritual picker sem layout dedicated) + 2 raças W7 (ritual picker + layout dedicated).
