@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate APIs
+        run: npm run validate
+
+      - name: Validate Service Worker
+        run: npm run sw-check
+
+      - name: Validate Open Graph
+        run: npm run og-check
+
+      - name: Validate narrative
+        run: npm run narrativa-check
+
+      - name: Validate map filters
+        run: npm run mapa-filtros-check
+
+      - name: Validate map export
+        run: npm run mapa-export-check
+
+      - name: Validate map minimap
+        run: npm run mapa-minimap-check
+
+      - name: Validate timeline
+        run: npm run timeline-check
+
+      - name: Validate transitions
+        run: npm run transitions-check
+
+      - name: Validate accessibility empty states
+        run: npm run a11y-empty-check
+
+      - name: Validate sharing
+        run: npm run share-check
+
+      - name: Validate about section
+        run: npm run about-check
+
+      - name: Validate search
+        run: npm run search-check
+
+      - name: Validate lazy loading
+        run: npm run lazy-check
+
+      - name: Validate modal view transitions
+        run: npm run modal-vt-check
+
+      - name: Lint JavaScript tests
+        run: npm run lint:js
+
+      - name: Check formatting
+        run: npm run format:check
