@@ -324,8 +324,8 @@ Prioridades concluídas:
 
 ```text
 §1.1  WebP / lazy-load    ✅ JÁ FEITO (487/487 WebP, lazy-load no index.html, IntersectionObserver)
-§7.2  Conquistas          🟡 CRIADO (data/conquistas.json + assets/conquistas.js + #conquistasBtn)
-§7.3  Wiki cruzada         🟡 CRIADO (.map-crosslinks básico no Mapa_Aetheria.html)
+§7.2  Conquistas          ✅ COMPLETO (data/conquistas.json + assets/conquistas.js + #conquistasBtn)
+§7.3  Wiki cruzada         ✅ COMPLETO (.map-crosslinks no Mapa_Aetheria.html)
 §8.8-22 Rituais restantes  ✅ COMPLETO (rituals.js: 22/22 grupos — todos com rituais)
 ```
 ```
