@@ -553,7 +553,7 @@ Utilitários em `scripts/` (já usados, manter por precaução): `fix_encoding.p
 
 **Lição nova**: `tests/url-check.mjs` precisa ignorar diretórios internos (`.claude`, `memorias`) que são scratch e não fazem parte dos artefatos publicados. A regra de ignorar `migrate_codex_urls.ps1` também se aplica a esses diretórios.
 
-**Status pós-Camada 3 + CI**: `sw.js`: VERSION v1.4.0 + precache expandido. `.github/workflows/ci.yml`: build API, lint:md, url-check adicionados. `npm run all`: 58/58 ✅. `Temporario.md`: Camada 3 🟢 APROVADO, Camada 4 🟢 APROVADO.
+**Status pós-Camada 3 + CI + Camada 5**: `sw.js`: v1.4.0 + precache expandido. CI (`.github/workflows/ci.yml`): build API, lint:md, url-check. `npm run all`: 58/58 ✅. Camada 5 (Deploy): todos os 12 gates validados (home, busca, mapa, timeline, racas, WebP/PNG, canonical/sitemap/share, 404, offline). `Temporario.md`: Camadas 3, 4, 5 🟢.
 
 ---
 

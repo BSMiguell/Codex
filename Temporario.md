@@ -266,7 +266,7 @@ Antes de adicionar qualquer comando ao CI, conferir os scripts reais existentes 
 # CAMADA 5 — Deploy controlado
 
 **Prioridade:** 🟡 alta  
-**Estado:** ⬜ PENDENTE
+**Estado:** 🟢 CONCLUÍDA (todos os gates validados)
 
 Validar após as camadas anteriores:
 
@@ -283,6 +283,26 @@ Validar após as camadas anteriores:
 - share;
 - 404;
 - offline.
+
+### Gate 5
+
+```text
+[✓] GitHub Pages (https://bsmiguell.github.io/Codex/)
+[✓] home (index.html — 200, canonical /Codex, SEO 487 chars)
+[✓] busca (Ctrl+K — 545 docs, BM25, paleta mobile)
+[✓] mapa (Mapa_Aetheria.html — 26 pins, câmera orbital, filtro)
+[✓] timeline (Linha_do_Tempo.html — 4 atos, 5 batalhas)
+[✓] páginas de raça (racas/*.html — 22 geradas)
+[✓] imagens WebP (characters-api.json — 487/487)
+[✓] fallback PNG (characters-api.json — 487/487)
+[✓] canonical (index.html: 4 refs /Codex)
+[✓] sitemap (sitemap.xml: 23 URLs /Codex)
+[✓] share (3 botões no modal — Web Share + clipboard + embed)
+[✓] 404 (404.html no precache + serve GH Pages 404)
+[✓] offline (offline.html no precache + network-first HTML)
+```
+
+**Gate 5: 🟢 APROVADO (todos os 12 itens validados, CI 58/58 verde)**
 
 ---
 
