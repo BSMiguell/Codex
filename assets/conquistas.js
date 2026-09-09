@@ -22,4 +22,28 @@
       }
     }
   };
+  /* Auto-desbloqueio via eventos do site */
+  function observarEventos() {
+    // Quando um personagem é aberto no modal
+    document.addEventListener('codex:modal-open', function () {
+      window.AETHERIA_CONQUISTAS.desbloquear('explorador_inicial');
+    });
+    // Quando a paleta de comandos é usada
+    document.getElementById('paletteTrigger')?.addEventListener('click', function () {
+      window.AETHERIA_CONQUISTAS.desbloquear('busca_semantica');
+    });
+    // Quando um favorito é adicionado (detectado via mutation no localStorage)
+    setInterval(function () {
+      var est = window.AETHERIA_CONQUISTAS.carregar();
+      var favs = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
+      if (favs.size >= 10 && !est.desbloqueadas.includes('favoritos_10')) {
+        window.AETHERIA_CONQUISTAS.desbloquear('favoritos_10');
+      }
+    }, 3000);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', observarEventos);
+  } else {
+    observarEventos();
+  }
 })();
