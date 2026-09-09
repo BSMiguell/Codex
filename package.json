@@ -7,6 +7,7 @@
   "scripts": {
     "test": "node tests/smoke.mjs",
     "validate": "node tests/validate-api.mjs",
+    "sw-check": "node tests/sw-check.mjs",
     "og-check": "node tests/og-check.mjs",
     "narrativa-check": "node tests/narrativa-check.mjs",
     "mapa-filtros-check": "node tests/mapa-filtros-check.mjs",
