@@ -326,9 +326,9 @@ Prioridades já previstas:
 
 ```text
 §1.1  WebP / lazy-load    ✅ JÁ FEITO (487/487 WebP, lazy-load no index.html, IntersectionObserver)
-§7.2  Conquistas          ❌ NÃO EXISTE (não há código de achievement/conquista)
-§7.3  Wiki cruzada         ❌ NÃO EXISTE (não há cross-links entre páginas além dos links normais)
-§8.8-22 Rituais restantes  🟡 PARCIAL (assets/rituals.js: 7 rituais implementados de ~22 grupos; faltam rituais para os restantes)
+§7.2  Conquistas          🟡 CRIADO (data/conquistas.json + assets/conquistas.js + #conquistasBtn)
+§7.3  Wiki cruzada         🟡 CRIADO (.map-crosslinks básico no Mapa_Aetheria.html)
+§8.8-22 Rituais restantes  ✅ COMPLETO (rituals.js: 22/22 grupos — todos com rituais)
 ```
 ```
 
