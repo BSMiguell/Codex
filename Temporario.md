@@ -315,8 +315,8 @@ Só iniciar quando as Camadas 1–5 estiverem verdes.
 Prioridades já previstas:
 
 ```text
-§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §1.1 ✅ / §7.2 ✅ PARCIAL (data/conquistas.json + botão #conquistasBtn criados)
-§7.3 ❌ NÃO IMPLEMENTADO (sem cross-links estruturais — requer criação)
+§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §1.1 ✅ / §7.2 ✅ COMPLETO (data/conquistas.json + assets/conquistas.js + #conquistasBtn)
+§7.3 ✅ COMPLETO (.map-crosslinks básico + links cruzados no Mapa_Aetheria.html)
 §8.8-22 🟡 PARCIAL (rituals.js: 7 rituais; faltam restantes para 22 grupos)
 §11.9/11.10 → §11.5 → §12
 
