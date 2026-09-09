@@ -98,6 +98,127 @@
     runAfter(700, function () { wm.classList.remove('ritual-mark-active'); });
   }
 
+  /* Rit ual 01 — Humanos: Chama ancestral */
+  RITUALS['01_Humanos'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-01-ancestral');
+    modal.classList.add('ritual-01-modal');
+    runAfter(600, function () {
+      card.classList.remove('ritual-01-ancestral');
+      modal.classList.remove('ritual-01-modal');
+    });
+  };
+
+  /* Rit ual 02 — Mutantes: Transformacao instavel */
+  RITUALS['02_Mutantes'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-02-mutate');
+    modal.classList.add('ritual-02-modal');
+    runAfter(700, function () {
+      card.classList.remove('ritual-02-mutate');
+      modal.classList.remove('ritual-02-modal');
+    });
+  };
+
+  /* Rit ual 04 — Onis: Sombra que consome */
+  RITUALS['04_Onis'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-04-shadow');
+    modal.classList.add('ritual-04-modal');
+    runAfter(800, function () {
+      card.classList.remove('ritual-04-shadow');
+      modal.classList.remove('ritual-04-modal');
+    });
+  };
+
+  /* Rit ual 05 — Demonios: Pacto de sangue */
+  RITUALS['05_Demonios'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-05-pact');
+    modal.classList.add('ritual-05-modal');
+    runAfter(750, function () {
+      card.classList.remove('ritual-05-pact');
+      modal.classList.remove('ritual-05-modal');
+    });
+  };
+
+  /* Rit ual 09 — Semi-Deuses: Ascensao divina */
+  RITUALS['09_Semi_Deuses'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-09-ascension');
+    modal.classList.add('ritual-09-modal');
+    runAfter(700, function () {
+      card.classList.remove('ritual-09-ascension');
+      modal.classList.remove('ritual-09-modal');
+    });
+  };
+
+  /* Rit ual 10 — Seres do Vazio: Abismo abre */
+  RITUALS['10_Seres_Do_Vazio'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-10-abyss');
+    modal.classList.add('ritual-10-modal');
+    runAfter(850, function () {
+      card.classList.remove('ritual-10-abyss');
+      modal.classList.remove('ritual-10-modal');
+    });
+  };
+
+  /* Rit ual 13 — Deuses: Relampago do trono */
+  RITUALS['13_Deuses'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-13-thunder');
+    modal.classList.add('ritual-13-modal');
+    runAfter(600, function () {
+      card.classList.remove('ritual-13-thunder');
+      modal.classList.remove('ritual-13-modal');
+    });
+  };
+
+  /* Rit ual 15 — Desconhecidos: Veu se rasga */
+  RITUALS['15_Desconhecidos'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-15-veil');
+    modal.classList.add('ritual-15-modal');
+    runAfter(700, function () {
+      card.classList.remove('ritual-15-veil');
+      modal.classList.remove('ritual-15-modal');
+    });
+  };
+
+  /* Rit ual 16 — Alvamortos: Ossos ressurgem */
+  RITUALS['16_Alvamortos'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-16-bones');
+    modal.classList.add('ritual-16-modal');
+    runAfter(800, function () {
+      card.classList.remove('ritual-16-bones');
+      modal.classList.remove('ritual-16-modal');
+    });
+  };
+
+  /* Rit ual 18 — Magos: Encantamento arcano */
+  RITUALS['18_Magos'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-18-arcane');
+    modal.classList.add('ritual-18-modal');
+    runAfter(700, function () {
+      card.classList.remove('ritual-18-arcane');
+      modal.classList.remove('ritual-18-modal');
+    });
+  };
+
+  /* Rit ual 20 — Seres do Vazio (duplicado corrigido): Vazio profundo */
+  RITUALS['20_Seres_Do_Vazio_2'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-20-deep');
+    modal.classList.add('ritual-20-modal');
+    runAfter(900, function () {
+      card.classList.remove('ritual-20-deep');
+      modal.classList.remove('ritual-20-modal');
+    });
+  };
+
   /* Fallback generico para grupos ainda sem ritual implementado */
   function ritualFallback(card, modal, color) {
     // Nenhuma classe adicionada; apenas retorna imediatamente.
