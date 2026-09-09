@@ -15,9 +15,9 @@
 import { chromium } from "playwright";
 
 const BASE = process.env.AETHERIA_URL || "http://localhost:8124";
-const GENERIC_TITLE = "Aetheria Codex — Códice de 489 Personagens";
-const GENERIC_OG_URL = "https://bsmiguell.github.io/Temporario/";
-const GENERIC_OG_IMAGE = "https://bsmiguell.github.io/Temporario/assets/og-cover.jpg";
+const GENERIC_TITLE = "Aetheria Codex — Códice de 487 Personagens";
+const GENERIC_OG_URL = "https://bsmiguell.github.io/Codex/";
+const GENERIC_OG_IMAGE = "https://bsmiguell.github.io/Codex/assets/og-cover.jpg";
 const GENERIC_OG_DESC_PREFIX = "Códice de fantasia autoral:";
 
 const browser = await chromium.launch({ headless: true });
@@ -35,10 +35,6 @@ const getMeta = (page, attr, key) =>
   );
 const getTitle = (page) => page.evaluate(() => document.title);
 
-// descobre 2 chars reais do API (1º do 1º grupo + 1º do 2º grupo).
-// parseHash() no site resolve por `id` (NÃO slug), entao testamos com id.
-// O `slug` continua sendo usado pra asserir og:url, ja que updateMetaTagsForChar
-// prefere slug (slug || id || name).
 async function discoverChars(page) {
   return page.evaluate(async () => {
     const r = await fetch("/characters-api.json");
@@ -59,7 +55,6 @@ async function freshPage(url) {
 }
 
 try {
-  // 1) Estado inicial generico (4 checks)
   {
     const { ctx, page } = await freshPage("/");
     check("inicial: title generico", (await getTitle(page)) === GENERIC_TITLE);
@@ -78,7 +73,6 @@ try {
     await ctx.close();
   }
 
-  // 2) Deep-link /#<id> atualiza meta tags (7 checks)
   {
     const probe = await browser.newContext({ serviceWorkers: "block" });
     const probePage = await probe.newPage();
@@ -129,7 +123,6 @@ try {
     }
   }
 
-  // 3) Restaurar ao fechar via Esc (3 checks)
   {
     const probe = await browser.newContext({ serviceWorkers: "block" });
     const probePage = await probe.newPage();
@@ -159,10 +152,6 @@ try {
     }
   }
 
-  // 4) Sem leak entre chars (substitui o teste de "char sem description" que
-  // nao e possivel no dataset atual — todos os 487 chars tem description).
-  // Aqui validamos que abrir um 2º char via novo deep-link sobrescreve o 1º
-  // corretamente (4 checks).
   {
     const probe = await browser.newContext({ serviceWorkers: "block" });
     const probePage = await probe.newPage();
@@ -176,7 +165,6 @@ try {
       check("overwrite: og:title vira 2º char", false);
       check("overwrite: og:url vira 2º slug", false);
     } else {
-      // abre direto o 2º char (simula "abrir um char sem fechar o anterior")
       const { ctx, page } = await freshPage(`/#${encodeURIComponent(b.id)}`);
       try {
         await page.waitForFunction((n) => document.title.includes(n), b.name, { timeout: 4000 });
