@@ -41,6 +41,15 @@
       }
     }, 3000);
   }
+  document.getElementById('conquistasBtn')?.addEventListener('click', function () {
+    var est = window.AETHERIA_CONQUISTAS.carregar();
+    var desbloqueadas = est.desbloqueadas || [];
+    if (desbloqueadas.length === 0) {
+      alert('🏆 Nenhuma conquista desbloqueada ainda.\nExplora o códice!');
+    } else {
+      alert('🏆 Conquistas desbloqueadas: ' + desbloqueadas.join(', '));
+    }
+  });
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', observarEventos);
   } else {
