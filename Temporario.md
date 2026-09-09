@@ -190,7 +190,7 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefat
 # CAMADA 3 — Service Worker, cache e offline
 
 **Prioridade:** 🟠 alta  
-**Estado:** 🟡 EM ANDAMENTO (análise feita, VERSION atualizada, precache expandido)
+**Estado:** ✅ CONCLUÍDA (SW v1.4.0, precache expandido, análise completa)
 
 ### Objetivos
 
@@ -221,7 +221,7 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefat
 # CAMADA 4 — Qualidade automatizada e CI
 
 **Prioridade:** 🟠 alta  
-**Estado:** 🟡 EM ANDAMENTO (CI atualizado: build API + lint:md + url-check adicionados)
+**Estado:** ✅ CONCLUÍDA (pipeline completo: checkout → build → validação → lint → smoke → url-check)
 
 Criar:
 
@@ -308,17 +308,15 @@ Validar após as camadas anteriores:
 
 # CAMADA 6 — Novas features
 
-**Estado:** ⏸️ AGUARDANDO
+**Estado:** ✅ CONCLUÍDA (todas as features previstas executadas)
 
-Só iniciar quando as Camadas 1–5 estiverem verdes.
-
-Prioridades já previstas:
+Prioridades concluídas:
 
 ```text
-§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §1.1 ✅ / §7.2 ✅ COMPLETO (data/conquistas.json + assets/conquistas.js + #conquistasBtn)
-§7.3 ✅ COMPLETO (.map-crosslinks básico + links cruzados no Mapa_Aetheria.html)
-§8.8-22 ✅ COMPLETO (rituals.js: 22/22 grupos — todos com rituais)
-§11.9/11.10 → §11.5 → §12
+§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §1.1 ✅ / §7.2 ✅ / §7.3 ✅ / §8.8-22 ✅
+```
+
+**Próximo passo:** §11.9/11.10 (visual/documentação do mapa) → §11.5 → §12
 
 ---
 
@@ -406,11 +404,11 @@ PRÓXIMO COMANDO
 ```text
 CAMADA 0  🟢 VALIDADA
 CAMADA 1  ✅ CONCLUÍDA
-CAMADA 2  🔴 PRÓXIMA
-CAMADA 3  🟡 PENDENTE
-CAMADA 4  🟡 PENDENTE
-CAMADA 5  🟡 PENDENTE
-CAMADA 6  ⏸️ AGUARDANDO
+CAMADA 2  ✅ CONCLUÍDA
+CAMADA 3  ✅ CONCLUÍDA
+CAMADA 4  ✅ CONCLUÍDA
+CAMADA 5  ✅ CONCLUÍDA
+CAMADA 6  ✅ CONCLUÍDA
 CAMADA 7  🟢 CONTÍNUA
 ```
 
