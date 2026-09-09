@@ -48,6 +48,12 @@ async function putRuntime(req, res) {
   await cache.put(req, res.clone());
 }
 
+async function putCore(req, res) {
+  if (!res || res.status !== 200) return;
+  const cache = await caches.open(CORE_CACHE);
+  await cache.put(req, res.clone());
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CORE_CACHE).then((cache) =>
@@ -101,14 +107,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 2) Manifest/favicon: stale-while-revalidate
+  // 2) Manifest/favicon: stale-while-revalidate no CORE_CACHE.
+  // Como esses arquivos ja estao no precache, a atualizacao precisa substituir
+  // a entrada do CORE_CACHE para que caches.match() veja a versao nova.
   if (isRevalidateAsset(url)) {
     event.respondWith(
       caches.match(req).then((cached) => {
         const update = fetch(req)
           .then((res) => {
             if (res && res.status === 200) {
-              return putRuntime(req, res);
+              return putCore(req, res);
             }
             return null;
           })
