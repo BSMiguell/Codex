@@ -245,7 +245,6 @@
       // Silenciosamente ignora erros de ritual; nunca quebra o fluxo principal.
     }
   };
-})();
 
   /* Rit ual 15 — Os Aspectos: Reflexo distorcido */
   RITUALS['15_Os_Aspectos'] = function (card, modal, color) {
@@ -301,3 +300,4 @@
       modal.classList.remove('ritual-22-modal');
     });
   };
+})();
