@@ -674,4 +674,4 @@ Sitemap: https://bsmiguell.github.io/Codex/sitemap.xml
 
 ---
 
-*Última geração: 09/09/2026 21:12 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
+*Última geração: 09/09/2026 21:48 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
