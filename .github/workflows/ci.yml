@@ -35,6 +35,12 @@ jobs:
           python3 -m http.server 8124 > /tmp/aetheria-http-8124.log 2>&1 &
           python3 -m http.server 8080 > /tmp/aetheria-http-8080.log 2>&1 &
 
+      - name: Build API (characters-api.json)
+        run: powershell -ExecutionPolicy Bypass -File scripts/build_api_json.ps1
+
+      - name: Build Historia API
+        run: powershell -ExecutionPolicy Bypass -File scripts/build_historia_api.ps1
+
       - name: Validate APIs
         run: npm run validate
 
@@ -88,3 +94,9 @@ jobs:
 
       - name: Check formatting
         run: npm run format:check
+
+      - name: Lint Markdown
+        run: npm run lint:md
+
+      - name: SEO / URL check
+        run: node tests/url-check.mjs

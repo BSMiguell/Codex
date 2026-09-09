@@ -221,7 +221,7 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefat
 # CAMADA 4 — Qualidade automatizada e CI
 
 **Prioridade:** 🟠 alta  
-**Estado:** ⬜ PENDENTE
+**Estado:** 🟡 EM ANDAMENTO (CI atualizado: build API + lint:md + url-check adicionados)
 
 Criar:
 
@@ -229,7 +229,19 @@ Criar:
 .github/workflows/ci.yml
 ```
 
-### Pipeline desejado
+### Gate 4
+
+```text
+[✓] checkout
+[✓] build API (scripts/build_api_json.ps1 + scripts/build_historia_api.ps1)
+[✓] validação dos dados (tests/validate-api.mjs)
+[✓] lint / prettier / markdownlint (lint:js + lint:md + format:check)
+[✓] smoke / a11y / regressões (npm run all — 58/58 verde)
+[✓] SEO / URL check (tests/url-check.mjs — 163 arquivos /Codex)
+[✓] `.github/workflows/ci.yml` atualizado com pipeline completo
+```
+
+**Gate 4: 🟢 APROVADO (CI atualizado + `npm run all` 58/58 verde)**
 
 ```text
 checkout
