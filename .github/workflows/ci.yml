@@ -59,6 +59,9 @@ jobs:
       - name: Validate timeline
         run: npm run timeline-check
 
+      - name: Diagnose transition console errors
+        run: node tests/transitions-debug.mjs
+
       - name: Validate transitions
         run: npm run transitions-check
 
