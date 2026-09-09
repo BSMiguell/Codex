@@ -315,7 +315,18 @@ Só iniciar quando as Camadas 1–5 estiverem verdes.
 Prioridades já previstas:
 
 ```text
-§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §11.9/11.10 → §8.8–22 → §11.5 → §12
+§7.1 ✅ / §9.2 ✅ / §9.3 ✅ / §6.1 ✅ / §1.1 ✅ / §11.9/11.10 → §8.8–22 → §11.5 → §12
+
+---
+
+## Registro adicional (09/09/2026)
+
+```text
+§1.1  WebP / lazy-load    ✅ JÁ FEITO (487/487 WebP, lazy-load no index.html, IntersectionObserver)
+§7.2  Conquistas          ❌ NÃO EXISTE (não há código de achievement/conquista)
+§7.3  Wiki cruzada         ❌ NÃO EXISTE (não há cross-links entre páginas além dos links normais)
+§8.8-22 Rituais restantes  🟡 PARCIAL (assets/rituals.js: 7 rituais implementados de ~22 grupos; faltam rituais para os restantes)
+```
 ```
 
 ---
