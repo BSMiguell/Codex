@@ -1,14 +1,13 @@
 // sw.js - Service Worker do Aetheria Codex
 // Estrategia:
 //   - Network-first para navegacao (HTML) -> sempre fresco
-//   - Cache-first para assets estaticos (imagens, JSON, CSS, JS)
-//   - Stale-while-revalidate para o manifest/favicon
-// Tudo offline-first: apos 1 visita, o site abre 100% sem internet.
+//   - Cache-first para assets estaticos publicados -> rapido e offline
+//   - Stale-while-revalidate para manifest/favicon -> entrega cache e atualiza em paralelo
+// O offline e progressivo: recursos ja visitados permanecem disponiveis sem internet.
 
-const VERSION = "aetheria-v1.2.0"; // §11.4 404 tematizada: 404.html no precache + handler de 404
+const VERSION = "aetheria-v1.3.0";
 const CORE_CACHE = `${VERSION}-core`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
-const MAX_RUNTIME = 200; // ~200 arquivos em cache (suficiente para todos os WebP/JSON)
 
 const PRECACHE_URLS = [
   "./",
@@ -27,6 +26,28 @@ const PRECACHE_URLS = [
   "./data/search-index.json", // §9.3 — indice da search semantica (Ctrl+K por lore)
 ];
 
+const REVALIDATE_PATHS = new Set([
+  "/manifest.webmanifest",
+  "/assets/favicon.svg",
+  "/assets/favicon-32.png",
+  "/assets/favicon-192.png",
+  "/assets/apple-touch-icon.png",
+]);
+
+function isRevalidateAsset(url) {
+  return REVALIDATE_PATHS.has(url.pathname);
+}
+
+function isCacheableAsset(url) {
+  return /\.(?:css|js|json|webmanifest|png|jpe?g|webp|svg|ico|woff2?)$/i.test(url.pathname);
+}
+
+async function putRuntime(req, res) {
+  if (!res || res.status !== 200) return;
+  const cache = await caches.open(RUNTIME_CACHE);
+  await cache.put(req, res.clone());
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CORE_CACHE).then((cache) =>
@@ -44,8 +65,8 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((k) => !k.startsWith(VERSION))
-          .map((k) => caches.delete(k))
+          .filter((key) => key.startsWith("aetheria-") && !key.startsWith(VERSION))
+          .map((key) => caches.delete(key))
       )
     )
   );
@@ -70,37 +91,55 @@ self.addEventListener("fetch", (event) => {
             return caches.match("./404.html");
           }
           const clone = res.clone();
-          caches.open(CORE_CACHE).then((c) => c.put(req, clone));
+          caches.open(CORE_CACHE).then((cache) => cache.put(req, clone));
           return res;
         })
-        .catch(() => caches.match(req).then((r) => r || caches.match("./offline.html")))
+        .catch(() =>
+          caches.match(req).then((cached) => cached || caches.match("./offline.html"))
+        )
     );
     return;
   }
 
-  // 2) Assets estaticos: cache-first
-  event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req)
-        .then((res) => {
-          // so cacheia o que deu certo
-          if (!res || res.status !== 200) return res;
-          const clone = res.clone();
-          caches.open(RUNTIME_CACHE).then((c) => {
-            c.put(req, clone);
-            // limita tamanho do runtime
-            c.keys().then((keys) => {
-              if (keys.length > MAX_RUNTIME) {
-                c.delete(keys[0]); // remove o mais antigo
-              }
-            });
-          });
-          return res;
-        })
-        .catch(() => cached); // offline total
-    })
-  );
+  // 2) Manifest/favicon: stale-while-revalidate
+  if (isRevalidateAsset(url)) {
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        const update = fetch(req)
+          .then((res) => {
+            if (res && res.status === 200) {
+              return putRuntime(req, res);
+            }
+            return null;
+          })
+          .catch(() => null);
+
+        if (cached) {
+          event.waitUntil(update);
+          return cached;
+        }
+
+        return update.then(() => caches.match(req));
+      })
+    );
+    return;
+  }
+
+  // 3) Assets publicados: cache-first sem limite artificial de quantidade.
+  // Isso permite que WebP/JSON/JS/CSS ja visitados continuem offline.
+  if (isCacheableAsset(url)) {
+    event.respondWith(
+      caches.match(req).then((cached) => {
+        if (cached) return cached;
+        return fetch(req)
+          .then(async (res) => {
+            await putRuntime(req, res);
+            return res;
+          })
+          .catch(() => cached);
+      })
+    );
+  }
 });
 
 // mensagem: o usuario pediu pular o cache e recarregar
