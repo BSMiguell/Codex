@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "title": "Conquistas do Aetheria Codex",
+  "description": "Progresso de exploração e interação com o códice.",
+  "conquistas": [
+    {"id":"explorador_inicial","nome":"Primeiros Passos","descricao":"Abriu o Aetheria pela primeira vez.","icone":"🌱","desbloqueado":true},
+    {"id":"leitor_22","nome":"Leitor das 22 Raças","descricao":"Visitou as páginas de todas as 22 raças.","icone":"📚","desbloqueado":false,"progresso":0,"total":22},
+    {"id":"mapa_explorador","nome":"Explorador do Mapa","descricao":"Clicou em pelo menos 10 pins no mapa.","icone":"🗺️","desbloqueado":false,"progresso":0,"total":10},
+    {"id":"favoritos_10","nome":"Colecionador","descricao":"Adicionou 10 personagens aos favoritos.","icone":"♥","desbloqueado":false,"progresso":0,"total":10},
+    {"id":"busca_semantica","nome":"Investigador","descricao":"Usou a busca semântica por lore.","icone":"🔎","desbloqueado":false,"progresso":0,"total":1}
+  ]
+}
