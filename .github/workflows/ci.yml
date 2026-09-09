@@ -30,8 +30,10 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Start local server
-        run: python3 -m http.server 8124 > /tmp/aetheria-http.log 2>&1 &
+      - name: Start local servers
+        run: |
+          python3 -m http.server 8124 > /tmp/aetheria-http-8124.log 2>&1 &
+          python3 -m http.server 8080 > /tmp/aetheria-http-8080.log 2>&1 &
 
       - name: Validate APIs
         run: npm run validate
