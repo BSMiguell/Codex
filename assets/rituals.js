@@ -154,7 +154,7 @@
   };
 
   /* Rit ual 10 — Seres do Vazio: Abismo abre */
-  RITUALS['10_Seres_Do_Vazio'] = function (card, modal, color) {
+  RITUALS['10_Os_Observadores'] = function (card, modal, color) {
     if (prefersReduced) return;
     card.classList.add('ritual-10-abyss');
     modal.classList.add('ritual-10-modal');
@@ -175,8 +175,8 @@
     });
   };
 
-  /* Rit ual 15 — Desconhecidos: Veu se rasga */
-  RITUALS['15_Desconhecidos'] = function (card, modal, color) {
+  /* Rit ual 06 — Desconhecidos: Veu se rasga (corrigido do 15) */
+  RITUALS['06_Desconhecidos'] = function (card, modal, color) {
     if (prefersReduced) return;
     card.classList.add('ritual-15-veil');
     modal.classList.add('ritual-15-modal');
@@ -208,8 +208,19 @@
     });
   };
 
-  /* Rit ual 20 — Seres do Vazio (duplicado corrigido): Vazio profundo */
-  RITUALS['20_Seres_Do_Vazio_2'] = function (card, modal, color) {
+  /* Rit ual 11 — Seres do Vazio: Vazio profundo */
+  RITUALS['11_Seres_Do_Vazio'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-11-deep');
+    modal.classList.add('ritual-11-modal');
+    runAfter(900, function () {
+      card.classList.remove('ritual-11-deep');
+      modal.classList.remove('ritual-11-modal');
+    });
+  };
+
+  /* Rit ual 12 — Magos: Encantamento arcano (corrigido do 18) */
+  RITUALS['12_Magos'] = function (card, modal, color) {
     if (prefersReduced) return;
     card.classList.add('ritual-20-deep');
     modal.classList.add('ritual-20-modal');
@@ -235,3 +246,58 @@
     }
   };
 })();
+
+  /* Rit ual 15 — Os Aspectos: Reflexo distorcido */
+  RITUALS['15_Os_Aspectos'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-15-reflect');
+    modal.classList.add('ritual-15-modal');
+    runAfter(700, function () {
+      card.classList.remove('ritual-15-reflect');
+      modal.classList.remove('ritual-15-modal');
+    });
+  };
+
+  /* Rit ual 18 — Canibais: Fome insaciavel */
+  RITUALS['18_Canibais'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-18-hunger');
+    modal.classList.add('ritual-18-modal');
+    runAfter(800, function () {
+      card.classList.remove('ritual-18-hunger');
+      modal.classList.remove('ritual-18-modal');
+    });
+  };
+
+  /* Rit ual 20 — Amaldiçoados: Sombra eterna */
+  RITUALS['20_Amaldiçoados'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-20-curse');
+    modal.classList.add('ritual-20-modal');
+    runAfter(750, function () {
+      card.classList.remove('ritual-20-curse');
+      modal.classList.remove('ritual-20-modal');
+    });
+  };
+
+  /* Rit ual 21 — Demonios Akuma-Gani: Corrente das almas */
+  RITUALS['21_Demonios_Akuma_Gani'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-21-chain');
+    modal.classList.add('ritual-21-modal');
+    runAfter(850, function () {
+      card.classList.remove('ritual-21-chain');
+      modal.classList.remove('ritual-21-modal');
+    });
+  };
+
+  /* Rit ual 22 — Bersek: Furor incontrolavel */
+  RITUALS['22_Bersek'] = function (card, modal, color) {
+    if (prefersReduced) return;
+    card.classList.add('ritual-22-rage');
+    modal.classList.add('ritual-22-modal');
+    runAfter(800, function () {
+      card.classList.remove('ritual-22-rage');
+      modal.classList.remove('ritual-22-modal');
+    });
+  };
