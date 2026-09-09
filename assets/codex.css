@@ -3940,3 +3940,32 @@ body.no-fx .ritual-19-axe {
     scroll-behavior: auto !important;
   }
 }
+
+/* §7.3 — .map-crosslinks (links cruzados no mapa) */
+.map-crosslinks {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem var(--pad, 1rem);
+  background: rgba(0,0,0,0.6);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.map-crosslinks a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.35rem;
+  background: rgba(255,255,255,0.08);
+  color: #f0e6d2;
+  text-decoration: none;
+  font-size: 0.8rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.2s, color 0.2s;
+}
+.map-crosslinks a:hover,
+.map-crosslinks a:focus {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  outline: none;
+}
