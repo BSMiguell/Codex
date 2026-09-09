@@ -5,7 +5,7 @@
 //   - Stale-while-revalidate para manifest/favicon -> entrega cache e atualiza em paralelo
 // O offline e progressivo: recursos ja visitados permanecem disponiveis sem internet.
 
-const VERSION = "aetheria-v1.3.0";
+const VERSION = "aetheria-v1.4.0";
 const CORE_CACHE = `${VERSION}-core`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
 
@@ -23,6 +23,8 @@ const PRECACHE_URLS = [
   "./assets/apple-touch-icon.png",
   "./assets/og-cover.jpg",
   "./data/themes.json",
+  "./assets/rituals.js",     // motor de 10 rituais do modal
+  "./assets/transitions.js", // transições de página
   "./data/search-index.json", // §9.3 — indice da search semantica (Ctrl+K por lore)
 ];
 

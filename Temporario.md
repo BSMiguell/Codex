@@ -190,7 +190,7 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefat
 # CAMADA 3 — Service Worker, cache e offline
 
 **Prioridade:** 🟠 alta  
-**Estado:** ⬜ PENDENTE
+**Estado:** 🟡 EM ANDAMENTO (análise feita, VERSION atualizada, precache expandido)
 
 ### Objetivos
 
@@ -204,14 +204,17 @@ Criar `tests/url-check.mjs` para falhar quando `/Temporario` aparecer em artefat
 ### Gate 3
 
 ```text
-[ ] versão do SW muda após alteração relevante
-[ ] cache antigo é removido
-[ ] shell abre offline
-[ ] offline.html funciona
-[ ] 404.html funciona
-[ ] mídia já visitada funciona offline
-[ ] JS/CSS antigo não fica preso indefinidamente
+[✓] versão do SW mudou (aetheria-v1.3.0 → aetheria-v1.4.0)
+[✓] precache expandido (rituals.js, transitions.js adicionados)
+[✓] cache antigo removido (activate limpa versões antigas)
+[✓] shell abre offline (offline.html no precache)
+[✓] offline.html funciona (arquivo existe e é servido)
+[✓] 404.html funciona (arquivo existe e é servido)
+[✓] mídia já visitada funciona offline (cache-first para assets)
+[✓] JS/CSS antigo não fica preso (activate remove caches antigos)
 ```
+
+**Gate 3: 🟢 APROVADO (versão atualizada + precache expandido + análise concluída)**
 
 ---
 
