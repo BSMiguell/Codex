@@ -20,7 +20,7 @@ const checks = [
   ["cache sem limite artificial", /cache-first sem limite artificial/.test(sw)],
   [
     "videos fora do runtime",
-    !/(?:mp4|webm|mov)/i.test(cacheableBody),
+    !/\.(?:mp4|webm|mov)(?:$|[^a-z0-9])/i.test(cacheableBody),
   ],
   [
     "limpeza de caches antigos",
