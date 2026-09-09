@@ -12,7 +12,7 @@
 
 import { chromium } from "playwright";
 
-const BASE = process.env.AETHERIA_URL || "http://localhost:8080";
+const BASE = process.env.AETHERIA_URL || "http://localhost:8124";
 
 const browser = await chromium.launch({ headless: true });
 let pass = 0,
