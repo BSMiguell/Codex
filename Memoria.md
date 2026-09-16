@@ -94,6 +94,16 @@ Três formatos de ficha `.md` convivem no projeto:
 
 **Status pós-W12:** **9/10 do backlog original fechados** (§9.3 fechou). Plano Q4: **29/39 (~74%)**. Pendentes: §1.1 WebP, §1.3 Lazy-load agressivo, §5.3 Doc API, §6.1 Minimap, §7.1 Páginas únicas, §7.2 Conquistas, §7.3 Wiki, §8.8-22 14 rituais, §9.2 Coleções temáticas. Próxima recomendação Bruno: A → B → D → C (§6.1 Minimap antes de WebP, intercalando 1 curto + 1 longo).
 
+### 16/09/2026 — Correção `assets/rituals.js` (P0 A1)
+
+| Hora | Evento | Resultado |
+| --- | --- | --- |
+| — | `assets/rituals.js` corrigido: 22 rituais confirmados dentro da IIFE, duplicado `18_Magos` removido, classes de `06_Desconhecidos` e `12_Magos` corrigidas, comentário `10` corrigido. | OK |
+
+**Status pós-correção:** Gate A1 (rituals) ✅. Próximos: A2 (`transitions-check`) → A3 (CI verde) → B (documentação) → C (magia) → D (mapa) → E (NVDA). Nenhuma nova feature até o circuito de estabilidade estar verde.
+
+---
+
 ### 04/09/2026 — §6.1 Minimap/bússola: feature W5.1 já existia — mas o click NÃO funcionava
 
 | Hora   | Evento                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   | Resultado |

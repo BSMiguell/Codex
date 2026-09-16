@@ -153,7 +153,7 @@
     });
   };
 
-  /* Rit ual 10 — Seres do Vazio: Abismo abre */
+  /* Rit ual 10 — Os Observadores: Abismo abre */
   RITUALS['10_Os_Observadores'] = function (card, modal, color) {
     if (prefersReduced) return;
     card.classList.add('ritual-10-abyss');
@@ -175,14 +175,14 @@
     });
   };
 
-  /* Rit ual 06 — Desconhecidos: Veu se rasga (corrigido do 15) */
+  /* Ritual 06 — Desconhecidos: Veu se rasga */
   RITUALS['06_Desconhecidos'] = function (card, modal, color) {
     if (prefersReduced) return;
-    card.classList.add('ritual-15-veil');
-    modal.classList.add('ritual-15-modal');
+    card.classList.add('ritual-06-veil');
+    modal.classList.add('ritual-06-modal');
     runAfter(700, function () {
-      card.classList.remove('ritual-15-veil');
-      modal.classList.remove('ritual-15-modal');
+      card.classList.remove('ritual-06-veil');
+      modal.classList.remove('ritual-06-modal');
     });
   };
 
@@ -197,17 +197,6 @@
     });
   };
 
-  /* Rit ual 18 — Magos: Encantamento arcano */
-  RITUALS['18_Magos'] = function (card, modal, color) {
-    if (prefersReduced) return;
-    card.classList.add('ritual-18-arcane');
-    modal.classList.add('ritual-18-modal');
-    runAfter(700, function () {
-      card.classList.remove('ritual-18-arcane');
-      modal.classList.remove('ritual-18-modal');
-    });
-  };
-
   /* Rit ual 11 — Seres do Vazio: Vazio profundo */
   RITUALS['11_Seres_Do_Vazio'] = function (card, modal, color) {
     if (prefersReduced) return;
@@ -219,14 +208,14 @@
     });
   };
 
-  /* Rit ual 12 — Magos: Encantamento arcano (corrigido do 18) */
+  /* Rit ual 12 — Magos: Encantamento arcano */
   RITUALS['12_Magos'] = function (card, modal, color) {
     if (prefersReduced) return;
-    card.classList.add('ritual-20-deep');
-    modal.classList.add('ritual-20-modal');
-    runAfter(900, function () {
-      card.classList.remove('ritual-20-deep');
-      modal.classList.remove('ritual-20-modal');
+    card.classList.add('ritual-12-arcane');
+    modal.classList.add('ritual-12-modal');
+    runAfter(700, function () {
+      card.classList.remove('ritual-12-arcane');
+      modal.classList.remove('ritual-12-modal');
     });
   };
 

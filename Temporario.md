@@ -516,17 +516,18 @@ Não apagar o histórico para “corrigir” a documentação. Atualizar o estad
 
 ## FASE A — Estabilização
 
-### A1 — `assets/rituals.js`
+### A1 — `assets/rituals.js` ✅ CONCLUÍDO (16/09/2026)
 
 ```text
-[ ] abrir arquivo atual
-[ ] confirmar escopo da IIFE
-[ ] confirmar declaração dos 22 rituais
-[ ] confirmar que RITUALS/prefersReduced/runAfter estão no escopo correto
-[ ] verificar erros de console
+[✓] abrir arquivo atual
+[✓] confirmar escopo da IIFE — todos os 22 rituais dentro do fechamento
+[✓] confirmar declaração dos 22 rituais — 22 (duplicado 18_Magos removido)
+[✓] confirmar que RITUALS/prefersReduced/runAfter estão no escopo correto
+[✓] corrigir classes confusas (06_Desconhecidos, 12_Magos) e duplicado (18_Magos)
+[✓] comentário 10 corrigido (Os Observadores, não Seres do Vazio)
 ```
 
-**Gate A1:** arquivo estruturalmente correto e sem erro causado por escopo.
+**Gate A1:** arquivo estruturalmente correto. 22 rituais, IIFE fechada, sem duplicados.
 
 ### A2 — Transitions
 
