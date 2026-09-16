@@ -100,6 +100,7 @@ $template = @'
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/raca.css?v=__ASSET_VER__">
+  <link rel="stylesheet" href="assets/transitions.css">
 </head>
 <body data-slug="__SLUG__" data-layout="__LAYOUT__">
 <a class="skip-link" href="#mainContent">Pular para a lista de personagens</a>
@@ -218,6 +219,7 @@ $template = @'
 
 <noscript><p style="padding:6rem 2rem;text-align:center;font-family:sans-serif;">Ative o JavaScript para ver o showcase dos membros.</p></noscript>
 
+  <script src="assets/page-entry.js" defer></script>
 <script id="race-data" type="application/json">__DATA__</script>
 <script src="assets/raca.js?v=__ASSET_VER__" defer></script>
 </body>
