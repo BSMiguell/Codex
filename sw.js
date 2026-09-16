@@ -23,7 +23,7 @@ const PRECACHE_URLS = [
   "./assets/apple-touch-icon.png",
   "./assets/og-cover.jpg",
   "./data/themes.json",
-  "./assets/rituals.js",     // motor de 10 rituais do modal
+  "./assets/rituals.js",     // motor de 22 rituais do modal
   "./assets/transitions.js", // transições de página
   "./data/search-index.json", // §9.3 — indice da search semantica (Ctrl+K por lore)
 ];

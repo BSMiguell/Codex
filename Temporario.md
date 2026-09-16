@@ -473,7 +473,7 @@ Não transformar documentação de teste em aprovação de teste real.
 
 # 13. CAMADA 7 — Documentação e manutenção
 
-**Estado:** 🟡 EM SINCRONIZAÇÃO
+**Estado:** 🟢 SINCRONIZADO (B concluída 16/09/2026)
 
 ## Fontes documentais
 
@@ -569,11 +569,11 @@ Não apagar o histórico para “corrigir” a documentação. Atualizar o estad
 Depois de A3:
 
 ```text
-[ ] atualizar Temporario.md com estado final
-[ ] revisar docs/checklist-validado.md
-[ ] revisar memória diária correspondente
-[ ] corrigir comentários/documentação obsoletos do SW
-[ ] confirmar README
+[✓] atualizar Temporario.md com estado final
+[✓] revisar docs/checklist-validado.md
+[✓] revisar memória diária correspondente
+[✓] corrigir comentários/documentação obsoletos do SW (rituais: 10 → 22)
+[✓] confirmar README
 ```
 
 **Gate B:** documentação não contradiz o estado do código.
