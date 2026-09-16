@@ -1928,3 +1928,17 @@ Bruno confirmou: §1.3 era o #2 do backlog Q4 (1-2 dias, altíssimo impacto). §
 **Custo real §1.3**: 3 commits fatiados (1+2: ~140 LOC em `index.html`; 3: 285 LOC em `tests/lazy-check.mjs`; 4: ~3 linhas em `build_readme.ps1` + ~10 linhas regeneradas em `README.md` + 1 entrada em `Memoria.md` + 2 status flips em `Temporario.md`). **Zero dependência nova** (só `IntersectionObserver` nativo). **Resultado mensurável**: 18+ requests → 9 no boot (50% redução) + CLS=0 + sem imagens perdidas (WebP-first preservado).
 
 **Status pós-§1.3**: **8/10 do backlog original fechados** (§1.1+§1.3 juntos). Plano Q4: **33/39 (~85%)**. Pendentes: §5.3 Doc API, §7.1 Páginas de raça únicas, §7.2 Conquistas, §7.3 Wiki, §8.8-22 14 rituais, §9.2 Coleções, §11.5 Camadas extras do mapa, §11.8 14 rituais espelho, §11.11 Pesquisa leitor de tela. Próxima recomendação Bruno: §5.3 (Doc API) é 1 dia e baixo risco — boa pedida pra W16.
+
+---
+
+### 16/09/2026 (B — Reconciliar documentação, pós-A3)
+
+- `sw.js`: comentário `10 rituais` → `22 rituais` corrigido (linha 26).
+- `docs/checklist-validado.md`: revisado; 36 itens confirmados; estatísticas atualizadas; #11 rituais corrigido; #19 v5 confirmado; sem contradições com código.
+- `Temporario.md`: Fase B marcada concluída; Gate B aprovado; Camada 7 (doc) reclassificada 🟡 → 🟢; Gate 4 (CI) mantido 🔴 (smoke falha local — não regressão).
+- `memorias/2026-09-16.md`: atualizado com seção B.
+- `README.md`: preservado (não editado direto; gerado por `build_readme.ps1` — Lição 1ª/10ª honrada).
+- `assets/rituals.js`: já corrigido em A1 (22/22, IIFE fechada, duplicado 18_Magos removido, classes 06/12 corrigidas, comentário 10 corrigido — `Os Observadores`).
+- Commit: `5b8039a` (docs + sw + memórias + racas/* já do A2).
+- **Nenhum arquivo histórico apagado ou reescrito destrutivamente.**
+- Próximo: C (magia) → só após CI verde no HEAD atual.
