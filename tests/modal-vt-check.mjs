@@ -22,7 +22,7 @@ import { setTimeout as wait } from "node:timers/promises";
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({
   viewport: { width: 1600, height: 1000 },
-  serviceWorkers: "block", // Lição 11ª: SW segura versão antiga em testes
+  serviceWorkers: "block" // Lição 11ª: SW segura versão antiga em testes
 });
 const page = await ctx.newPage();
 
@@ -88,7 +88,7 @@ const vtErrors = errs.filter(
     m.includes("View Transition") ||
     m.includes("InvalidStateError") ||
     m.includes("startTime") ||
-    m.includes("Transition was aborted"),
+    m.includes("Transition was aborted")
 );
 
 console.log("=== modal-vt-check ===");

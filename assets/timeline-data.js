@@ -15,7 +15,7 @@
     I: { titulo: "Ato I — A Queda do Norte", cor: "#9bb5d4" },
     II: { titulo: "Ato II — Os Cumes em Chamas", cor: "#dba66b" },
     III: { titulo: "Ato III — A Ruptura da Fenda", cor: "#a25bb6" },
-    IV: { titulo: "Ato IV — O Vazio Desperta", cor: "#5b8b8e" },
+    IV: { titulo: "Ato IV — O Vazio Desperta", cor: "#5b8b8e" }
   };
 
   // Mapa data (label humano) -> peso numérico. "Verão do Vazio, ano 12 (clímax)"
@@ -46,7 +46,7 @@
       data: b.data,
       resumo: b.resumo,
       regiao: b.regiao,
-      pos: b.pos,
+      pos: b.pos
     }));
   }
 

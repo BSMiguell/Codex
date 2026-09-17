@@ -557,6 +557,11 @@ $L.Add('---')
 $L.Add('')
 $L.Add('*Última geração: ' + (Get-Date -Format 'dd/MM/yyyy HH:mm') + ' por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*')
 
-$content = $L -join [Environment]::NewLine
+$content = ($L -join "`n") + "`n"
 [System.IO.File]::WriteAllText((Join-Path $root 'README.md'), $content, (New-Object System.Text.UTF8Encoding($false)))
+# O README gerado participa do format:check; formatar na origem evita drift a cada build.
+$prettier = Join-Path $root 'node_modules/prettier/bin/prettier.cjs'
+if (-not (Test-Path $prettier)) { throw 'Prettier nao encontrado. Execute npm ci antes de gerar o README.' }
+& node $prettier --write (Join-Path $root 'README.md')
+if ($LASTEXITCODE -ne 0) { throw 'Falha ao formatar README.md.' }
 Write-Host "README.md gerado."

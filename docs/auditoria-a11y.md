@@ -10,22 +10,22 @@
 
 ## Resumo
 
-| Métrica | Valor |
-|---|---|
-| Páginas auditadas | 4 |
-| **Violações REAIS (a corrigir)** | **0** |
-| Violações whitelisted (falso-positivo) | 42 |
-| Critical (real) | 0 |
-| Serious (real) | 42 |
-| Moderate (real) | 0 |
-| Minor (real) | 0 |
+| Métrica                                | Valor |
+| -------------------------------------- | ----- |
+| Páginas auditadas                      | 4     |
+| **Violações REAIS (a corrigir)**       | **0** |
+| Violações whitelisted (falso-positivo) | 42    |
+| Critical (real)                        | 0     |
+| Serious (real)                         | 42    |
+| Moderate (real)                        | 0     |
+| Minor (real)                           | 0     |
 
 > **Status**: ✅ sem violações reais — todas as críticas/sérias foram whitelisted como falso-positivos conhecidos.
 
 ## Falsos-positivos whitelisted (com motivo)
 
-| Regra axe | Whitelisted em | Motivo |
-|---|---|---|
+| Regra axe        | Whitelisted em                               | Motivo                                                                                                                             |
+| ---------------- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | `color-contrast` | index (24), linha-do-tempo (17), offline (1) | Tokens semânticos próprios (--paper, --ink-soft, --accent) já validados pelo smoke check 9; axe não conhece nossa paleta calibrada |
 
 ## Por página

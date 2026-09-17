@@ -3,11 +3,7 @@
 import { chromium } from "playwright";
 
 const BASE = process.env.AETHERIA_URL || "http://localhost:8124";
-const TARGETS = [
-  "/index.html",
-  "/racas/humanos.html",
-  "/racas/mutantes.html",
-];
+const TARGETS = ["/index.html", "/racas/humanos.html", "/racas/mutantes.html"];
 
 const browser = await chromium.launch({ headless: true });
 
@@ -27,7 +23,9 @@ try {
       }
     });
     page.on("requestfailed", (request) => {
-      failedRequests.push(`${request.method()} ${request.url()} — ${request.failure()?.errorText || "unknown"}`);
+      failedRequests.push(
+        `${request.method()} ${request.url()} — ${request.failure()?.errorText || "unknown"}`
+      );
     });
 
     await page.goto(BASE + target, { waitUntil: "load" });

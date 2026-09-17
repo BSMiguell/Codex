@@ -41,10 +41,14 @@
 
   // === KILL SWITCHES ===
   function shouldAnimate() {
-    if (document.body && document.body.classList && document.body.classList.contains("no-fx")) return false;
+    if (document.body && document.body.classList && document.body.classList.contains("no-fx"))
+      return false;
     try {
-      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-    } catch (e) { /* matchMedia indisponível em browser antigo */ }
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+        return false;
+    } catch (e) {
+      /* matchMedia indisponível em browser antigo */
+    }
     return true;
   }
 
@@ -73,11 +77,11 @@
       const xRatio = (r.left + r.width / 2) / vw;
       const yRatio = (r.top + r.height / 2) / vh;
       // Vertical domina
-      if (yRatio < 0.34) return "down";  // topo → B entra de cima
-      if (yRatio > 0.66) return "up";    // base → B entra de baixo
+      if (yRatio < 0.34) return "down"; // topo → B entra de cima
+      if (yRatio > 0.66) return "up"; // base → B entra de baixo
       // Horizontal no meio da página
-      if (xRatio < 0.5)  return "right"; // esquerda → B entra da direita
-      return "left";                      // direita → B entra da esquerda
+      if (xRatio < 0.5) return "right"; // esquerda → B entra da direita
+      return "left"; // direita → B entra da esquerda
     } catch (e) {
       return "down";
     }
@@ -89,7 +93,8 @@
   function isInternalNavLink(link, ev) {
     if (!link || !link.getAttribute) return false;
     const href = link.getAttribute("href");
-    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return false;
+    if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:"))
+      return false;
     if (link.target && link.target !== "" && link.target !== "_self") return false;
     if (link.hasAttribute("download")) return false;
     // Modificadores abrem em nova aba — deixa o browser tratar
@@ -99,7 +104,8 @@
       const u = new URL(href, window.location.href);
       if (u.origin !== window.location.origin) return false;
       // Mesma URL exata: sem transição
-      if (u.pathname === window.location.pathname && u.search === window.location.search) return false;
+      if (u.pathname === window.location.pathname && u.search === window.location.search)
+        return false;
     } catch (e) {
       return false;
     }
@@ -109,21 +115,27 @@
   // === TRIGGER DE DIREÇÃO (rodado no clique) ===
   // Seta o atributo ANTES do browser iniciar a nav, usando capture phase
   // pra rodar antes de qualquer handler de stopPropagation/preventDefault.
-  document.addEventListener("click", function (ev) {
-    if (!shouldAnimate()) return;
-    if (!crossDocVTSupported()) return;
-    const link = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
-    if (!link) return;
-    if (!isInternalNavLink(link, ev)) return;
-    const dir = directionForLink(link);
-    // Seta no <html> (documentElement) — o CSS escuta esse seletor.
-    document.documentElement.setAttribute("data-transition-direction", dir);
-    // Sessão: se a nav falhar (browser aborta), limpa o atributo
-    // depois de 1s pra não contaminar navs futuras.
-    setTimeout(function () {
-      try { document.documentElement.removeAttribute("data-transition-direction"); } catch (e) {}
-    }, 1000);
-  }, true); // capture phase
+  document.addEventListener(
+    "click",
+    function (ev) {
+      if (!shouldAnimate()) return;
+      if (!crossDocVTSupported()) return;
+      const link = ev.target && ev.target.closest ? ev.target.closest("a[href]") : null;
+      if (!link) return;
+      if (!isInternalNavLink(link, ev)) return;
+      const dir = directionForLink(link);
+      // Seta no <html> (documentElement) — o CSS escuta esse seletor.
+      document.documentElement.setAttribute("data-transition-direction", dir);
+      // Sessão: se a nav falhar (browser aborta), limpa o atributo
+      // depois de 1s pra não contaminar navs futuras.
+      setTimeout(function () {
+        try {
+          document.documentElement.removeAttribute("data-transition-direction");
+        } catch (e) {}
+      }, 1000);
+    },
+    true
+  ); // capture phase
 
   // === FALLBACK WAAPI (browsers sem VT API) ===
   // Anima OPACITY (não transform — Lição 21ª) no body como fade-in
@@ -135,14 +147,11 @@
   if (typeof document.body.animate !== "function") return;
 
   try {
-    document.body.animate(
-      [{ opacity: 0 }, { opacity: 1 }],
-      {
-        duration: 350,
-        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
-        fill: "both"
-      }
-    );
+    document.body.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: 350,
+      easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+      fill: "both"
+    });
   } catch (e) {
     console.warn("[page-entry] fallback WAAPI falhou:", e);
   }

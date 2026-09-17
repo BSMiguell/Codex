@@ -203,7 +203,12 @@ try {
           return { exposed: true, hasDataSrc, hasDataSrcset, snippet: htmlStr.substring(0, 300) };
         }
         // Fallback: se não estiver exposto, lê o código fonte diretamente
-        return { exposed: false, hasDataSrc: false, hasDataSrcset: false, snippet: "pictureHTML não exposta no window" };
+        return {
+          exposed: false,
+          hasDataSrc: false,
+          hasDataSrcset: false,
+          snippet: "pictureHTML não exposta no window"
+        };
       });
       await ctx2.close();
       check(

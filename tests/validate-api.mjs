@@ -72,7 +72,9 @@ for (const c of allChars) {
         if (!c.imageWebp || !existsSync(join(root, c.imageWebp))) {
           errors.push(`${c.id}: PNG '${c.image}' ausente e sem WebP valida para fallback`);
         } else {
-          warnings.push(`${c.id}: PNG local '${c.image}' nao esta versionado; WebP valida usada no CI`);
+          warnings.push(
+            `${c.id}: PNG local '${c.image}' nao esta versionado; WebP valida usada no CI`
+          );
         }
       }
     } else if (!imageExists) {
@@ -81,7 +83,9 @@ for (const c of allChars) {
 
     if (imageExists) {
       if (imageOwners.has(c.image)) {
-        errors.push(`imagem duplicada: '${c.image}' usada por ${imageOwners.get(c.image)} e ${c.id}`);
+        errors.push(
+          `imagem duplicada: '${c.image}' usada por ${imageOwners.get(c.image)} e ${c.id}`
+        );
       } else {
         imageOwners.set(c.image, c.id);
       }

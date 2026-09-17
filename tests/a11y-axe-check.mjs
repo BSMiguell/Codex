@@ -35,11 +35,15 @@ const FALSE_POSITIVES = {
   // semânticos que JÁ foram validados pelo smoke check 9 (22/22 raças OK
   // com threshold 0.18 calibrado). axe-core não conhece nossos tokens.
   // → whitelist por enquanto; refinar quando instrumentar
-  "color-contrast": "Tokens semânticos próprios (--paper, --ink-soft, --accent) já validados pelo smoke check 9; axe não conhece nossa paleta calibrada"
+  "color-contrast":
+    "Tokens semânticos próprios (--paper, --ink-soft, --accent) já validados pelo smoke check 9; axe não conhece nossa paleta calibrada"
 };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const axeSource = readFileSync(join(__dirname, "..", "node_modules", "axe-core", "axe.min.js"), "utf8");
+const axeSource = readFileSync(
+  join(__dirname, "..", "node_modules", "axe-core", "axe.min.js"),
+  "utf8"
+);
 
 const browser = await chromium.launch({ headless: true });
 let pass = 0,
@@ -131,10 +135,14 @@ try {
     console.log(
       `  Violações: ${realViolations.reduce((s, v) => s + v.count, 0)} reais, ${whitelistedViolations.reduce((s, v) => s + v.count, 0)} whitelisted`
     );
-    console.log(`  Por severidade: critical=${bySeverity.critical} serious=${bySeverity.serious} moderate=${bySeverity.moderate} minor=${bySeverity.minor}`);
+    console.log(
+      `  Por severidade: critical=${bySeverity.critical} serious=${bySeverity.serious} moderate=${bySeverity.moderate} minor=${bySeverity.minor}`
+    );
 
     // Checks: páginas com critical OU serious REAL = ❌
-    const realCriticalSerious = realViolations.filter((v) => v.impact === "critical" || v.impact === "serious");
+    const realCriticalSerious = realViolations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious"
+    );
     if (realCriticalSerious.length === 0) {
       check(`${p.name}: sem violações critical/serious reais`, true);
     } else {

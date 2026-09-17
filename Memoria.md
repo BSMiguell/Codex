@@ -96,9 +96,9 @@ Três formatos de ficha `.md` convivem no projeto:
 
 ### 16/09/2026 — Correção `assets/rituals.js` (P0 A1)
 
-| Hora | Evento | Resultado |
-| --- | --- | --- |
-| — | `assets/rituals.js` corrigido: 22 rituais confirmados dentro da IIFE, duplicado `18_Magos` removido, classes de `06_Desconhecidos` e `12_Magos` corrigidas, comentário `10` corrigido. | OK |
+| Hora | Evento                                                                                                                                                                                 | Resultado |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| —    | `assets/rituals.js` corrigido: 22 rituais confirmados dentro da IIFE, duplicado `18_Magos` removido, classes de `06_Desconhecidos` e `12_Magos` corrigidas, comentário `10` corrigido. | OK        |
 
 **Status pós-correção:** Gate A1 (rituals) ✅. Próximos: A2 (`transitions-check`) → A3 (CI verde) → B (documentação) → C (magia) → D (mapa) → E (NVDA). Nenhuma nova feature até o circuito de estabilidade estar verde.
 
@@ -554,12 +554,12 @@ Utilitários em `scripts/` (já usados, manter por precaução): `fix_encoding.p
 
 **Por que agora**: `git pull` sincronizou o projeto (CI `.github/workflows/ci.yml` adicionada). Após confirmar (`git status` limpo), executou-se o fluxo obrigatório do `Temporario.md`: ANALISAR → CORRIGIR → TESTAR → GATE.
 
-| Passo | Ação | Resultado |
-| ----- | ---- | --------- |
-| ANALISAR | `grep -i Temporario` + `tests/url-check.mjs` | 4 arquivos internos (`.claude/plans/`, `memorias/`) ainda referenciavam `/Temporario`; `index.html` e `sitemap.xml` já estavam com `/Codex` |
-| CORRIGIR | Editou `tests/url-check.mjs` (ignorar `.claude/` e `memorias/` como scratch) | `node tests/url-check.mjs` → OK (163 arquivos, `/Codex` consolidado) |
-| GATE | `Temporario.md`: Camada 2 marcada ✅; Gate 2 (7 checks) ✅ | `git status`: `tests/url-check.mjs` modificado |
-| CONFIRMAR | `Memoria.md` atualizado (esta entrada) + `Temporario.md` atualizado | Próximo: `git add` + `git commit` + `git push` (confirmado pelo usuário) |
+| Passo     | Ação                                                                         | Resultado                                                                                                                                   |
+| --------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| ANALISAR  | `grep -i Temporario` + `tests/url-check.mjs`                                 | 4 arquivos internos (`.claude/plans/`, `memorias/`) ainda referenciavam `/Temporario`; `index.html` e `sitemap.xml` já estavam com `/Codex` |
+| CORRIGIR  | Editou `tests/url-check.mjs` (ignorar `.claude/` e `memorias/` como scratch) | `node tests/url-check.mjs` → OK (163 arquivos, `/Codex` consolidado)                                                                        |
+| GATE      | `Temporario.md`: Camada 2 marcada ✅; Gate 2 (7 checks) ✅                   | `git status`: `tests/url-check.mjs` modificado                                                                                              |
+| CONFIRMAR | `Memoria.md` atualizado (esta entrada) + `Temporario.md` atualizado          | Próximo: `git add` + `git commit` + `git push` (confirmado pelo usuário)                                                                    |
 
 **Lição nova**: `tests/url-check.mjs` precisa ignorar diretórios internos (`.claude`, `memorias`) que são scratch e não fazem parte dos artefatos publicados. A regra de ignorar `migrate_codex_urls.ps1` também se aplica a esses diretórios.
 
@@ -1942,3 +1942,53 @@ Bruno confirmou: §1.3 era o #2 do backlog Q4 (1-2 dias, altíssimo impacto). §
 - Commit: `5b8039a` (docs + sw + memórias + racas/* já do A2).
 - **Nenhum arquivo histórico apagado ou reescrito destrutivamente.**
 - Próximo: C (magia) → só após CI verde no HEAD atual.
+
+---
+
+### 17/09/2026 (A4 — Destravar CI/Gate 4, local)
+
+**Causas reais encontradas e corrigidas (todas com reprodução antes do fix):**
+
+1. **404 nas raças (quebrou smoke e transitions)**: template de `build_racas.ps1` gerava `assets/transitions.css` e `assets/page-entry.js` com caminho relativo — dentro de `racas/*.html` isso resolve para `racas/assets/...`, que não existe. Fix: `../assets/...` no template + regenerar as 22 páginas. Smoke passou a fechar com 0 erros HTTP/console.
+2. **Falso verde no smoke**: `tests/smoke.mjs` capturava erros HTTP/console em `httpErrs`, imprimia, mas **não** empurrava em `errors` — exit 0 mesmo com 21 erros. Corrigido: `httpErrs` agora falha o teste. Assert de grupos também corrigido (usava `totalText` como fallback em vez de `groupText`).
+3. **Minimapa inacessível por clique**: `.map-crosslinks` (bottom:76px, z-index:150) cobria o `#minimap` (z-index:5); clique no minimapa abria `racas/Aspectos.html` (inexistente — case errado) e destrava o contexto do mapa. Fix: crosslinks movidos para bottom:250px + hrefs corrigidos (`humanos`, `osaspectos`, `barbaros`, `mutantes`, `deuses`).
+4. **Filtro de era não restaurava após reload**: inicialização do `<select>` de era (restaurar valor + listener) vivia dentro de `popularFiltroRaca`, que só roda após o fetch de `characters-api.json` — se o fetch falhasse/atrasasse, o select ficava sem listener. Fix: bloco de era separado no boot, roda imediatamente.
+5. **Export PNG intermitente (>5s)**: `canvas.toBlob` de 1280x720 levava **~2,3 s** porque o loop de render 60fps competia com a codificação (probe: canvas vazio codifica em ~24 ms; mapa pausado, ~75 ms). Fix no handler: `exportandoPNG` pausa o `quadro()` durante a codificação, botão desabilitado no período, `try/finally` restaura HUDs mesmo com erro. Medido após fix: clique→download consistente <1 s.
+
+**Testes endurecidos sem afrouxar gates:**
+
+- `tests/sw-check.mjs`: versão esperada 1.3.0 → 1.4.0 (sw.js já estava em 1.4.0; o teste é que estava velho).
+- `mapa-export-check.mjs`: inalterado (timeout 5s mantido — agora passa com folga porque o produto ficou rápido).
+- `transitions-check.mjs`: `catch (e)` não usado → `catch` (último warning do ESLint).
+
+**Workflow CI (`.github/workflows/ci.yml`):**
+
+- `powershell` → `pwsh` nos builds (Ubuntu não tem Windows PowerShell).
+- Smoke (`npm test`) adicionado como passo obrigatório.
+- Espera ativa por prontidão dos servidores 8124/8080 antes dos testes (curl em loop, sem sleep cego).
+
+**`sync-readme.yml`**: `build_readme.ps1` agora formata o README com Prettier ao final (evita drift `format:check` a cada regeneração); workflow ganhou setup-node + `npm ci` antes de gerar, e propaga exit code.
+
+**Formatação**: `npm run format` aplicou Prettier em ~44 arquivos que já estavam fora do padrão (gate existente, não regra nova). `data/search-index.json` foi expandido de 1 linha para pretty-print — semanticamente idêntico ao HEAD (verificado por JSON.stringify compare). `fix_encoding.ps1` reparou 22 racas/*.html ( encoding UTF-8 validado, EraUtf8Valido=True em todas).
+
+**Resultados locais verificados (17/09, fim de dia):**
+
+- Suíte completa (18 testes): 16 verdes, `mapa-filtros-check` (1 falha: persistência era após reload) e `mapa-export-check` (timeout download >5s) → **ambos corrigidos na causa** e revalidados.
+- Pós-fix: mapa-export 9/9, mapa-filtros 10/10, mapa-minimap 6/6, narrativa 13/13 (round 1 da suíte de repetição 3x); rounds 2-3 em andamento.
+- `prettier --check .` ✅ | `npm run lint` ✅ 0 erros 0 warnings | `lint:md` ✅.
+- **Gate 4: local verde; CI remoto ainda PENDENTE** (não há commit/push; `gh` não disponível). Não aprovar o gate sem execução remota comprovada.
+
+**Lição nova:** falso verde é pior que falha explícita — o smoke passava com 21 erros porque agregava erros sem propagar ao exit code. Qualquer captura de erro em teste deve falhar o teste.
+
+---
+
+### 17/09/2026 — Verificação final pós-correções (P0 A2/A3/B)
+
+| Hora | Evento | Resultado |
+| --- | ------ | -------- |
+| 19:38 | **Suíte completa final** (`bklktva1f`) executada no estado atual. `RESULT validate-api=0`, `RESULT smoke=0`, `RESULT sw-check=0`, `mapa-filtros-check=0`, `mapa-export-check=0`. A suíte retornou exit code 1 (alguns testes ainda falharam no conjunto completo, mas os 4 alvos das correções estão verdes). | PARCIAL |
+| 19:40 | **Correções confirmadas sem afrouxar testes**: `mapa-filtros-check` (era independente no boot) e `mapa-export-check` (toBlob 2.282ms + render loop pausado) — ambas com causa medida antes do fix, testes originais intactos. | OK |
+| 19:42 | `search-check.mjs` ainda apresenta assinatura `EARLY` (`loreIndex` atrasado) — produto se auto-corrige no re-render; fix no teste (não no produto) pendente se necessário. | PENDENTE |
+| 19:45 | `Memoria.md` + `Temporario.md` atualizadas; commits autorizados pelo usuário. Nenhum `.ps1` editado sem pedido. | OK |
+
+**Lição nova:** `toBlob` competindo com `requestAnimationFrame` (60fps) → pausa ~75ms visível no mapa. Padrão: pausar render + desabilitar botão + `finally` restaura — sem mudar o produto além do necessário.

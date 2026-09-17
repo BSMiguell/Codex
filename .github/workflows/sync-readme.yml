@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - 'characters-api.json'
-      - 'scripts/build_readme.ps1'
-      - 'Temporario.md'
-      - '.github/workflows/sync-readme.yml'
+      - "characters-api.json"
+      - "scripts/build_readme.ps1"
+      - "Temporario.md"
+      - ".github/workflows/sync-readme.yml"
   workflow_dispatch:
 
 permissions:
@@ -20,11 +20,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Generate README with UTF-8
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
           powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_readme.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
           $path = Join-Path $PWD 'README.md'
           $content = [System.IO.File]::ReadAllText($path, [System.Text.Encoding]::UTF8)

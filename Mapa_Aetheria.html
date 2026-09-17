@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Aetheria · Mapa do Mundo</title>
-  <meta name="view-transition" content="same-origin" />
+    <meta name="view-transition" content="same-origin" />
     <meta
       name="description"
       content="Mapa 3D interativo do continente de Aetheria: regiões, grandes batalhas e entidades celestes do códice."
@@ -852,7 +852,7 @@
       }
     </style>
 
-    <link rel="stylesheet" href="assets/transitions.css">
+    <link rel="stylesheet" href="assets/transitions.css" />
   </head>
   <body>
     <canvas
@@ -1000,14 +1000,96 @@
     <div id="tooltip" role="tooltip"></div>
 
     <!-- §7.3 — Wiki cruzada / cross-links entre camadas -->
-    <div class="map-crosslinks" aria-label="Links cruzados entre regiões, batalhas e celestes" style="position:fixed;bottom:76px;right:26px;z-index:150;background:rgba(26,23,20,0.85);backdrop-filter:blur(12px);border:1px solid rgba(227,73,27,0.2);border-radius:1rem;padding:0.8rem 1rem;font-family:'Fraunces',Georgia,serif;font-size:0.8rem;color:#e8e3d5;max-width:220px;box-shadow:0 8px 32px rgba(0,0,0,0.4);line-height:1.6;">
-      <h4 style="margin:0 0 0.5rem;font-size:0.85rem;letter-spacing:0.05em;color:#c9a227;">Conexões do Códice</h4>
-      <ul style="list-style:none;margin:0;padding:0;">
-        <li><a href="racas/Humanos.html" style="color:#c9a227;text-decoration:none;border-bottom:1px solid rgba(227,73,27,0.2);display:block;padding:0.1rem 0;">Humanos → Geada</a></li>
-        <li><a href="racas/Aspectos.html" style="color:#c9a227;text-decoration:none;border-bottom:1px solid rgba(227,73,27,0.2);display:block;padding:0.1rem 0;">Aspectos → Geada</a></li>
-        <li><a href="racas/Barbaros.html" style="color:#c9a227;text-decoration:none;border-bottom:1px solid rgba(227,73,27,0.2);display:block;padding:0.1rem 0;">Bárbaros → Cumes</a></li>
-        <li><a href="racas/Mutantes.html" style="color:#c9a227;text-decoration:none;border-bottom:1px solid rgba(227,73,27,0.2);display:block;padding:0.1rem 0;">Mutantes → Fenda</a></li>
-        <li><a href="racas/Deuses.html" style="color:#c9a227;text-decoration:none;border-bottom:1px solid rgba(227,73,27,0.2);display:block;padding:0.1rem 0;">Deuses → Abismo</a></li>
+    <div
+      class="map-crosslinks"
+      aria-label="Links cruzados entre regiões, batalhas e celestes"
+      style="
+        position: fixed;
+        bottom: 250px;
+        right: 26px;
+        z-index: 150;
+        background: rgba(26, 23, 20, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(227, 73, 27, 0.2);
+        border-radius: 1rem;
+        padding: 0.8rem 1rem;
+        font-family: &quot;Fraunces&quot;, Georgia, serif;
+        font-size: 0.8rem;
+        color: #e8e3d5;
+        max-width: 220px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        line-height: 1.6;
+      "
+    >
+      <h4 style="margin: 0 0 0.5rem; font-size: 0.85rem; letter-spacing: 0.05em; color: #c9a227">
+        Conexões do Códice
+      </h4>
+      <ul style="list-style: none; margin: 0; padding: 0">
+        <li>
+          <a
+            href="racas/humanos.html"
+            style="
+              color: #c9a227;
+              text-decoration: none;
+              border-bottom: 1px solid rgba(227, 73, 27, 0.2);
+              display: block;
+              padding: 0.1rem 0;
+            "
+            >Humanos → Geada</a
+          >
+        </li>
+        <li>
+          <a
+            href="racas/osaspectos.html"
+            style="
+              color: #c9a227;
+              text-decoration: none;
+              border-bottom: 1px solid rgba(227, 73, 27, 0.2);
+              display: block;
+              padding: 0.1rem 0;
+            "
+            >Aspectos → Geada</a
+          >
+        </li>
+        <li>
+          <a
+            href="racas/barbaros.html"
+            style="
+              color: #c9a227;
+              text-decoration: none;
+              border-bottom: 1px solid rgba(227, 73, 27, 0.2);
+              display: block;
+              padding: 0.1rem 0;
+            "
+            >Bárbaros → Cumes</a
+          >
+        </li>
+        <li>
+          <a
+            href="racas/mutantes.html"
+            style="
+              color: #c9a227;
+              text-decoration: none;
+              border-bottom: 1px solid rgba(227, 73, 27, 0.2);
+              display: block;
+              padding: 0.1rem 0;
+            "
+            >Mutantes → Fenda</a
+          >
+        </li>
+        <li>
+          <a
+            href="racas/deuses.html"
+            style="
+              color: #c9a227;
+              text-decoration: none;
+              border-bottom: 1px solid rgba(227, 73, 27, 0.2);
+              display: block;
+              padding: 0.1rem 0;
+            "
+            >Deuses → Abismo</a
+          >
+        </li>
       </ul>
     </div>
     <!-- Rosa dos ventos (mesa de guerra) -->
@@ -1874,10 +1956,7 @@
           // Preserva yaw/pitch atuais quando o destino nao os fornece
           // (ex.: minimap click só passa tx/tz/dist). Sem isso, lerp(a,
           // undefined, k) = NaN, corrompendo cam.yaw/cam.pitch.
-          const paraCompleto = Object.assign(
-            { yaw: cam.yaw, pitch: cam.pitch },
-            para
-          );
+          const paraCompleto = Object.assign({ yaw: cam.yaw, pitch: cam.pitch }, para);
           tw = { t0: performance.now(), dur, de: Object.assign({}, cam), para: paraCompleto };
         }
         function passoTween(agora) {
@@ -3008,17 +3087,23 @@
           ctx.fillRect(proj.x - r, proj.y - r, r * 2, r * 2);
         }
 
+        let exportandoPNG = false;
         let tempoAgora = 0;
         let tempoQuadroMedio = 4,
           _ultimoT = 0;
 
         function quadro(agora) {
+          // Libera o thread para codificar o PNG sem competir com o terreno.
+          if (exportandoPNG) {
+            requestAnimationFrame(quadro);
+            return;
+          }
           // try/catch no rAF loop: se algum desenho (nebulosa, pin) jogar
           // exceção, nao podemos perder o próximo requestAnimationFrame —
           // isso mataria o tween, o minimap, e tudo que depende do loop.
           // Loga 1x por sessão pra nao inundar o console.
           try {
-          renderQuadro(agora);
+            renderQuadro(agora);
           } catch (e) {
             if (!quadro.__errLogged) {
               quadro.__errLogged = true;
@@ -3301,31 +3386,47 @@
         const btnExportar = document.getElementById("exportarPNG");
         if (btnExportar) {
           btnExportar.addEventListener("click", () => {
+            if (exportandoPNG) return;
+            exportandoPNG = true;
+            btnExportar.disabled = true;
             const huds = document.querySelectorAll(".hud, #minimap, #painel, #vinheta");
             const prev = [];
             huds.forEach((h, i) => {
               prev[i] = h.style.display;
               h.style.display = "none";
             });
-            // 1 frame extra sem HUDs (requestAnimationFrame do quadro() está rodando)
+            const restaurar = () => {
+              huds.forEach((h, i) => (h.style.display = prev[i] || ""));
+              btnExportar.disabled = false;
+              exportandoPNG = false;
+            };
+            // Mantém o último frame completo enquanto o navegador codifica o PNG.
             requestAnimationFrame(() => {
-              canvas.toBlob((blob) => {
-                if (!blob) {
-                  huds.forEach((h, i) => (h.style.display = prev[i] || ""));
-                  return;
-                }
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-                a.href = url;
-                a.download = `aetheria-mapa-${ts}.png`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                // restaura HUDs imediatamente (sem esperar próximo frame)
-                huds.forEach((h, i) => (h.style.display = prev[i] || ""));
-              }, "image/png");
+              try {
+                canvas.toBlob((blob) => {
+                  let url;
+                  let a;
+                  try {
+                    if (!blob) throw new Error("Não foi possível codificar o PNG do mapa.");
+                    url = URL.createObjectURL(blob);
+                    a = document.createElement("a");
+                    const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+                    a.href = url;
+                    a.download = `aetheria-mapa-${ts}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                  } catch (err) {
+                    console.error("[mapa] Falha ao exportar PNG:", err);
+                  } finally {
+                    if (a) a.remove();
+                    if (url) URL.revokeObjectURL(url);
+                    restaurar();
+                  }
+                }, "image/png");
+              } catch (err) {
+                restaurar();
+                console.error("[mapa] Falha ao exportar PNG:", err);
+              }
             });
           });
         }
@@ -3618,7 +3719,10 @@
               localStorage.setItem("mapaFiltroRaca", FILTRO_RACA);
             } catch (e) {}
           });
+        }
 
+        // Inicializa a era sem aguardar o fetch das raças.
+        {
           // §6.3 — Filtro de era (I-IV). Listener separado: a era vem da
           // historia-api.json e é independente da characters-api.json. Filtro
           // só esconde battles; regiões e céus ficam visíveis mesmo com era
@@ -3912,6 +4016,6 @@
       })();
     </script>
 
-  <script src="assets/page-entry.js" defer></script>
+    <script src="assets/page-entry.js" defer></script>
   </body>
 </html>

@@ -25,10 +25,7 @@
       property="og:description"
       content="Códice de fantasia autoral: 487 personagens em 22 raças, com arte, lore, mapa do mundo e galeria interativa."
     />
-    <meta
-      property="og:image"
-      content="https://bsmiguell.github.io/Codex/assets/og-cover.jpg"
-    />
+    <meta property="og:image" content="https://bsmiguell.github.io/Codex/assets/og-cover.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Capa do Aetheria Codex" />
@@ -42,10 +39,7 @@
       name="twitter:description"
       content="Códice de fantasia autoral: 487 personagens em 22 raças, com arte, lore, mapa do mundo e galeria interativa."
     />
-    <meta
-      name="twitter:image"
-      content="https://bsmiguell.github.io/Codex/assets/og-cover.jpg"
-    />
+    <meta name="twitter:image" content="https://bsmiguell.github.io/Codex/assets/og-cover.jpg" />
     <meta name="twitter:image:alt" content="Capa do Aetheria Codex" />
 
     <!-- Favicon -->
@@ -56,7 +50,7 @@
     <!-- PWA -->
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#1a120e" />
-  <meta name="view-transition" content="same-origin" />
+    <meta name="view-transition" content="same-origin" />
 
     <title>Aetheria Codex — Códice de 487 Personagens</title>
 
@@ -81,9 +75,8 @@
 
     <!-- §1.2 — CSS extraído para cache cross-page; v=YYYYMMDD para cache-bust -->
     <link rel="preload" as="style" href="assets/codex.css?v=20260903" />
-    <link rel="stylesheet" href="assets/transitions.css">
+    <link rel="stylesheet" href="assets/transitions.css" />
     <link rel="stylesheet" href="assets/codex.css?v=20260903" />
-
   </head>
   <body>
     <script>
@@ -178,10 +171,35 @@
             role="tablist"
             aria-label="Progresso do onboarding"
           >
-            <button type="button" role="tab" class="is-active" data-go="0" aria-label="Passo 1 de 4" aria-selected="true"></button>
-            <button type="button" role="tab" data-go="1" aria-label="Passo 2 de 4" aria-selected="false"></button>
-            <button type="button" role="tab" data-go="2" aria-label="Passo 3 de 4" aria-selected="false"></button>
-            <button type="button" role="tab" data-go="3" aria-label="Passo 4 de 4" aria-selected="false"></button>
+            <button
+              type="button"
+              role="tab"
+              class="is-active"
+              data-go="0"
+              aria-label="Passo 1 de 4"
+              aria-selected="true"
+            ></button>
+            <button
+              type="button"
+              role="tab"
+              data-go="1"
+              aria-label="Passo 2 de 4"
+              aria-selected="false"
+            ></button>
+            <button
+              type="button"
+              role="tab"
+              data-go="2"
+              aria-label="Passo 3 de 4"
+              aria-selected="false"
+            ></button>
+            <button
+              type="button"
+              role="tab"
+              data-go="3"
+              aria-label="Passo 4 de 4"
+              aria-selected="false"
+            ></button>
           </div>
           <div class="onboard-actions">
             <button type="button" class="onboard-btn" id="onboardPrev">Voltar</button>
@@ -473,8 +491,8 @@
           <header class="hero-races-head">
             <h2 class="hero-races-title">Coleções <em>por</em> Raça</h2>
             <p class="hero-races-sub">
-              22 coleções automáticas — uma por raça. Cada card leva à página
-              dedicada com os personagens daquela raça.
+              22 coleções automáticas — uma por raça. Cada card leva à página dedicada com os
+              personagens daquela raça.
             </p>
           </header>
           <div
@@ -2025,8 +2043,8 @@
       //  falhar (file://, offline), loreIndex = null e a paleta
       //  volta ao comportamento original (só chars/races/actions).
       // ============================================================
-      let loreIndex = null;          // {docs, postings} ou null
-      let loreIndexLoading = null;   // Promise dedupe
+      let loreIndex = null; // {docs, postings} ou null
+      let loreIndexLoading = null; // Promise dedupe
 
       async function ensureLoreIndex() {
         if (loreIndex !== null) return loreIndex;
@@ -2208,9 +2226,7 @@
           ensureLoreIndex();
         }
         if (loreIndex) {
-          loreSearch(q).forEach((r) =>
-            results.push({ type: "lore", lore: r, score: r.score })
-          );
+          loreSearch(q).forEach((r) => results.push({ type: "lore", lore: r, score: r.score }));
         } else if (loreIndexLoading && q) {
           // Primeira chamada: fetch em voo. Quando resolver, re-renderiza
           // a paleta com o indice agora disponivel (cobre o caso em que
@@ -2594,8 +2610,8 @@
         const loadAttrs = isEager
           ? `loading="eager" fetchpriority="high" decoding="async"`
           : isNativeLazy
-          ? `loading="lazy" decoding="async"`
-          : `decoding="async"`;
+            ? `loading="lazy" decoding="async"`
+            : `decoding="async"`;
         // data-initial/data-icon/data-glabel ficam em data-* (independentes do src)
         const dataAttrs = `data-initial="${initial}" data-icon="${theme.icon}" data-glabel="${groupLabel}"`;
         const media = c.image
@@ -3382,11 +3398,10 @@
       noFxBtn.addEventListener("click", () => {
         const on = !document.body.classList.contains("no-fx");
         applyNoFx(on);
-        try { localStorage.setItem("noFx", on ? "1" : "0"); } catch (e) {}
-        showToast(
-          on ? "Modo sem efeitos ativo" : "Efeitos restaurados",
-          { icon: "◑" }
-        );
+        try {
+          localStorage.setItem("noFx", on ? "1" : "0");
+        } catch (e) {}
+        showToast(on ? "Modo sem efeitos ativo" : "Efeitos restaurados", { icon: "◑" });
       });
 
       // sincroniza aria-pressed com a classe que o script do <body> pode ter aplicado
@@ -3739,6 +3754,6 @@
       }
     </script>
 
-  <script src="assets/page-entry.js" defer></script>
+    <script src="assets/page-entry.js" defer></script>
   </body>
 </html>

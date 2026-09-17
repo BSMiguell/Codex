@@ -50,10 +50,9 @@ async function openPaletteAndType(ctx, term) {
   installPageListeners(page);
   await page.goto(BASE + "/", { waitUntil: "load" });
   // Garante que a index tem a API carregada antes de abrir a paleta
-  await page.waitForFunction(
-    () => document.querySelectorAll("#characterGrid > *").length > 0,
-    { timeout: 8000 }
-  );
+  await page.waitForFunction(() => document.querySelectorAll("#characterGrid > *").length > 0, {
+    timeout: 8000
+  });
   await page.keyboard.press("Control+k");
   await page.waitForSelector("#palette.open", { timeout: 2000 });
   // Aguarda o indice de lore carregar (so carrega lazy no 1o openPalette)
@@ -73,8 +72,8 @@ async function openPaletteAndType(ctx, term) {
   await page
     .waitForFunction(
       () => {
-        const labels = [...document.querySelectorAll("#paletteList .pal-group-label")].map(
-          (el) => el.textContent.trim()
+        const labels = [...document.querySelectorAll("#paletteList .pal-group-label")].map((el) =>
+          el.textContent.trim()
         );
         // tem resultados de lore OU ja tentou tudo e nao ha (fetch resolvido)
         if (labels.includes("Lore (search semantica)")) return true;
@@ -232,7 +231,9 @@ try {
     const startUrl = page.url();
     // O 1o resultado de "geada" pode ser 'Fortalezas de Juramento'
     // (href='Mapa_Aetheria.html#pin-region-...') — navegacao real
-    const navP = page.waitForURL((u) => u.toString() !== startUrl, { timeout: 5000 }).catch(() => null);
+    const navP = page
+      .waitForURL((u) => u.toString() !== startUrl, { timeout: 5000 })
+      .catch(() => null);
     await firstLore.click();
     const nav = await navP;
     check(

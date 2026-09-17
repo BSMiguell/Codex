@@ -35,14 +35,34 @@ jobs:
           python3 -m http.server 8124 > /tmp/aetheria-http-8124.log 2>&1 &
           python3 -m http.server 8080 > /tmp/aetheria-http-8080.log 2>&1 &
 
+      - name: Wait for local servers
+        run: |
+          for port in 8124 8080; do
+            ready=false
+            for attempt in {1..30}; do
+              if curl --fail --silent "http://localhost:$port/index.html" > /dev/null; then
+                ready=true
+                break
+              fi
+              sleep 1
+            done
+            if [ "$ready" != true ]; then
+              printf 'Server on port %s did not become ready\n' "$port" >&2
+              exit 1
+            fi
+          done
+
       - name: Build API (characters-api.json)
-        run: powershell -ExecutionPolicy Bypass -File scripts/build_api_json.ps1
+        run: pwsh -NoProfile -File scripts/build_api_json.ps1
 
       - name: Build Historia API
-        run: powershell -ExecutionPolicy Bypass -File scripts/build_historia_api.ps1
+        run: pwsh -NoProfile -File scripts/build_historia_api.ps1
 
       - name: Validate APIs
         run: npm run validate
+
+      - name: Smoke test
+        run: npm test
 
       - name: Validate Service Worker
         run: npm run sw-check

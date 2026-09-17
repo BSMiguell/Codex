@@ -70,11 +70,11 @@ Registrar commit quando aplicável
 
 ## Relação entre os arquivos
 
-| Arquivo | Função |
-|---|---|
-| `Memoria.md` | Memória histórica/original e referência de longo prazo |
-| `Temporario.md` | Plano de execução, camadas, gates e próximos passos |
-| `memorias/AAAA-MM-DD.md` | Diário detalhado de cada dia |
-| `README.md` | Documentação geral do projeto |
+| Arquivo                  | Função                                                 |
+| ------------------------ | ------------------------------------------------------ |
+| `Memoria.md`             | Memória histórica/original e referência de longo prazo |
+| `Temporario.md`          | Plano de execução, camadas, gates e próximos passos    |
+| `memorias/AAAA-MM-DD.md` | Diário detalhado de cada dia                           |
+| `README.md`              | Documentação geral do projeto                          |
 
 Este sistema deve ser usado nas próximas sessões para evitar que a memória principal fique excessivamente grande e para facilitar a recuperação do contexto de um dia específico.

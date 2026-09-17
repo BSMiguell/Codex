@@ -2,13 +2,13 @@
 
 > 🤖 **Para assistentes de IA (Claude e similares):** ao iniciar uma conversa sobre este projeto, leia este README por inteiro para entender a estrutura, E DEPOIS LEIA [`Memoria.md`](Memoria.md) — é a linha do tempo oficial com todas as alterações, erros já resolvidos, lições técnicas (armadilhas de PowerShell 5.1) e pendências. Ao terminar qualquer manutenção, adicione uma entrada lá com data/hora e commit.
 
-> 💡 **Prompt sugerido para iniciar uma nova conversa:** *"Leia o README.md e o Memoria.md deste projeto para absorver todo o contexto antes de qualquer tarefa."*
+> 💡 **Prompt sugerido para iniciar uma nova conversa:** _"Leia o README.md e o Memoria.md deste projeto para absorver todo o contexto antes de qualquer tarefa."_
 
 ---
 
 ## O que é este projeto
 
-**Aetheria Codex** é um códice de personagens de fantasia autoral: **487 personagens** distribuídos em **22 categorias/raças**, cada um com ficha em Markdown (história + descrição visual detalhada) e arte `.webp`/`.png`. Sobre esse acervo roda um site galeria estático — sem backend, sem dependências, só HTML/CSS/JS puro.
+**Aetheria Codex** é um códice de personagens de fantasia autoral: **487 personagens** distribuídos em **22 categorias/raças**, cada um com ficha em Markdown (história + descrição visual detalhada) e arte `.png`. Sobre esse acervo roda um site galeria estático — sem backend, sem dependências, só HTML/CSS/JS puro.
 
 O fluxo é: **fichas `.md` nas pastas → scripts PowerShell geram `characters-api.json` e `README.md` → `index.html` consome a API JSON**.
 
@@ -67,86 +67,86 @@ Capturas dedicadas das **17 funcionalidades entregues no ciclo Q4/2026** — cad
 **Toast instrutivo do botão "📲 Instalar"** — detecção adaptativa por UA, com 3 variantes (Chromium, iOS Safari, fallback) e micro-copy distinta por engine.
 ![Toast instrutivo do botao PWA](docs/screenshots/feat-pwa-install-toast.jpg)
 
-*Mecanismo:* o IIFE `installPwa()` (`index.html` ~linha 3303) testa `beforeinstallprompt` (Chromium), `navigator.standalone` (iOS) e cai num toast genérico nos demais; aparece em 7s e some sozinho, só na 1ª visita.
-*Implementação:* capturado com `page.evaluate(() => localStorage.clear())` + reload, viewport 1600x1000, servidor :8080; o Chromium dispara `beforeinstallprompt` mesmo sem o usuário instalar.
-*Tecnologias:* `beforeinstallprompt` event, `e.preventDefault()` (sem isso o Chrome mata o gatilho nativo), `navigator.standalone`, `setTimeout(..., 7000)`, classes `.toast`/`.toast--ios`/`.toast--fallback`.
-*Decisão:* iOS não dispara `beforeinstallprompt` — sem o toast instrutivo, o usuário iOS nunca descobriria "Compartilhar → Adicionar à Tela de Início" (§3.3 Q4).
+_Mecanismo:_ o IIFE `installPwa()` (`index.html` ~linha 3303) testa `beforeinstallprompt` (Chromium), `navigator.standalone` (iOS) e cai num toast genérico nos demais; aparece em 7s e some sozinho, só na 1ª visita.
+_Implementação:_ capturado com `page.evaluate(() => localStorage.clear())` + reload, viewport 1600x1000, servidor :8080; o Chromium dispara `beforeinstallprompt` mesmo sem o usuário instalar.
+_Tecnologias:_ `beforeinstallprompt` event, `e.preventDefault()` (sem isso o Chrome mata o gatilho nativo), `navigator.standalone`, `setTimeout(..., 7000)`, classes `.toast`/`.toast--ios`/`.toast--fallback`.
+_Decisão:_ iOS não dispara `beforeinstallprompt` — sem o toast instrutivo, o usuário iOS nunca descobriria "Compartilhar → Adicionar à Tela de Início" (§3.3 Q4).
 
 **Onboarding 4 passos — tela 1 (Bem-vindo)** — overlay central com 4 dots, botões prev/next/skip, micro-copy de boas-vindas.
 ![Onboarding 4 passos - tela 1](docs/screenshots/feat-onboarding-passo1.jpg)
 
-*Mecanismo:* `<div id="onboardOverlay">` em `position:fixed` com backdrop `rgba(0,0,0,.65)`; o passo atual (1/4) é destacado e o progresso fica visível nos 4 dots animados.
-*Implementação:* capturado com `localStorage.removeItem("aetheria.onboarded")` + reload (Playwright), viewport 1600x1000, sem flag de pupulação — é a 1ª visita real.
-*Tecnologias:* `localStorage["aetheria.onboarded"]` com `version:"1"` (só mostra de novo se `version !== "1"`), `.is-active` na `.onboard-step[n]`, `@keyframes onboardFadeIn`.
-*Decisão:* 4 passos com 4 saídas (Pular / Esc / backdrop / último Next = "Começar a explorar") para respeitar tanto apressados quanto curiosos — todos persistem em `localStorage` (§4.3 Q4).
+_Mecanismo:_ `<div id="onboardOverlay">` em `position:fixed` com backdrop `rgba(0,0,0,.65)`; o passo atual (1/4) é destacado e o progresso fica visível nos 4 dots animados.
+_Implementação:_ capturado com `localStorage.removeItem("aetheria.onboarded")` + reload (Playwright), viewport 1600x1000, sem flag de pupulação — é a 1ª visita real.
+_Tecnologias:_ `localStorage["aetheria.onboarded"]` com `version:"1"` (só mostra de novo se `version !== "1"`), `.is-active` na `.onboard-step[n]`, `@keyframes onboardFadeIn`.
+_Decisão:_ 4 passos com 4 saídas (Pular / Esc / backdrop / último Next = "Começar a explorar") para respeitar tanto apressados quanto curiosos — todos persistem em `localStorage` (§4.3 Q4).
 
 **Onboarding 4 passos — tela 2 após click em Next** — mesma estrutura, micro-copy de "Explore o códice", dot 2/4 ativo.
 ![Onboarding 4 passos - tela 2 apos Next](docs/screenshots/feat-onboarding-passo2.jpg)
 
-*Mecanismo:* o click em Next incrementa o índice, troca o conteúdo do overlay e move o dot ativo com transição CSS de `transform: translateX`; o estado do passo é local (não persiste até o último Next).
-*Implementação:* capturado com `page.click("#onboardNext")` + `waitForTimeout(300)` (Playwright) para garantir a transição antes do screenshot.
-*Tecnologias:* mesmo overlay do passo 1, `aria-live="polite"` no conteúdo, foco automático no botão Next para navegação por teclado.
-*Decisão:* a animação do dot é a única pista visual de progresso — sem ela, o usuário não saberia que ainda há 2 passos (§4.3 Q4).
+_Mecanismo:_ o click em Next incrementa o índice, troca o conteúdo do overlay e move o dot ativo com transição CSS de `transform: translateX`; o estado do passo é local (não persiste até o último Next).
+_Implementação:_ capturado com `page.click("#onboardNext")` + `waitForTimeout(300)` (Playwright) para garantir a transição antes do screenshot.
+_Tecnologias:_ mesmo overlay do passo 1, `aria-live="polite"` no conteúdo, foco automático no botão Next para navegação por teclado.
+_Decisão:_ a animação do dot é a única pista visual de progresso — sem ela, o usuário não saberia que ainda há 2 passos (§4.3 Q4).
 
 **Skip-link a11y (Tab pressionado na home)** — o link "Pular para conteúdo principal" aparece no canto superior esquerdo, com outline visível.
 ![Skip-link a11y com Tab pressionado](docs/screenshots/feat-skiplink.jpg)
 
-*Mecanismo:* o `<a href="#mainContent" class="skipLink">` é o primeiro elemento focável do `<body>`; ao receber foco ele ganha `transform: translate(0,0)` e outline `:focus-visible`.
-*Implementação:* capturado com `page.keyboard.press("Tab")` logo após o `goto`, em viewport 1600x1000, sem mouse — só o foco de teclado ativa o link.
-*Tecnologias:* `:focus-visible`, `transform: translateY(-100%)` → `translateY(0)`, atributo `id="mainContent"` no `<main>`, ARIA `aria-label="Pular para conteúdo principal"`.
-*Decisão:* WCAG 2.4.1 (Bypass Blocks) — o usuário de teclado/tecnologia assistiva pula a navegação sem tabular por 30+ chips antes do conteúdo (§4.1 Q4).
+_Mecanismo:_ o `<a href="#mainContent" class="skipLink">` é o primeiro elemento focável do `<body>`; ao receber foco ele ganha `transform: translate(0,0)` e outline `:focus-visible`.
+_Implementação:_ capturado com `page.keyboard.press("Tab")` logo após o `goto`, em viewport 1600x1000, sem mouse — só o foco de teclado ativa o link.
+_Tecnologias:_ `:focus-visible`, `transform: translateY(-100%)` → `translateY(0)`, atributo `id="mainContent"` no `<main>`, ARIA `aria-label="Pular para conteúdo principal"`.
+_Decisão:_ WCAG 2.4.1 (Bypass Blocks) — o usuário de teclado/tecnologia assistiva pula a navegação sem tabular por 30+ chips antes do conteúdo (§4.1 Q4).
 
 ### B. Galeria Aprimorada (desktop)
 
 **Diário de Páginas expandido: 3 mini-cards por período** — Manhã/Tarde/Noite abaixo do destaque principal; o card do período atual tem borda tingida na cor da raça.
 ![Diario de Paginas expandido 3 mini-cards](docs/screenshots/feat-daily-featured-3p.jpg)
 
-*Mecanismo:* o seed do dia (YYYY-MM-DD) gera 3 personagens determinísticos (1 por período: ☀️ Manhã 5-12h / 🌤️ Tarde 12-18h / 🌙 Noite 18-5h); o card do período corrente (baseado no horário local) recebe classe `.is-now` com borda + fundo na cor da raça dele.
-*Implementação:* capturado com `page.addInitScript(() => { Date.now = () => 1700000000000 })` no Playwright para forçar 14h, mostrando a Tarde ativa; screenshot full-viewport 1600x1000.
-*Tecnologias:* `Intl.DateTimeFormat().hour`, hash determinístico sobre `seed + periodIndex`, CSS `border: 2px solid var(--race-color)` via `themes.json`.
-*Decisão:* 1 destaque → 3 opções reduz a fricção de reroll manual; o usuário sempre vê um personagem "do seu turno" sem precisar clicar 🎲 (§4.5 Q4).
+_Mecanismo:_ o seed do dia (YYYY-MM-DD) gera 3 personagens determinísticos (1 por período: ☀️ Manhã 5-12h / 🌤️ Tarde 12-18h / 🌙 Noite 18-5h); o card do período corrente (baseado no horário local) recebe classe `.is-now` com borda + fundo na cor da raça dele.
+_Implementação:_ capturado com `page.addInitScript(() => { Date.now = () => 1700000000000 })` no Playwright para forçar 14h, mostrando a Tarde ativa; screenshot full-viewport 1600x1000.
+_Tecnologias:_ `Intl.DateTimeFormat().hour`, hash determinístico sobre `seed + periodIndex`, CSS `border: 2px solid var(--race-color)` via `themes.json`.
+_Decisão:_ 1 destaque → 3 opções reduz a fricção de reroll manual; o usuário sempre vê um personagem "do seu turno" sem precisar clicar 🎲 (§4.5 Q4).
 
 **Modal scrollado mostrando os 3 botões Share / Copiar link / Embed** — ações de compartilhamento do personagem, cada uma com ícone e micro-copy próprios.
 ![Modal com 3 botoes de share](docs/screenshots/feat-modal-share-3botoes.jpg)
 
-*Mecanismo:* os 3 botões ficam no rodapé da ficha técnica do modal: `#modalShare` usa Web Share API, `#modalShareBtn` usa Clipboard API, `#embedBtn` gera `<iframe>` 400×500 com `loading="lazy"`. Toast de confirmação em todos.
-*Implementação:* capturado com `page.click(".character-card")` para abrir o modal, depois `page.evaluate(() => { const m = document.querySelector("#modal"); m.scrollTop = m.scrollHeight; })` para revelar os 3 botões.
-*Tecnologias:* `navigator.share({title, text, url})`, `navigator.clipboard.writeText(url)`, `URL.createObjectURL` para o `<iframe>` blob, toast genérico `.toast--success`.
-*Decisão:* 3 caminhos cobrem 3 públicos (mobile share, link copy para chat, embed para blog/wiki) — Web Share sozinho exclui desktop e quem quer embedar (§4.4 Q4).
+_Mecanismo:_ os 3 botões ficam no rodapé da ficha técnica do modal: `#modalShare` usa Web Share API, `#modalShareBtn` usa Clipboard API, `#embedBtn` gera `<iframe>` 400×500 com `loading="lazy"`. Toast de confirmação em todos.
+_Implementação:_ capturado com `page.click(".character-card")` para abrir o modal, depois `page.evaluate(() => { const m = document.querySelector("#modal"); m.scrollTop = m.scrollHeight; })` para revelar os 3 botões.
+_Tecnologias:_ `navigator.share({title, text, url})`, `navigator.clipboard.writeText(url)`, `URL.createObjectURL` para o `<iframe>` blob, toast genérico `.toast--success`.
+_Decisão:_ 3 caminhos cobrem 3 públicos (mobile share, link copy para chat, embed para blog/wiki) — Web Share sozinho exclui desktop e quem quer embedar (§4.4 Q4).
 
 **Dialog "Sobre" do footer** — `<dialog>` nativo com 4 seções (contagens vivas, lista de features, atalhos de teclado, "como tudo é construído").
 ![Dialog Sobre do footer](docs/screenshots/feat-about-dialog.jpg)
 
-*Mecanismo:* `<dialog id="aboutDialog">` aberto por `showModal()` via click no `#aboutLink`; Esc / click-fora / × fecham; scroll travado no `<body>` enquanto aberto.
-*Implementação:* capturado com `page.click("#aboutLink")` + `waitForSelector("#aboutDialog[open]")` em viewport 1600x1000.
-*Tecnologias:* HTML `<dialog>` (não `<div role=dialog>`), `dialog::backdrop`, contador animado `requestAnimationFrame`, atalhos listados com `<kbd>`.
-*Decisão:* `<dialog>` nativo dá focus trap + Esc de graça; reimplementar com JS puro seria esquecer a borda semântica e provavelmente o backdrop (§5.5 Q4).
+_Mecanismo:_ `<dialog id="aboutDialog">` aberto por `showModal()` via click no `#aboutLink`; Esc / click-fora / × fecham; scroll travado no `<body>` enquanto aberto.
+_Implementação:_ capturado com `page.click("#aboutLink")` + `waitForSelector("#aboutDialog[open]")` em viewport 1600x1000.
+_Tecnologias:_ HTML `<dialog>` (não `<div role=dialog>`), `dialog::backdrop`, contador animado `requestAnimationFrame`, atalhos listados com `<kbd>`.
+_Decisão:_ `<dialog>` nativo dá focus trap + Esc de graça; reimplementar com JS puro seria esquecer a borda semântica e provavelmente o backdrop (§5.5 Q4).
 
 **Paleta de comandos aberta (Ctrl+K)** — busca fuzzy com ranking global, 3 tipos no mesmo resultado (personagens, raças, ações).
 ![Paleta Ctrl+K aberta](docs/screenshots/feat-palette.jpg)
 
-*Mecanismo:* modal central com `<input>` focado automaticamente; cada keystroke recalcula o ranking fuzzy insensível a acentos e rerenderiza a lista agrupada por tipo (desempate: personagem > raça > ação).
-*Implementação:* capturado com `page.keyboard.press("Control+k")` (ou `Meta+k` no macOS); o input "aat" foi digitado para mostrar o Aatrox no topo do ranking.
-*Tecnologias:* ARIA `role="combobox"`, matching fuzzy com normalização NFD + remoção de diacríticos, `aria-activedescendant` + live region.
-*Decisão:* "aat" traz o Aatrox entre Demônios — provar que a busca é global, não escopada por filtro ativo, é o que diferencia a paleta de um `<select>` comum.
+_Mecanismo:_ modal central com `<input>` focado automaticamente; cada keystroke recalcula o ranking fuzzy insensível a acentos e rerenderiza a lista agrupada por tipo (desempate: personagem > raça > ação).
+_Implementação:_ capturado com `page.keyboard.press("Control+k")` (ou `Meta+k` no macOS); o input "aat" foi digitado para mostrar o Aatrox no topo do ranking.
+_Tecnologias:_ ARIA `role="combobox"`, matching fuzzy com normalização NFD + remoção de diacríticos, `aria-activedescendant` + live region.
+_Decisão:_ "aat" traz o Aatrox entre Demônios — provar que a busca é global, não escopada por filtro ativo, é o que diferencia a paleta de um `<select>` comum.
 
 ### C. Mapa & Linha do Tempo (desktop)
 
 **Mapa com filtro de raça (Onis) ativo** — pins das outras raças esmaecidos, chip "Onis" destacado com a cor canônica.
 ![Mapa com filtro de raca Onis](docs/screenshots/feat-mapa-filtro-raca.jpg)
 
-*Mecanismo:* o chip de filtro aplica `opacity:0.25` aos pins cujo `data-race` não bate com a raça selecionada, com transição CSS de 200ms; o chip ativo é preenchido com a cor de `themes.json`.
-*Implementação:* capturado via `page.evaluate(() => location.hash = "#04_Onis")` (deep-link) + reload, depois `window.__MAPA__.abrir("Cavernas_de_Obsidiana")` no console para pré-abrir o painel da região dos Onis.
-*Tecnologias:* querySelector sobre `g[data-race]`, custom property `--race-onis`, hashchange listener, API de diagnóstico `window.__MAPA__` (`abrir`, `camera`, `estado`, `ids`, `exportarVista`).
-*Decisão:* o filtro via hash fecha o circuito mapa ↔ galeria ↔ APIs — o mesmo `#<folder>` funciona nos dois lados (§6.3 Q4).
+_Mecanismo:_ o chip de filtro aplica `opacity:0.25` aos pins cujo `data-race` não bate com a raça selecionada, com transição CSS de 200ms; o chip ativo é preenchido com a cor de `themes.json`.
+_Implementação:_ capturado via `page.evaluate(() => location.hash = "#04_Onis")` (deep-link) + reload, depois `window.__MAPA__.abrir("Cavernas_de_Obsidiana")` no console para pré-abrir o painel da região dos Onis.
+_Tecnologias:_ querySelector sobre `g[data-race]`, custom property `--race-onis`, hashchange listener, API de diagnóstico `window.__MAPA__` (`abrir`, `camera`, `estado`, `ids`, `exportarVista`).
+_Decisão:_ o filtro via hash fecha o circuito mapa ↔ galeria ↔ APIs — o mesmo `#<folder>` funciona nos dois lados (§6.3 Q4).
 
 **Linha do Tempo narrativa do mundo** — 4 atos cinematográficos com Ken Burns nos quadros de batalha, do ano 0 ao ano 12.
 ![Linha do tempo narrativa](docs/screenshots/feat-linha-do-tempo.jpg)
 
-*Mecanismo:* página dedicada com timeline horizontal scrollável; cada ato é uma seção fullscreen com parallax sutil e revel por caractere nos títulos.
-*Implementação:* capturado em `Linha_do_Tempo.html` servido por `python -m http.server 8080`, viewport 1600x1000, com scroll para o início do Ato 2 (Guerra da Fenda) para mostrar um quadro de batalha.
-*Tecnologias:* `historia-api.json` (mesma fonte do mapa), `assets/timeline.css` + `assets/timeline-data.js`, `requestAnimationFrame` para o Ken Burns, `IntersectionObserver` para o reveal.
-*Decisão:* consome a mesma `historia-api.json` do mapa — mudar a lore em `Aetheria_Dados_do_Mundo.md` reflete nos dois sem retrabalho (§9.1 Q4).
+_Mecanismo:_ página dedicada com timeline horizontal scrollável; cada ato é uma seção fullscreen com parallax sutil e revel por caractere nos títulos.
+_Implementação:_ capturado em `Linha_do_Tempo.html` servido por `python -m http.server 8080`, viewport 1600x1000, com scroll para o início do Ato 2 (Guerra da Fenda) para mostrar um quadro de batalha.
+_Tecnologias:_ `historia-api.json` (mesma fonte do mapa), `assets/timeline.css` + `assets/timeline-data.js`, `requestAnimationFrame` para o Ken Burns, `IntersectionObserver` para o reveal.
+_Decisão:_ consome a mesma `historia-api.json` do mapa — mudar a lore em `Aetheria_Dados_do_Mundo.md` reflete nos dois sem retrabalho (§9.1 Q4).
 
 ### D. Mobile (390×844) — paridade das features
 
@@ -155,82 +155,82 @@ Todas as 7 capturas abaixo comprovam que **nada do Q4/2026 é só desktop** — 
 **Onboarding mobile (390×844)** — mesmo overlay de 4 passos, mas o conteúdo ocupa quase toda a viewport; botão Next com target ≥44px.
 ![Onboarding mobile](docs/screenshots/feat-mob-onboarding.jpg)
 
-*Mecanismo:* o overlay usa `width: min(92vw, 480px)` e padding maior; os botões ficam empilhados verticalmente para acomodar o polegar.
-*Implementação:* capturado em viewport 390×844 (iPhone 14), `localStorage.removeItem("aetheria.onboarded")` + reload, `isMobile: true` + `hasTouch: true` no contexto Playwright.
-*Tecnologias:* `min(92vw, 480px)`, `@media (max-width: 720px)`, `touch-action: manipulation`, target `min-height: 44px`.
-*Decisão:* alvo ≥44px (WCAG 2.5.5) e empilhamento evitam o "erro do polegar" em 1ª visita no celular.
+_Mecanismo:_ o overlay usa `width: min(92vw, 480px)` e padding maior; os botões ficam empilhados verticalmente para acomodar o polegar.
+_Implementação:_ capturado em viewport 390×844 (iPhone 14), `localStorage.removeItem("aetheria.onboarded")` + reload, `isMobile: true` + `hasTouch: true` no contexto Playwright.
+_Tecnologias:_ `min(92vw, 480px)`, `@media (max-width: 720px)`, `touch-action: manipulation`, target `min-height: 44px`.
+_Decisão:_ alvo ≥44px (WCAG 2.5.5) e empilhamento evitam o "erro do polegar" em 1ª visita no celular.
 
 **Cards mobile filtrados por Demônios (05)** — grade 1-coluna com chips de raça condensados no topo rolável.
 ![Cards mobile filtrados por Demonios](docs/screenshots/feat-mob-cards-demonios.jpg)
 
-*Mecanismo:* a grade vira `grid-template-columns: 1fr` abaixo de 720px; os chips de filtro viram uma faixa horizontal com `scroll-snap-type: x mandatory`.
-*Implementação:* capturado após `page.goto("index.html#g=05_Demonios")` em viewport 390×844, scroll para a região da grade.
-*Tecnologias:* CSS Grid `grid-template-columns: 1fr`, `scroll-snap-type: x mandatory` no carrossel de chips, blur-up mantido.
-*Decisão:* 1 coluna no mobile preserva o tilt 3D do card sem cortar a moldura de manuscrito nos 390px de largura.
+_Mecanismo:_ a grade vira `grid-template-columns: 1fr` abaixo de 720px; os chips de filtro viram uma faixa horizontal com `scroll-snap-type: x mandatory`.
+_Implementação:_ capturado após `page.goto("index.html#g=05_Demonios")` em viewport 390×844, scroll para a região da grade.
+_Tecnologias:_ CSS Grid `grid-template-columns: 1fr`, `scroll-snap-type: x mandatory` no carrossel de chips, blur-up mantido.
+_Decisão:_ 1 coluna no mobile preserva o tilt 3D do card sem cortar a moldura de manuscrito nos 390px de largura.
 
 **Modal mobile** — ocupa 100% da viewport, swipe touch para próximo/anterior personagem.
 ![Modal mobile](docs/screenshots/feat-mob-modal.jpg)
 
-*Mecanismo:* o modal ganha `width: 100vw; height: 100dvh; border-radius: 0` abaixo de 720px; swipe horizontal dispara `stepModal(±1)` com threshold de 50px.
-*Implementação:* capturado com `page.click(".character-card")` em viewport 390×844, após `window.scrollTo(0, 800)` para garantir card visível.
-*Tecnologias:* `touchstart`/`touchend` em `#modalMedia` com `Math.abs(deltaX) > 50`, `100dvh` (dynamic viewport height), `stepModal()` reusado das setas.
-*Decisão:* no mobile, as setas ‹ › somem e o swipe vira o gesto natural — o handler reusa a mesma função das setas para evitar drift de lógica.
+_Mecanismo:_ o modal ganha `width: 100vw; height: 100dvh; border-radius: 0` abaixo de 720px; swipe horizontal dispara `stepModal(±1)` com threshold de 50px.
+_Implementação:_ capturado com `page.click(".character-card")` em viewport 390×844, após `window.scrollTo(0, 800)` para garantir card visível.
+_Tecnologias:_ `touchstart`/`touchend` em `#modalMedia` com `Math.abs(deltaX) > 50`, `100dvh` (dynamic viewport height), `stepModal()` reusado das setas.
+_Decisão:_ no mobile, as setas ‹ › somem e o swipe vira o gesto natural — o handler reusa a mesma função das setas para evitar drift de lógica.
 
 **Paleta mobile (ativada com "/")** — vira folha inferior (bottom sheet) com 92vw de largura, input com `inputmode="search"`.
 ![Paleta mobile](docs/screenshots/feat-mob-palette.jpg)
 
-*Mecanismo:* abaixo de 720px a paleta troca de modal central para bottom sheet ancorado no rodapé; o atalho "/" funciona mesmo com teclado virtual aberto.
-*Implementação:* capturado com `page.keyboard.press("/")` em viewport 390×844, após focar no body (não em um input) para evitar conflito com a barra do navegador.
-*Tecnologias:* `transform: translateY(100%) → 0`, `inputmode="search"`, `autocapitalize="off"`, `autocomplete="off"`, listener `keydown` no `document`.
-*Decisão:* Ctrl+K é awkward no celular (sem Ctrl físico); "/" é o atalho canônico do Spotlight/Gmail-mobile e já era parte do spec.
+_Mecanismo:_ abaixo de 720px a paleta troca de modal central para bottom sheet ancorado no rodapé; o atalho "/" funciona mesmo com teclado virtual aberto.
+_Implementação:_ capturado com `page.keyboard.press("/")` em viewport 390×844, após focar no body (não em um input) para evitar conflito com a barra do navegador.
+_Tecnologias:_ `transform: translateY(100%) → 0`, `inputmode="search"`, `autocapitalize="off"`, `autocomplete="off"`, listener `keydown` no `document`.
+_Decisão:_ Ctrl+K é awkward no celular (sem Ctrl físico); "/" é o atalho canônico do Spotlight/Gmail-mobile e já era parte do spec.
 
 **Mapa mobile (390×844)** — Canvas 2D com pinça (2 dedos) e toque longo para abrir painel, câmera com limites de pitch para não furar o relevo.
 ![Mapa mobile](docs/screenshots/feat-mob-mapa.jpg)
 
-*Mecanismo:* a câmera responde a `touchstart`/`touchmove`/`touchend` com 1 dedo = orbital, 2 dedos = pan + zoom; o painel de lore vira um sheet inferior.
-*Implementação:* capturado em `Mapa_Aetheria.html` viewport 390×844, com `window.__MAPA__.camera({yaw: 0.3, pitch: 0.8, dist: 1.4})` para uma vista 3/4 de boa legibilidade.
-*Tecnologias:* `TouchEvent.touches`, distância euclidiana entre 2 dedos para zoom, `pointer-events: none` no sheet inferior quando fechado, debounce de 16ms.
-*Decisão:* Canvas 2D puro escala sem custo (zero deps), e os 2 modos de toque não conflitam com o scroll da página (`touch-action: none` só no canvas).
+_Mecanismo:_ a câmera responde a `touchstart`/`touchmove`/`touchend` com 1 dedo = orbital, 2 dedos = pan + zoom; o painel de lore vira um sheet inferior.
+_Implementação:_ capturado em `Mapa_Aetheria.html` viewport 390×844, com `window.__MAPA__.camera({yaw: 0.3, pitch: 0.8, dist: 1.4})` para uma vista 3/4 de boa legibilidade.
+_Tecnologias:_ `TouchEvent.touches`, distância euclidiana entre 2 dedos para zoom, `pointer-events: none` no sheet inferior quando fechado, debounce de 16ms.
+_Decisão:_ Canvas 2D puro escala sem custo (zero deps), e os 2 modos de toque não conflitam com o scroll da página (`touch-action: none` só no canvas).
 
 **Linha do Tempo mobile** — timeline vertical com cards empilhados, Ken Burns preservado nos quadros.
 ![Linha do tempo mobile](docs/screenshots/feat-mob-linha-do-tempo.jpg)
 
-*Mecanismo:* a timeline horizontal vira vertical (`flex-direction: column`) abaixo de 720px; os atos ocupam `min-height: 100dvh` cada para preservar o ritmo cinematográfico.
-*Implementação:* capturado em `Linha_do_Tempo.html` viewport 390×844, com scroll para o Ato 3 (Erupção do Abismo) onde o vulcão com lava emissiva é mais visível.
-*Tecnologias:* `@media (orientation: portrait)` + `flex-direction: column`, `scroll-snap-type: y mandatory` opcional, Ken Burns com `transform-origin: center`.
-*Decisão:* a inversão horizontal→vertical é mandatória no portrait — manter horizontal forçaria o usuário a girar o celular pra cada ato.
+_Mecanismo:_ a timeline horizontal vira vertical (`flex-direction: column`) abaixo de 720px; os atos ocupam `min-height: 100dvh` cada para preservar o ritmo cinematográfico.
+_Implementação:_ capturado em `Linha_do_Tempo.html` viewport 390×844, com scroll para o Ato 3 (Erupção do Abismo) onde o vulcão com lava emissiva é mais visível.
+_Tecnologias:_ `@media (orientation: portrait)` + `flex-direction: column`, `scroll-snap-type: y mandatory` opcional, Ken Burns com `transform-origin: center`.
+_Decisão:_ a inversão horizontal→vertical é mandatória no portrait — manter horizontal forçaria o usuário a girar o celular pra cada ato.
 
 **About dialog mobile** — `<dialog>` ocupando 100dvh, scroll interno no conteúdo (não no body).
 ![About mobile](docs/screenshots/feat-mob-about.jpg)
 
-*Mecanismo:* o `<dialog>` ganha `width: 100vw; height: 100dvh; border-radius: 0` e o conteúdo interno rola com `overflow-y: auto` no próprio dialog (não no body).
-*Implementação:* capturado com `page.click("#aboutLink")` em viewport 390×844, scroll para a seção "Atalhos de teclado" para mostrar a lista de `<kbd>`.
-*Tecnologias:* `<dialog>` nativo + `100dvh`, `overscroll-behavior: contain` no conteúdo, `<kbd>` estilizado com borda inferior 2px.
-*Decisão:* scroll interno evita o "rubber-band" duplo (body + dialog) que dá em alguns Androids quando ambos rolam.
+_Mecanismo:_ o `<dialog>` ganha `width: 100vw; height: 100dvh; border-radius: 0` e o conteúdo interno rola com `overflow-y: auto` no próprio dialog (não no body).
+_Implementação:_ capturado com `page.click("#aboutLink")` em viewport 390×844, scroll para a seção "Atalhos de teclado" para mostrar a lista de `<kbd>`.
+_Tecnologias:_ `<dialog>` nativo + `100dvh`, `overscroll-behavior: contain` no conteúdo, `<kbd>` estilizado com borda inferior 2px.
+_Decisão:_ scroll interno evita o "rubber-band" duplo (body + dialog) que dá em alguns Androids quando ambos rolam.
 
 ## Estrutura do Projeto
 
-| Caminho | Função |
-|---|---|
-| `codex/` | As 22 pastas numeradas (`codex\\01_Humanos` a `codex\\22_Bersek`) — uma categoria/raça por pasta; dentro, o arquivo `Aetheria_Codex_de_*.md` com as fichas + os PNGs/WebPs dos personagens |
-| `index.html` | Site galeria (tema claro/escuro, busca, filtros por categoria, modal folheável, PWA, onboarding, share/embed) — consome `characters-api.json` |
-| `Mapa_Aetheria.html` | Mapa 3D do mundo "Mesa de Guerra Arcana" (Canvas 2D puro, 26 pins, câmera orbital, filtro raça/era, export PNG) — consome `historia-api.json` |
-| `Linha_do_Tempo.html` | Linha do tempo narrativa do mundo (4 atos cinematográficos + 5 batalhas épicas) — gerada de `historia-api.json` |
-| `offline.html` | Página de fallback do Service Worker (offline-first) |
-| `racas/` | 22 páginas de raça geradas pelo `scripts\\build_racas.ps1` — showcase rotativo dos membros, lore, acervo, rituais e navegação entre raças (dados embutidos, funciona em file://) |
-| `assets/` | Recursos estáticos compartilhados: `codex.css` (105 KB, 22 raças), `rituals.js` (10 rituais do modal), `transitions.js` (transições de página), `timeline.css`+`timeline-data.js`, subpastas `brand/`, `ornaments/`, `textures/`, `ui/`, `videos/`, ícones (favicon, apple-touch, og-cover) |
-| `data/` | Configs estáticas: `themes.json` (cor/ícone das 22 raças — fonte canônica única) + `characters.schema.json` (schema JSON da API) |
-| `Historia/` | Lore autoral do mundo (narrativa livre) + `Aetheria_Dados_do_Mundo.md`, a fonte estruturada da API da história (16 regiões, 5 batalhas, 5 celestes, 22 raças, 10 rituais) |
-| `characters-api.json` | API estática gerada — única fonte de dados do site (22 grupos, 487 personagens, sem array flat) |
-| `historia-api.json` | API estática da história (regiões, celestes, batalhas, raças e rituais) — consumida pelo mapa, racas e linha do tempo |
-| `manifest.webmanifest` | Manifesto PWA (3 ícones, 4 shortcuts, pt-BR) — gerado por `scripts\\build_manifest.ps1` |
-| `sw.js` | Service Worker (network-first p/ HTML, cache-first p/ assets, offline.html, `skipWaiting`+`clients.claim`) |
-| `Memoria.md` | 📌 Linha do tempo oficial do projeto: alterações, erros/correções, lições técnicas, pendências — LER PRIMEIRO em toda sessão |
-| `Temporario.md` | 📋 Backlog Q4/2026 consolidado (status dos 10 itens + 39 subitens do plano, próximas sugestões) |
-| `graphify-out/` | 🕸️ Grafo de conhecimento do projeto (skill `/graphify`) — ver seção própria abaixo |
-| `docs/` | `screenshots/` (28 capturas JPEG: 11 da galeria base + 17 da galeria Q4/2026) + `relatorio-arte.md` (gerado por `relatorio_arte.py`) |
-| `tests/` | 15 testes Node (Playwright) + 2 utilitários Python + 2 scripts Node utilitários — ver seção própria abaixo |
-| `scripts/` | 12 scripts PowerShell (build/mainutenção) + 3 utilitários Python (padronização/relatórios) — ver tabela dedicada abaixo |
+| Caminho                | Função                                                                                                                                                                                                                                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `codex/`               | As 22 pastas numeradas (`codex\\01_Humanos` a `codex\\22_Bersek`) — uma categoria/raça por pasta; dentro, o arquivo `Aetheria_Codex_de_*.md` com as fichas + os PNGs/WebPs dos personagens                                                                                                  |
+| `index.html`           | Site galeria (tema claro/escuro, busca, filtros por categoria, modal folheável, PWA, onboarding, share/embed) — consome `characters-api.json`                                                                                                                                               |
+| `Mapa_Aetheria.html`   | Mapa 3D do mundo "Mesa de Guerra Arcana" (Canvas 2D puro, 26 pins, câmera orbital, filtro raça/era, export PNG) — consome `historia-api.json`                                                                                                                                               |
+| `Linha_do_Tempo.html`  | Linha do tempo narrativa do mundo (4 atos cinematográficos + 5 batalhas épicas) — gerada de `historia-api.json`                                                                                                                                                                             |
+| `offline.html`         | Página de fallback do Service Worker (offline-first)                                                                                                                                                                                                                                        |
+| `racas/`               | 22 páginas de raça geradas pelo `scripts\\build_racas.ps1` — showcase rotativo dos membros, lore, acervo, rituais e navegação entre raças (dados embutidos, funciona em file://)                                                                                                            |
+| `assets/`              | Recursos estáticos compartilhados: `codex.css` (105 KB, 22 raças), `rituals.js` (10 rituais do modal), `transitions.js` (transições de página), `timeline.css`+`timeline-data.js`, subpastas `brand/`, `ornaments/`, `textures/`, `ui/`, `videos/`, ícones (favicon, apple-touch, og-cover) |
+| `data/`                | Configs estáticas: `themes.json` (cor/ícone das 22 raças — fonte canônica única) + `characters.schema.json` (schema JSON da API)                                                                                                                                                            |
+| `Historia/`            | Lore autoral do mundo (narrativa livre) + `Aetheria_Dados_do_Mundo.md`, a fonte estruturada da API da história (16 regiões, 5 batalhas, 5 celestes, 22 raças, 10 rituais)                                                                                                                   |
+| `characters-api.json`  | API estática gerada — única fonte de dados do site (22 grupos, 487 personagens, sem array flat)                                                                                                                                                                                             |
+| `historia-api.json`    | API estática da história (regiões, celestes, batalhas, raças e rituais) — consumida pelo mapa, racas e linha do tempo                                                                                                                                                                       |
+| `manifest.webmanifest` | Manifesto PWA (3 ícones, 4 shortcuts, pt-BR) — gerado por `scripts\\build_manifest.ps1`                                                                                                                                                                                                     |
+| `sw.js`                | Service Worker (network-first p/ HTML, cache-first p/ assets, offline.html, `skipWaiting`+`clients.claim`)                                                                                                                                                                                  |
+| `Memoria.md`           | 📌 Linha do tempo oficial do projeto: alterações, erros/correções, lições técnicas, pendências — LER PRIMEIRO em toda sessão                                                                                                                                                                |
+| `Temporario.md`        | 📋 Backlog Q4/2026 consolidado (status dos 10 itens + 39 subitens do plano, próximas sugestões)                                                                                                                                                                                             |
+| `graphify-out/`        | 🕸️ Grafo de conhecimento do projeto (skill `/graphify`) — ver seção própria abaixo                                                                                                                                                                                                          |
+| `docs/`                | `screenshots/` (28 capturas JPEG: 11 da galeria base + 17 da galeria Q4/2026) + `relatorio-arte.md` (gerado por `relatorio_arte.py`)                                                                                                                                                        |
+| `tests/`               | 15 testes Node (Playwright) + 2 utilitários Python + 2 scripts Node utilitários — ver seção própria abaixo                                                                                                                                                                                  |
+| `scripts/`             | 12 scripts PowerShell (build/mainutenção) + 3 utilitários Python (padronização/relatórios) — ver tabela dedicada abaixo                                                                                                                                                                     |
 
 ## 🖥️ Como as Telas Funcionam
 
@@ -290,23 +290,23 @@ Todas as 7 capturas abaixo comprovam que **nada do Q4/2026 é só desktop** — 
 
 ## 📂 Scripts (`scripts/`)
 
-| Script | Função |
-|---|---|
-| `build_api_json.ps1` | 1. **OBRIGATÓRIO** — parseia `codex/*/Aetheria_Codex_de_*.md` e gera `characters-api.json` (22 grupos, sem array flat, com PNG+WebP links e guard de pastas com arte sem ficha) |
-| `build_historia_api.ps1` | 2. **OBRIGATÓRIO** — parseia `Historia/Aetheria_Dados_do_Mundo.md` e gera `historia-api.json` (16 regiões, 5 batalhas, 5 celestes, 22 raças, 10 rituais, com validação cruzada raça↔região↔batalha) |
-| `build_readme.ps1` | 3. Gera este `README.md` a partir do `characters-api.json` (seções descritivas manuais + elenco automático das 22 raças) |
-| `build_racas.ps1` | 4. Gera as 22 páginas em `racas/*.html` a partir da API (template único com payload `[ordered]` embutido, OG/Twitter meta, herói rotativo, rituais, guard de soma de membros contra JSON) |
-| `build_manifest.ps1` | 5. Gera `manifest.webmanifest` (PWA) com top 3 raças como shortcuts e contagens vivas |
-| `build_sitemap.ps1` | 6. Gera `sitemap.xml` a partir dos `racas/*.html` e HTMLs raiz (index, mapa, linha do tempo) |
-| `make_og_cover.ps1` | Gera a imagem de capa OG (`assets/og-cover.{jpg,png,svg}`) usada em todas as meta-tags de compartilhamento |
-| `absorb_sync.ps1` | Absorve pasta `NN_*` recriada na raiz pela sync externa do Bruno (idêntico por hash descarta, novo move, DIFERENTE guarda como `*.CONFLITO-SYNC.*`); rodar após cada sincronização OU atualizar o destino da sync para `...\Teste\codex\` |
-| `fix_encoding.ps1` | Repara mojibake double-encoded UTF-8↔CP1252 nos `.md`/`.ps1` (estratégia: por segmento, preservando partes já corretas; **SEMPRE rodar antes de qualquer diff**) |
-| `fix_image_typos.ps1` | Renomeia PNGs com typos inequívocos (Levenshtein ≤2 + pareamento único por pasta); casos ambíguos ignorados com aviso |
-| `dedupe_images.ps1` | Remove PNGs/WebPs duplicados por hash SHA-256 dentro de cada pasta `codex/NN_*` |
-| `check_missing_images.ps1` | Diagnóstico: classifica cada personagem sem imagem em SEM-ARTE (45), COLISÃO (8) ou EM-OUTRA-PASTA (2) — somente leitura |
-| `pad_demonios.py` | Padroniza `codex/05_Demonios/Aetheria_Codex_de_Demônios.md` no formato bulleted-bold (Python 3, UTF-8, idempotente, 6 asserts) |
-| `pad_preambulos.py` | Sincroniza os preâmbulos (texto antes do primeiro `## N.`) das 22 raças com a contagem real de fichas (regex mínima, idempotente) |
-| `relatorio_arte.py` | Gera `docs/relatorio-arte.md` (somente leitura) listando órfãos, cópias idênticas, homônimos e quase-duplicatas |
+| Script                     | Função                                                                                                                                                                                                                                    |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `build_api_json.ps1`       | 1. **OBRIGATÓRIO** — parseia `codex/*/Aetheria_Codex_de_*.md` e gera `characters-api.json` (22 grupos, sem array flat, com PNG+WebP links e guard de pastas com arte sem ficha)                                                           |
+| `build_historia_api.ps1`   | 2. **OBRIGATÓRIO** — parseia `Historia/Aetheria_Dados_do_Mundo.md` e gera `historia-api.json` (16 regiões, 5 batalhas, 5 celestes, 22 raças, 10 rituais, com validação cruzada raça↔região↔batalha)                                       |
+| `build_readme.ps1`         | 3. Gera este `README.md` a partir do `characters-api.json` (seções descritivas manuais + elenco automático das 22 raças)                                                                                                                  |
+| `build_racas.ps1`          | 4. Gera as 22 páginas em `racas/*.html` a partir da API (template único com payload `[ordered]` embutido, OG/Twitter meta, herói rotativo, rituais, guard de soma de membros contra JSON)                                                 |
+| `build_manifest.ps1`       | 5. Gera `manifest.webmanifest` (PWA) com top 3 raças como shortcuts e contagens vivas                                                                                                                                                     |
+| `build_sitemap.ps1`        | 6. Gera `sitemap.xml` a partir dos `racas/*.html` e HTMLs raiz (index, mapa, linha do tempo)                                                                                                                                              |
+| `make_og_cover.ps1`        | Gera a imagem de capa OG (`assets/og-cover.{jpg,png,svg}`) usada em todas as meta-tags de compartilhamento                                                                                                                                |
+| `absorb_sync.ps1`          | Absorve pasta `NN_*` recriada na raiz pela sync externa do Bruno (idêntico por hash descarta, novo move, DIFERENTE guarda como `*.CONFLITO-SYNC.*`); rodar após cada sincronização OU atualizar o destino da sync para `...\Teste\codex\` |
+| `fix_encoding.ps1`         | Repara mojibake double-encoded UTF-8↔CP1252 nos `.md`/`.ps1` (estratégia: por segmento, preservando partes já corretas; **SEMPRE rodar antes de qualquer diff**)                                                                          |
+| `fix_image_typos.ps1`      | Renomeia PNGs com typos inequívocos (Levenshtein ≤2 + pareamento único por pasta); casos ambíguos ignorados com aviso                                                                                                                     |
+| `dedupe_images.ps1`        | Remove PNGs/WebPs duplicados por hash SHA-256 dentro de cada pasta `codex/NN_*`                                                                                                                                                           |
+| `check_missing_images.ps1` | Diagnóstico: classifica cada personagem sem imagem em SEM-ARTE (45), COLISÃO (8) ou EM-OUTRA-PASTA (2) — somente leitura                                                                                                                  |
+| `pad_demonios.py`          | Padroniza `codex/05_Demonios/Aetheria_Codex_de_Demônios.md` no formato bulleted-bold (Python 3, UTF-8, idempotente, 6 asserts)                                                                                                            |
+| `pad_preambulos.py`        | Sincroniza os preâmbulos (texto antes do primeiro `## N.`) das 22 raças com a contagem real de fichas (regex mínima, idempotente)                                                                                                         |
+| `relatorio_arte.py`        | Gera `docs/relatorio-arte.md` (somente leitura) listando órfãos, cópias idênticas, homônimos e quase-duplicatas                                                                                                                           |
 
 ## Formatos das Fichas (.md)
 
@@ -346,7 +346,7 @@ Arquivos: `graph.html` (visualização interativa — abra no navegador) · `GRA
 - `/graphify explain "NomeDoNo"` — explicação em linguagem simples de um nó
 - `/graphify --update` — re-extrai só arquivos novos/alterados (rodar após mudanças grandes de conteúdo)
 
-*O `graph.json` é um snapshot: depois de adicionar/editar muitas fichas ou páginas, rode `/graphify --update` para atualizá-lo. A skill detecta 128 nós isolados (lacunas de documentação) e 41 comunidades finas (<3 nós) — query explore ajuda a mapear.*
+_O `graph.json` é um snapshot: depois de adicionar/editar muitas fichas ou páginas, rode `/graphify --update` para atualizá-lo. A skill detecta 128 nós isolados (lacunas de documentação) e 41 comunidades finas (<3 nós) — query explore ajuda a mapear._
 
 ## Como Rodar o Site
 
@@ -409,33 +409,33 @@ npm run format:check          # prettier --check . (CI mode)
 
 ### Dependências de desenvolvimento (5)
 
-| Pacote | Versão | Função |
-|---|---|---|
-| `eslint` | ^9.13.0 | Lint JS (flat config, escopo `tests/`, 6 regras mínimas: no-undef/no-var/eqeqeq/no-empty como error; no-unused-vars/prefer-const como warn) |
-| `globals` | ^15.11.0 | Pacote de globals Node para ESLint |
-| `prettier` | ^3.3.3 | Formatter (printWidth 100, trailingComma "none", endOfLine "lf") |
-| `markdownlint-cli` | ^0.42.0 | Lint Markdown (4 regras ativas: MD009/MD012/MD024/MD046; 7 desabilitadas por falso-positivo em prosa) |
-| `playwright` | ^1.62.1 | SDK de automação browser (Chromium headless) — usado por `tests/feature-shots.mjs` para capturar as 17 telas Q4/2026 em `docs/screenshots/feat-*.jpg` |
+| Pacote             | Versão   | Função                                                                                                                                                |
+| ------------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `eslint`           | ^9.13.0  | Lint JS (flat config, escopo `tests/`, 6 regras mínimas: no-undef/no-var/eqeqeq/no-empty como error; no-unused-vars/prefer-const como warn)           |
+| `globals`          | ^15.11.0 | Pacote de globals Node para ESLint                                                                                                                    |
+| `prettier`         | ^3.3.3   | Formatter (printWidth 100, trailingComma "none", endOfLine "lf")                                                                                      |
+| `markdownlint-cli` | ^0.42.0  | Lint Markdown (4 regras ativas: MD009/MD012/MD024/MD046; 7 desabilitadas por falso-positivo em prosa)                                                 |
+| `playwright`       | ^1.62.1  | SDK de automação browser (Chromium headless) — usado por `tests/feature-shots.mjs` para capturar as 17 telas Q4/2026 em `docs/screenshots/feat-*.jpg` |
 
 **Regra zero-deps em runtime:** o site (`index.html`, `racas/*.html`, `Mapa_Aetheria.html`, `Linha_do_Tempo.html`) NÃO usa nenhuma biblioteca externa — GSAP foi removido em 02/09/2026; tudo é HTML + CSS + JS puro. As 5 deps acima são só para o pipeline de validação local + capturas de tela.
 
 ### Testes utilitários (Python + Node)
 
-| Arquivo | Função |
-|---|---|
-| `tests/analyze.mjs` | Analisa os artefatos gerados e emite relatório HTML (página de QA local) |
-| `tests/convert_webp.py` | Pipeline PNG→WebP (489/489 convertido em 02/09; converte cada `codex/NN_*/X.png` em `X.webp` irmão) |
-| `tests/make-favicons.mjs` | Gera os favicons `favicon-{32,192}.png` e `apple-touch-icon.png` a partir do SVG canônico |
-| `tests/make-og-cover.mjs` | Gera a imagem de capa OG (`og-cover.{jpg,png}`) — wrapper Node do `scripts/make_og_cover.ps1` |
-| `tests/screenshots.mjs` | Captura as 6 telas principais (1600×1000) em `tests/screenshots/` (gerado, ignorado do git) |
+| Arquivo                   | Função                                                                                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tests/analyze.mjs`       | Analisa os artefatos gerados e emite relatório HTML (página de QA local)                                                                          |
+| `tests/convert_webp.py`   | Pipeline PNG→WebP (489/489 convertido em 02/09; converte cada `codex/NN_*/X.png` em `X.webp` irmão)                                               |
+| `tests/make-favicons.mjs` | Gera os favicons `favicon-{32,192}.png` e `apple-touch-icon.png` a partir do SVG canônico                                                         |
+| `tests/make-og-cover.mjs` | Gera a imagem de capa OG (`og-cover.{jpg,png}`) — wrapper Node do `scripts/make_og_cover.ps1`                                                     |
+| `tests/screenshots.mjs`   | Captura as 6 telas principais (1600×1000) em `tests/screenshots/` (gerado, ignorado do git)                                                       |
 | `tests/feature-shots.mjs` | Captura as 17 telas das features Q4/2026 (10 desktop 1600×1000 + 7 mobile 390×844) em `docs/screenshots/feat-*.jpg` — galeria visual deste README |
-| `tests/validate-api.mjs` | Valida o `characters-api.json` standalone: 22 grupos, slugs únicos, todas imagens existem em disco, 2 avisos esperados (homônimos Ulthar/Vanek) |
+| `tests/validate-api.mjs`  | Valida o `characters-api.json` standalone: 22 grupos, slugs únicos, todas imagens existem em disco, 2 avisos esperados (homônimos Ulthar/Vanek)   |
 
 **Convenção de testes Playwright:** `serviceWorkers: "block"` em todos os 12 contextos (Lição 11ª — SW segura versão antiga em testes), `permissions: ["clipboard-read", "clipboard-write"]` para os share-checks, `installPageListeners(page)` em cada bloco (helper que captura `pageerror` + console error + HTTP ≥ 400 + `requestfailed` de JS/CSS/fonts).
 
 ## Resumo Por Categoria
 
-Total: **487 personagens** em **22 categorias** (API gerada em 2026-09-08).
+Total: **487 personagens** em **22 categorias** (API gerada em 2026-09-17).
 
 <details>
 <summary><strong>01_Humanos</strong> — 24 personagens <code>Aetheria_Codex_de_Humano.md</code></summary>
@@ -596,7 +596,7 @@ Ashura | Guts-V-1 | Kargan-V-1, o Portador do Voto Quebrado | Vhalor-V-1, o Devo
 ```json
 {
   "project": "Aetheria Codex",
-  "generatedAt": "2026-09-08",
+  "generatedAt": "2026-09-17",
   "totalGroups": 22,
   "totalCharacters": 487,
   "groups":  [ { "folder": "...", "file": "...", "count": N, "characters": [...] } ]
@@ -607,15 +607,15 @@ Ashura | Guts-V-1 | Kargan-V-1, o Portador do Voto Quebrado | Vhalor-V-1, o Devo
 
 Cada personagem tem:
 
-| Campo | Conteúdo |
-|---|---|
-| `number` | número na ficha |
-| `title` | nome completo com epíteto ("X, o Y") |
-| `name` / `id` | nome base (sem epíteto) |
-| `file` / `folder` | origem no acervo |
-| `image` | caminho relativo do PNG ou `null` |
-| `description` | história original extraída |
-| `attributes` | `race`, `physical`, `faceAndHair`, `outfit`, `palette`, `equipment` (quando existirem na ficha) |
+| Campo             | Conteúdo                                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| `number`          | número na ficha                                                                                 |
+| `title`           | nome completo com epíteto ("X, o Y")                                                            |
+| `name` / `id`     | nome base (sem epíteto)                                                                         |
+| `file` / `folder` | origem no acervo                                                                                |
+| `image`           | caminho relativo do PNG ou `null`                                                               |
+| `description`     | história original extraída                                                                      |
+| `attributes`      | `race`, `physical`, `faceAndHair`, `outfit`, `palette`, `equipment` (quando existirem na ficha) |
 
 ### Exemplo de uso em JavaScript
 
@@ -662,7 +662,7 @@ Para compreender completamente este projeto, leia os seguintes arquivos na ordem
 25. **package.json** + **.prettierrc** + **eslint.config.js** + **.markdownlint.json** — tooling de qualidade (`npm run lint`, `npm run format:check`)
 26. **docs/screenshots/** (28 capturas JPEG: 11 galeria base + 17 Q4/2026) + **docs/relatorio-arte.md** — material visual e diagnóstico de conteúdo
 27. **graphify-out/** — grafo de conhecimento (`/graphify` — 298 nós / 311 arestas / 72 comunidades)
-28. **codex/** — fichas `.md` e imagens `.webp`/`.png`/`.webp` dos 487 personagens (fonte primária; 22 pastas numeradas)
+28. **codex/** — fichas `.md` e imagens `.png`/`.webp` dos 487 personagens (fonte primária; 22 pastas numeradas)
 29. **Historia/** — lore autoral do mundo (4 `.md`: Aetheria_Codex_do_Mundo, Aetheria_Dados_do_Mundo, Aetheria_Geografia_e_Batalhas, Aetheria_Super_Historia)
 
 ---
@@ -674,4 +674,4 @@ Sitemap: https://bsmiguell.github.io/Codex/sitemap.xml
 
 ---
 
-*Última geração: 09/09/2026 23:04 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md).*
+_Última geração: 17/09/2026 19:07 por `build_readme.ps1`. Histórico e pendências: [`Memoria.md`](Memoria.md)._

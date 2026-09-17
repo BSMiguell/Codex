@@ -137,7 +137,7 @@ try {
     );
     check(
       "hero mostra contagem de raças",
-      groupsInPage === apiTotal.groups || totalText.includes(String(apiTotal.groups)),
+      groupsInPage === apiTotal.groups || groupText.includes(String(apiTotal.groups)),
       `página=${groupText} API=${apiTotal.groups}`
     );
     check("API tem 487 chars (atual)", apiTotal.chars === 487, `chars=${apiTotal.chars}`);
@@ -895,7 +895,8 @@ try {
 console.log(`\n${"=".repeat(50)}`);
 if (httpErrs.length > 0) {
   console.log(`⚠️  ${httpErrs.length} erro(s) HTTP/console:`);
-  httpErrs.slice(0, 5).forEach((e) => console.log(`   - ${e}`));
+  httpErrs.forEach((e) => console.log(`   - ${e}`));
+  errors.push(`${httpErrs.length} erro(s) HTTP/console`);
 }
 if (errors.length > 0) {
   console.log(`\n❌ ${errors.length} falha(s):`);

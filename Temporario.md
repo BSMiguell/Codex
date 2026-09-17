@@ -1,6 +1,6 @@
 # Plano operacional — Aetheria Codex
 
-**Atualizado:** 09/09/2026  
+**Atualizado:** 17/09/2026  —  A3 parcial: mapa-filtros/export corrigidos; CI remoto ainda pendente (Gate 4 🟡)  
 **Objetivo:** manter este arquivo como a fonte operacional do trabalho: estado real do projeto, prioridades, gates, riscos, sequência de execução e próximos passos.
 
 > **Regra de ouro:** primeiro estabilizar o que existe; depois validar; só então adicionar novas features.
@@ -301,24 +301,30 @@ Foram corrigidos sucessivamente:
 5. porta necessária para o minimapa;
 6. diagnóstico dos erros de transição.
 
-### Último problema conhecido
+### Problemas corrigidos (17/09/2026 — A4)
 
-`transitions-check` apresentou **6 erros de console**, mesmo com a maior parte das verificações passando.
+Causas reais encontradas com reprodução antes de cada fix:
 
-O diagnóstico foi adicionado para revelar a mensagem real dos erros.
+1. 404 `racas/assets/*` — template com caminho relativo errado; fix `../assets/` + regeneração das 22 páginas.
+2. Falso verde no smoke — erros HTTP/console capturados mas não propagados ao exit code; smoke passava com 21 erros.
+3. Minimapa encoberto por `.map-crosslinks` (z-index) + hrefs de raça com case errado (`Aspectos` → `osaspectos`).
+4. Filtro de era não restaurava após reload — inicialização presa ao fetch de `characters-api.json`.
+5. Export PNG intermitente — `toBlob` levava ~2,3s competindo com o loop de render; render pausado durante a codificação, clique→download <1s.
+
+`transitions-check` agora 82/82; smoke fecha com 0 erros HTTP/console.
 
 ### Próximo gate
 
 ```text
-[ ] CI do HEAD atual verde
-[ ] transitions-check verde
-[ ] todos os testes críticos verdes
-[ ] lint verde
-[ ] format:check verde
-[ ] URL/SEO verde
+[✓] todos os testes críticos verdes (local, 17/09)
+[✓] transitions-check verde (82/82 local)
+[✓] lint verde (0 erros, 0 warnings)
+[✓] format:check verde
+[✓] URL/SEO verde
+[ ] CI do HEAD atual verde (remoto — exige commit/push autorizado)
 ```
 
-**Gate 4: 🔴 NÃO APROVADO AINDA**
+**Gate 4: 🟡 LOCAL VERDE — CI REMOTO PENDENTE**
 
 ---
 

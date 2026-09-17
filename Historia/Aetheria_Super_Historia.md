@@ -417,4 +417,3 @@ Ela so sobrevivera se alianças improvaveis se mantiverem:
 No fim, Aetheria nao e uma historia de vencedores.
 
 E uma historia de sobreviventes que aprenderam a lutar lado a lado com antigos inimigos quando o ceu, a terra e o abismo resolveram cobrar a divida ao mesmo tempo.
-
