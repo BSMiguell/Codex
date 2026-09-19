@@ -1,6 +1,6 @@
 # Plano operacional — Aetheria Codex
 
-**Atualizado:** 17/09/2026  —  A3 parcial: mapa-filtros/export corrigidos; CI remoto ainda pendente (Gate 4 🟡)  
+**Atualizado:** 19/09/2026 — A1/A2/A3 concluídos localmente; BOM corrigido nos .ps1 (fix #39); CI remoto #40 em andamento (Gate 4 🟡 → pode virar 🟢)  
 **Objetivo:** manter este arquivo como a fonte operacional do trabalho: estado real do projeto, prioridades, gates, riscos, sequência de execução e próximos passos.
 
 > **Regra de ouro:** primeiro estabilizar o que existe; depois validar; só então adicionar novas features.
