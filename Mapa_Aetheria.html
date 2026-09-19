@@ -938,6 +938,26 @@
           </svg>
           Céus
         </button>
+        <button type="button" class="chip" data-camada="politica" aria-pressed="false">
+          <svg class="sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#5a4a3a" stroke-width="1.4" /></svg>
+          <svg class="nao-sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#8B93A5" stroke-width="1.3" /></svg>
+          Política
+        </button>
+        <button type="button" class="chip" data-camada="magica" aria-pressed="false">
+          <svg class="sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#6a3d9a" stroke-width="1.4" /></svg>
+          <svg class="nao-sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#8B93A5" stroke-width="1.3" /></svg>
+          Magia
+        </button>
+        <button type="button" class="chip" data-camada="rotas" aria-pressed="false">
+          <svg class="sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#3a7a6a" stroke-width="1.4" /></svg>
+          <svg class="nao-sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#8B93A5" stroke-width="1.3" /></svg>
+          Rotas
+        </button>
+        <button type="button" class="chip" data-camada="conflitos" aria-pressed="false">
+          <svg class="sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#8B2A2A" stroke-width="1.4" /></svg>
+          <svg class="nao-sel" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" stroke="#8B93A5" stroke-width="1.3" /></svg>
+          Conflitos
+        </button>
         <button
           type="button"
           class="chip"
@@ -3198,7 +3218,7 @@
    5. INTERAÇÃO — orbitar, zoom, hover, clique, teclado
    ============================================================ */
 
-        const CAMADAS = { regioes: true, batalhas: true, ceus: true };
+        const CAMADAS = { regioes: true, batalhas: true, ceus: true, politica: false, magica: false, rotas: false, conflitos: false };
         // Filtro de raça (W5.3). Vazio = todas. Restaurado do localStorage no boot.
         let FILTRO_RACA = "";
         try {
