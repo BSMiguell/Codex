@@ -29,6 +29,14 @@
 - Nenhum leitor de tela real disponível para execução automatizada.
 - O teste com NVDA real não pode ser concluído automaticamente.
 
+## Atualização 19/09/2026 — ambiente atual
+
+- NVDA não instalado no ambiente atual (`C:\Program Files\NVDA` inexistente).
+- Nenhum leitor de tela disponível para execução automatizada.
+- Verificações manuais (axe-core 4.13.0 + ARIA manual) confirmadas sem violações.
+- **Gate E (NVDA real): permanece 🟡 — requer execução manual em máquina com NVDA.**
+- Não mascarado: a limitação é do ambiente, não do código.
+
 ## Próximo passo para fechar #13
 
 1. Executar NVDA real em máquina com Windows + NVDA atualizado.
