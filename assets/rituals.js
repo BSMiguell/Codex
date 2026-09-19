@@ -11,6 +11,33 @@
 
   const RITUALS = {};
 
+  /* Integração com data/magia.json (retira custos hardcoded) */
+  var MAGIA_CONFIG = {
+    custos: {
+      invocacao: { tempo: 900 },
+      alteracao: { tempo: 700 },
+      observacao: { tempo: 850 }
+    }
+  };
+
+  function getTempo(tipo) {
+    return (MAGIA_CONFIG.custos[tipo] && MAGIA_CONFIG.custos[tipo].tempo) ? MAGIA_CONFIG.custos[tipo].tempo : 700;
+  }
+
+  /* Tenta carregar data/magia.json; se falhar, usa o fallback acima */
+  if (typeof window !== "undefined" && window.fetch) {
+    try {
+      fetch("data/magia.json")
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (cfg) {
+          if (cfg && cfg.custos) {
+            MAGIA_CONFIG.custos = cfg.custos;
+          }
+        })
+        .catch(function () { /* silenciosamente usa fallback */ });
+    } catch (e) { /* silenciosamente usa fallback */ }
+  }
+
   /* --- Helpers --- */
   const prefersReduced =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -32,7 +59,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-03-banner");
     modal.classList.add("ritual-03-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-03-banner");
       modal.classList.remove("ritual-03-modal");
     });
@@ -43,7 +70,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-07-impact");
     modal.classList.add("ritual-07-modal");
-    runAfter(800, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-07-impact");
       modal.classList.remove("ritual-07-modal");
     });
@@ -54,7 +81,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-08-jaw");
     modal.classList.add("ritual-08-modal");
-    runAfter(750, function () {
+    runAfter(getTempo("observacao"), function () {
       card.classList.remove("ritual-08-jaw");
       modal.classList.remove("ritual-08-modal");
     });
@@ -65,7 +92,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-14-fracture");
     modal.classList.add("ritual-14-modal");
-    runAfter(850, function () {
+    runAfter(getTempo("observacao"), function () {
       card.classList.remove("ritual-14-fracture");
       modal.classList.remove("ritual-14-modal");
     });
@@ -76,7 +103,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-17-merge");
     modal.classList.add("ritual-17-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-17-merge");
       modal.classList.remove("ritual-17-modal");
     });
@@ -87,7 +114,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-19-axe");
     modal.classList.add("ritual-19-modal");
-    runAfter(800, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-19-axe");
       modal.classList.remove("ritual-19-modal");
     });
@@ -98,7 +125,7 @@
     var wm = document.querySelector(".hero-watermark") || document.querySelector(".lore-watermark");
     if (!wm) return;
     wm.classList.add("ritual-mark-active");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       wm.classList.remove("ritual-mark-active");
     });
   }
@@ -108,7 +135,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-01-ancestral");
     modal.classList.add("ritual-01-modal");
-    runAfter(600, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-01-ancestral");
       modal.classList.remove("ritual-01-modal");
     });
@@ -119,7 +146,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-02-mutate");
     modal.classList.add("ritual-02-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-02-mutate");
       modal.classList.remove("ritual-02-modal");
     });
@@ -130,7 +157,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-04-shadow");
     modal.classList.add("ritual-04-modal");
-    runAfter(800, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-04-shadow");
       modal.classList.remove("ritual-04-modal");
     });
@@ -141,7 +168,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-05-pact");
     modal.classList.add("ritual-05-modal");
-    runAfter(750, function () {
+    runAfter(getTempo("observacao"), function () {
       card.classList.remove("ritual-05-pact");
       modal.classList.remove("ritual-05-modal");
     });
@@ -152,7 +179,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-09-ascension");
     modal.classList.add("ritual-09-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-09-ascension");
       modal.classList.remove("ritual-09-modal");
     });
@@ -163,7 +190,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-10-abyss");
     modal.classList.add("ritual-10-modal");
-    runAfter(850, function () {
+    runAfter(getTempo("observacao"), function () {
       card.classList.remove("ritual-10-abyss");
       modal.classList.remove("ritual-10-modal");
     });
@@ -174,7 +201,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-13-thunder");
     modal.classList.add("ritual-13-modal");
-    runAfter(600, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-13-thunder");
       modal.classList.remove("ritual-13-modal");
     });
@@ -185,7 +212,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-06-veil");
     modal.classList.add("ritual-06-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-06-veil");
       modal.classList.remove("ritual-06-modal");
     });
@@ -196,7 +223,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-16-bones");
     modal.classList.add("ritual-16-modal");
-    runAfter(800, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-16-bones");
       modal.classList.remove("ritual-16-modal");
     });
@@ -207,7 +234,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-11-deep");
     modal.classList.add("ritual-11-modal");
-    runAfter(900, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-11-deep");
       modal.classList.remove("ritual-11-modal");
     });
@@ -218,7 +245,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-12-arcane");
     modal.classList.add("ritual-12-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-12-arcane");
       modal.classList.remove("ritual-12-modal");
     });
@@ -245,7 +272,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-15-reflect");
     modal.classList.add("ritual-15-modal");
-    runAfter(700, function () {
+    runAfter(getTempo("alteracao"), function () {
       card.classList.remove("ritual-15-reflect");
       modal.classList.remove("ritual-15-modal");
     });
@@ -256,7 +283,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-18-hunger");
     modal.classList.add("ritual-18-modal");
-    runAfter(800, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-18-hunger");
       modal.classList.remove("ritual-18-modal");
     });
@@ -267,7 +294,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-20-curse");
     modal.classList.add("ritual-20-modal");
-    runAfter(750, function () {
+    runAfter(getTempo("observacao"), function () {
       card.classList.remove("ritual-20-curse");
       modal.classList.remove("ritual-20-modal");
     });
@@ -278,7 +305,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-21-chain");
     modal.classList.add("ritual-21-modal");
-    runAfter(850, function () {
+    runAfter(getTempo("observacao"), function () {
       card.classList.remove("ritual-21-chain");
       modal.classList.remove("ritual-21-modal");
     });
@@ -289,7 +316,7 @@
     if (prefersReduced) return;
     card.classList.add("ritual-22-rage");
     modal.classList.add("ritual-22-modal");
-    runAfter(800, function () {
+    runAfter(getTempo("invocacao"), function () {
       card.classList.remove("ritual-22-rage");
       modal.classList.remove("ritual-22-modal");
     });

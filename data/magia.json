@@ -1,0 +1,22 @@
+{
+  "schema": "magia-v1.0",
+  "atualizado": "2026-09-19",
+  "tipos": ["invocacao", "alteracao", "observacao"],
+  "custos": {
+    "invocacao": { "tempo": "900ms", "risco": "media", "exige_ritual": true },
+    "alteracao": { "tempo": "700ms", "risco": "baixa", "exige_ritual": false },
+    "observacao": { "tempo": "850ms", "risco": "alta", "exige_ritual": true }
+  },
+  "regras": [
+    "Cada ritual (assets/rituals.js) consome 1 ponto de magia.",
+    "Magia sem ritual = risco de falha (ritual-15-veil).",
+    "Magos (grupo 18) têm custo reduzido (-200ms)."
+  ],
+  "reducoes": {
+    "magos": { "grupo": 18, "reduz_tempo": "200ms" }
+  },
+  "fontes": [
+    "assets/rituals.js",
+    "docs/11.9.md"
+  ]
+}
