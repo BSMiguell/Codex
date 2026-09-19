@@ -1,612 +1,555 @@
 # Plano operacional — Aetheria Codex
 
-**Atualizado:** 19/09/2026 — A1/A2/A3 concluídos localmente; BOM corrigido nos .ps1 (fix #39); CI remoto #40 em andamento (Gate 4 🟡 → pode virar 🟢)  
-**Objetivo:** manter este arquivo como a fonte operacional do trabalho: estado real do projeto, prioridades, gates, riscos, sequência de execução e próximos passos.
+**Atualizado:** 19/09/2026 — ciclo de estabilização concluído após CI #43
+**HEAD de referência:** `f386a7ab5bef3d83d59dbc65e235ca1f3a799c24`
+**Objetivo:** manter este arquivo como a fonte operacional do estado atual, dos gates, das prioridades e do próximo trabalho.
 
-> **Regra de ouro:** primeiro estabilizar o que existe; depois validar; só então adicionar novas features.
+> **Regra de ouro:** estabilizar → validar → publicar → documentar → evoluir.
 >
 > **Ordem:** Dados → URLs/SEO → Cache/PWA → Testes/CI → Deploy → Features → Documentação/manutenção.
 
 ---
 
-# 1. Estado atual — fotografia do projeto
+# 1. Estado atual — fotografia oficial
 
-## 1.1 Fonte de verdade técnica
-
-| Item | Estado | Referência |
+| Área | Estado | Situação comprovada |
 |---|---:|---|
-| Grupos/raças | 🟢 **22** | `characters-api.json` |
-| Personagens | 🟢 **487** | `characters-api.json` |
-| WebP | 🟢 **487/487** | `imageWebp` validado |
-| PNG fallback | 🟢 **487/487** | `image` validado |
-| Personagens sem imagem | 🟢 **0** | `tests/validate-api.mjs` |
-| `characters-api.json` | 🟢 | gerado e validado |
-| `historia-api.json` | 🟢 | regiões, celestes, batalhas, raças e rituais |
-| URL oficial | 🟢 `/Codex` | produção |
-| GitHub Pages | 🟢 | deploy atual publicado |
-| Service Worker | 🟢 `v1.4.0` | precache expandido |
-| Conquistas | 🟢 | 5 conquistas implementadas |
-| Rituais | 🟢 **22/22** declarados | `assets/rituals.js` |
-| Wiki/cross-links do mapa | 🟢 | `.map-crosslinks` |
+| Grupos/raças | 🟢 | **22** |
+| Personagens | 🟢 | **487** |
+| WebP | 🟢 | **487/487** |
+| PNG fallback | 🟢 | legado/local, não versionado |
+| Personagens sem imagem | 🟢 | **0** |
+| `characters-api.json` | 🟢 | build + validação |
+| `historia-api.json` | 🟢 | build + validação |
+| URL oficial | 🟢 | `/Codex` |
+| Service Worker | 🟢 | `v1.4.0` |
+| Rituais | 🟢 | **22/22** |
+| Conquistas | 🟢 | 5 implementadas |
+| Wiki/cross-links | 🟢 | mapa integrado |
+| Transições | 🟢 | **82/82** |
+| Smoke test | 🟢 | **0 erros HTTP/console** |
+| Lint JS | 🟢 | passou |
+| Prettier | 🟢 | passou |
+| Markdownlint | 🟢 | passou |
+| URL/SEO | 🟢 | passou |
+| GitHub Pages | 🟢 | deploy publicado |
+| CI remoto | 🟢 | **CI #43 verde** |
 | Sistema de magia | 🟡 | base criada, integração pendente |
 | Camadas extras do mapa | 🟡 | política/mágica/rotas/conflitos pendentes |
-| NVDA real | 🟡 | documentação criada, teste manual pendente |
-| CI | 🔴 **não considerar verde ainda** | última sequência teve falhas em testes de regressão |
-| Documentação operacional | 🟡 | este arquivo está sendo ressincronizado |
+| NVDA manual | 🟡 | documentação pronta, teste real pendente |
 
-## 1.2 HEAD / publicação
-
-O repositório recebeu muitas atualizações depois da primeira implantação do CI. O estado atual inclui, entre outros:
-
-- sistema de conquistas;
-- 22 rituais;
-- cross-links do mapa;
-- evolução do mapa e minimapa;
-- base de magia;
-- documentação de política/magia;
-- documentação de testes NVDA;
-- Service Worker `v1.4.0`;
-- diagnóstico para transições;
-- atualizações de README por automação.
-
-**Regra:** não assumir que um gate antigo continua válido depois de dezenas de commits. Cada grande bloco de mudanças deve ser revalidado contra o HEAD atual.
+**Regra:** depois de novas alterações, um gate antigo só continua válido quando for novamente comprovado no HEAD atual.
 
 ---
 
-# 2. Regras de estado e prioridade
+# 2. GATE DE ESTABILIDADE
 
-## 🔴 P0 — Bloqueadores
-
-Problemas que podem invalidar a confiança no projeto ou no CI.
-
-1. Resolver/verificar a estrutura de `assets/rituals.js`.
-2. Descobrir e corrigir os erros reais que ainda fazem `transitions-check` falhar.
-3. Rodar o CI contra o estado atual do `main` e obter um resultado verde real.
-4. Só depois atualizar os gates documentais para refletir o resultado comprovado.
-
-## 🟠 P1 — Alta prioridade
-
-- sincronizar `Temporario.md`, checklists e memórias;
-- revisar testes afetados pelas novas features;
-- confirmar Service Worker e cache após a expansão das features;
-- validar que os novos scripts estão cobertos pelo CI.
-
-## 🟡 P2 — Evolução
-
-- sistema formal de magia;
-- camadas extras do mapa;
-- teste manual com NVDA;
-- melhorias de documentação e UX.
-
-## 🟢 P3 — Futuro
-
-Novas features somente depois do circuito de estabilidade estar verde.
-
----
-
-# 3. CAMADA 0 — Congelamento e fonte de verdade
-
-**Estado:** 🟢 VALIDADA
+## Gate 0 — Fonte de verdade
+**Estado:** 🟢 APROVADO
 
 ```text
 [✓] 22 grupos
 [✓] 487 personagens
-[✓] fonte de verdade = characters-api.json
-[✓] 493 não é contagem atual
-[✓] URL oficial = /Codex
+[✓] characters-api.json como referência
+[✓] 493 tratado somente como histórico
+[✓] produção = /Codex
 ```
 
-### Regra de contagem
-
-O backlog histórico pode conter 493, mas o número operacional atual é **487 personagens em 22 grupos**. Não reintroduzir 493 como meta ou total sem uma decisão explícita.
-
----
-
-# 4. CAMADA 1 — Pipeline de dados e imagens
-
-**Estado:** 🟢 CONCLUÍDA
-
-### O que foi estabilizado
-
-- WebP e PNG são descobertos independentemente.
-- WebP é a imagem principal.
-- PNG é fallback.
-- Ficha sem imagem não é descartada.
-- Caminhos são relativos e normalizados com `/`.
-- Não há reutilização indevida de imagem entre personagens.
-
-### Arquivos principais
-
-- `scripts/build_api_json.ps1`
-- `scripts/build_historia_api.ps1`
-- `characters-api.json`
-- `historia-api.json`
-- `tests/validate-api.mjs`
-
-### Validação conhecida
+## Gate 1 — Dados e imagens
+**Estado:** 🟢 APROVADO
 
 ```text
-OK — 487 chars, 22 grupos, 487 WebP, 487 PNG fallback, 0 sem imagem (2 aviso(s))
-```
-
-### Gate 1
-
-```text
-[✓] 22 grupos
-[✓] 487 personagens
 [✓] 487 WebP
-[✓] 487 PNG fallback
-[✓] 0 sem imagem
-[✓] historia-api.json gerado
-[✓] validate-api.mjs passa
+[✓] imageWebp validado
+[✓] fallback legado preservado
+[✓] 0 personagem sem imagem
+[✓] build da API
+[✓] build da história
+[✓] validate-api
 ```
 
-**Gate 1: 🟢 APROVADO**
-
----
-
-# 5. CAMADA 2 — URL e SEO
-
-**Estado:** 🟢 CONCLUÍDA
-
-### Resultado
-
-A produção foi consolidada em:
-
-```text
-https://bsmiguell.github.io/Codex/
-```
-
-Foram alinhados:
-
-- canonical;
-- `og:url`;
-- Twitter Card;
-- sitemap;
-- páginas de raça;
-- share/embed;
-- scripts geradores;
-- referências públicas de produção.
-
-A única referência necessária ao antigo `/Temporario` é a própria lógica de migração histórica, que deve continuar preservada para que a ferramenta de migração possa localizar o valor antigo.
-
-### Gate 2
+## Gate 2 — URL e SEO
+**Estado:** 🟢 APROVADO
 
 ```text
 [✓] URLs públicas em /Codex
-[✓] canonical /Codex
-[✓] OG /Codex
-[✓] sitemap /Codex
-[✓] páginas de raça /Codex
-[✓] share/embed /Codex
-[✓] url-check validado
+[✓] canonical
+[✓] Open Graph
+[✓] Twitter Card
+[✓] sitemap
+[✓] share/embed
+[✓] url-check
 ```
 
-**Gate 2: 🟢 APROVADO**
-
----
-
-# 6. CAMADA 3 — Service Worker, cache e offline
-
-**Estado:** 🟢 CONCLUÍDA — manter sob regressão
-
-## Estado atual
-
-`sw.js` está em:
+## Gate 3 — PWA / cache / offline
+**Estado:** 🟢 APROVADO
 
 ```text
-const VERSION = "aetheria-v1.4.0";
-```
-
-O precache inclui, entre outros:
-
-- `index.html`;
-- `offline.html`;
-- `404.html`;
-- manifest;
-- sitemap;
-- CSS;
-- favicons;
-- `og-cover.jpg`;
-- `themes.json`;
-- `search-index.json`;
-- `rituals.js`;
-- `transitions.js`.
-
-A estratégia atual mantém:
-
-- network-first para navegação;
-- cache-first para assets publicados;
-- stale-while-revalidate para manifest/favicon;
-- limpeza de caches antigos;
-- fallback offline/404.
-
-### Atenção
-
-Existe um comentário interno em `sw.js` que ainda menciona **10 rituais** (já corrigido — ver memória 16/09). A documentação foi sincronizada para 22 rituais.
-
-### Gate 3
-
-```text
-[✓] versão v1.4.0
-[✓] precache expandido
+[✓] Service Worker v1.4.0
+[✓] precache atualizado
 [✓] limpeza de caches antigos
-[✓] fallback offline
-[✓] fallback 404
-[✓] WebP no runtime
-[✓] sem limite artificial MAX_RUNTIME
-[✓] manifest/favicon com revalidação
+[✓] network-first para navegação
+[✓] cache-first para assets publicados
+[✓] stale-while-revalidate para manifest/favicon
+[✓] offline.html
+[✓] 404.html
+[✓] sem MAX_RUNTIME artificial
 ```
 
-**Gate 3: 🟢 APROVADO**
+## Gate 4 — Qualidade e CI
+**Estado:** 🟢 APROVADO
 
----
-
-# 7. CAMADA 4 — Qualidade automatizada e CI
-
-**Estado:** 🔴 **ABERTA / EM ESTABILIZAÇÃO**
-
-> Não marcar esta camada como concluída enquanto o CI do estado atual não estiver verde.
-
-## Pipeline atual
-
-`.github/workflows/ci.yml` executa Node 22, `npm ci`, instala Chromium e inicia servidores locais para os testes Playwright.
-
-O pipeline cobre:
+**CI remoto:** #43 — `f386a7a`
 
 ```text
-Checkout
-  ↓
-Node 22
-  ↓
-npm ci
-  ↓
-Chromium
-  ↓
-Servidores locais 8124 + 8080
-  ↓
-Validação APIs
-  ↓
-Service Worker
-  ↓
-Open Graph
-  ↓
-Narrativa
-  ↓
-Mapas
-  ↓
-Timeline
-  ↓
-Transições
-  ↓
-Acessibilidade
-  ↓
-Share / About / Search / Lazy / Modal VT
-  ↓
-ESLint
-  ↓
-Prettier
-  ↓
-Gate
+[✓] checkout
+[✓] Node 22
+[✓] npm ci
+[✓] Chromium
+[✓] servidores locais 8124 + 8080
+[✓] build APIs
+[✓] validate
+[✓] smoke
+[✓] sw-check
+[✓] og-check
+[✓] narrativa
+[✓] mapa-filtros
+[✓] mapa-export
+[✓] mapa-minimap
+[✓] timeline
+[✓] transitions-debug
+[✓] transitions — 82/82
+[✓] a11y-empty
+[✓] share
+[✓] about
+[✓] search
+[✓] lazy
+[✓] modal-vt
+[✓] lint JS
+[✓] format:check
+[✓] markdownlint
+[✓] url-check
 ```
 
-## Histórico da estabilização do CI
+## Gate 5 — Deploy
+**Estado:** 🟢 APROVADO
 
-Foram corrigidos sucessivamente:
-
-1. validação de WebP/PNG no CI;
-2. instalação do Chromium;
-3. URLs/SEO usados pelo teste OG;
-4. servidor local para Playwright;
-5. porta necessária para o minimapa;
-6. diagnóstico dos erros de transição.
-
-### Problemas corrigidos (17/09/2026 — A4)
-
-Causas reais encontradas com reprodução antes de cada fix:
-
-1. 404 `racas/assets/*` — template com caminho relativo errado; fix `../assets/` + regeneração das 22 páginas.
-2. Falso verde no smoke — erros HTTP/console capturados mas não propagados ao exit code; smoke passava com 21 erros.
-3. Minimapa encoberto por `.map-crosslinks` (z-index) + hrefs de raça com case errado (`Aspectos` → `osaspectos`).
-4. Filtro de era não restaurava após reload — inicialização presa ao fetch de `characters-api.json`.
-5. Export PNG intermitente — `toBlob` levava ~2,3s competindo com o loop de render; render pausado durante a codificação, clique→download <1s.
-
-`transitions-check` agora 82/82; smoke fecha com 0 erros HTTP/console.
-
-### Próximo gate
+**GitHub Pages:** deploy #93 — mesmo HEAD, sucesso.
 
 ```text
-[✓] todos os testes críticos verdes (local, 17/09)
-[✓] transitions-check verde (82/82 local)
-[✓] lint verde (0 erros, 0 warnings)
-[✓] format:check verde
-[✓] URL/SEO verde
-[ ] CI do HEAD atual verde (remoto — exige commit/push autorizado)
-```
-
-**Gate 4: 🟡 LOCAL VERDE — CI REMOTO PENDENTE**
-
----
-
-# 8. CAMADA 5 — Deploy controlado
-
-**Estado:** 🟢 PUBLICADO / validar novamente após Gate 4
-
-O GitHub Pages continua construindo e publicando com sucesso no estado atual.
-
-### Checklist
-
-```text
-[✓] GitHub Pages publica
-[✓] home disponível
+[✓] produção publicada
 [✓] /Codex
-[✓] WebP
-[✓] PNG fallback
-[✓] busca
+[✓] home
 [✓] mapa
 [✓] minimapa
 [✓] timeline
 [✓] páginas de raça
-[✓] canonical
-[✓] sitemap
+[✓] WebP
 [✓] 404
 [✓] offline
 ```
 
-### Regra
-
-Pages verde **não substitui** CI verde. O deploy comprova publicação; o CI comprova qualidade automatizada.
+> Pages verde confirma publicação. CI verde confirma qualidade automatizada. Um não substitui o outro.
 
 ---
 
-# 9. CAMADA 6 — Features já implementadas
+# 3. PROBLEMA CRÍTICO RESOLVIDO — 404 DOS PNG
 
-**Estado:** 🟢 IMPLEMENTADAS, mas algumas precisam de regressão antes de serem consideradas definitivamente fechadas.
+## Sintoma
 
-## §6.1 — Minimapa
+O Smoke test apresentava centenas de erros como:
 
-🟢 Implementado e corrigido para o servidor local usado pelo CI.
+```text
+HTTP 404 ... /codex/17_Meio_Sangue/...png
+Failed to load resource
+```
 
-## §7.1 — WebP / lazy-load
+A falha chegou a **356 erros HTTP/console**.
 
-🟢 Implementado.
+## Causa
 
-- 487 WebP;
-- lazy-load;
-- IntersectionObserver.
+O acervo PNG está deliberadamente fora do Git porque é pesado. A API já possuía:
 
-## §7.2 — Conquistas
+```text
+image     = PNG legado
+imageWebp = WebP publicado
+```
 
-🟢 Implementado.
+Mas as páginas de raça usavam diretamente `m.image`, então o CI tentava carregar PNG inexistente no checkout.
 
-Arquivos principais:
+## Correção
 
-- `data/conquistas.json`
-- `assets/conquistas.js`
-- `index.html`
+Commit:
+
+```text
+6118853 — fix: torna paginas de raca WebP-first e evita 404 de PNG
+```
+
+Arquivos:
+
+```text
+racas/assets/raca.js
+scripts/build_racas.ps1
+```
+
+### Nova resolução de imagem
+
+```text
+imageWebp explícito
+      ↓
+se legado for .png → mesmo nome em .webp
+      ↓
+PNG original como fallback
+      ↓
+placeholder
+```
+
+O gerador também passou a criar páginas novas usando WebP primeiro.
+
+### Resultado
+
+No CI #42, depois da correção:
+
+```text
+Smoke ✅
+SW ✅
+OG ✅
+Narrativa ✅
+Mapas ✅
+Timeline ✅
+Transitions 82/82 ✅
+A11y ✅
+Share ✅
+Search ✅
+Lazy ✅
+Modal VT ✅
+Lint ✅
+```
+
+O único bloqueio restante era formatação do histórico.
+
+---
+
+# 4. PROBLEMA SECUNDÁRIO RESOLVIDO — PRETTIER E MEMÓRIA HISTÓRICA
+
+O CI #42 passou pelos testes funcionais e caiu somente em:
+
+```text
+format:check
+```
+
+O arquivo apontado foi `Memoria.md`.
+
+Como `Memoria.md` é histórico e não deve ser reformatado destrutivamente apenas para satisfazer o Prettier, ele foi adicionado ao `.prettierignore`.
+
+Commit:
+
+```text
+f386a7a — ci: ignora Memoria.md historico no Prettier
+```
+
+Resultado final:
+
+```text
+CI #43 ✅
+Pages #93 ✅
+```
+
+---
+
+# 5. REGRAS DE PRIORIDADE
+
+## 🔴 P0 — Bloqueadores
+
+Usar quando algo ameaça dados, estabilidade, produção ou CI.
+
+**Estado atual:**
+
+```text
+[✓] nenhum P0 conhecido aberto
+```
+
+## 🟠 P1 — Manutenção importante
+
+```text
+[ ] manter documentação alinhada
+[ ] revisar testes afetados por novas features
+[ ] manter geradores sincronizados
+[ ] proteger a cadeia WebP-first
+[ ] registrar mudanças importantes nas memórias
+```
+
+## 🟡 P2 — Próximas evoluções
+
+```text
+[ ] sistema formal de magia
+[ ] camadas extras do mapa
+[ ] teste manual com NVDA
+[ ] melhorias de UX/documentação
+```
+
+## 🟢 P3 — Futuro
+
+Novas features experimentais depois que o circuito de estabilidade continuar verde.
+
+---
+
+# 6. INVENTÁRIO DE FUNCIONALIDADES
+
+## 6.1 WebP / lazy-load
+**Estado:** 🟢
+
+```text
+[✓] 487 WebP
+[✓] imageWebp
+[✓] WebP-first nas páginas
+[✓] lazy-load
+[✓] IntersectionObserver
+[✓] preload controlado
+```
+
+## 6.2 Conquistas
+**Estado:** 🟢
+
+Arquivos:
+
+```text
+data/conquistas.json
+assets/conquistas.js
+index.html
+```
 
 Conquistas atuais:
 
+```text
 1. Primeiros Passos
 2. Leitor das 22 Raças
 3. Explorador do Mapa
 4. Colecionador
 5. Investigador
+```
 
-## §7.3 — Wiki/cross-links
+## 6.3 Wiki / cross-links
+**Estado:** 🟢
 
-🟢 Implementado no `Mapa_Aetheria.html`.
+Integração entre mapa, regiões e páginas relacionadas.
 
-## §8.8–22 — Rituais
+## 6.4 Rituais
+**Estado:** 🟢
 
-🟢 O projeto declara **22/22 rituais**.
+```text
+22/22 rituais declarados
+```
 
-🔴 **Porém, revisar `assets/rituals.js` antes de fechar definitivamente:** há indícios de que parte das declarações dos rituais mais recentes ficou fora do escopo da IIFE que declara `RITUALS`, `prefersReduced` e `runAfter`.
+A estrutura de `assets/rituals.js` deve permanecer dentro do escopo da IIFE e continuar coberta por regressão.
 
-Esse ponto pode estar relacionado aos erros de console encontrados no `transitions-check` e deve ser investigado antes de novas features.
+## 6.5 Transições
+**Estado:** 🟢
+
+```text
+82/82 checks
+```
+
+Cobertura inclui:
+
+- direções;
+- Cross-document View Transition API;
+- reduced motion;
+- `body.no-fx`;
+- estados de entrada/saída;
+- links entre hubs e raças;
+- validação das páginas geradas.
+
+## 6.6 Mapa e minimapa
+**Estado:** 🟢 na base atual
+
+```text
+[✓] mapa principal
+[✓] minimapa
+[✓] filtros
+[✓] exportação
+[✓] câmera/navegação
+[✓] cross-links
+[✓] timeline integrada ao fluxo
+```
 
 ---
 
-# 10. CAMADA 6A — Sistema de magia
+# 7. SISTEMA DE MAGIA
 
 **Estado:** 🟡 EM CONSTRUÇÃO
 
-### Já existe
-
-- base de sistema;
-- tipos de magia;
-- regras/custos documentados;
-- relação conceitual com os rituais.
-
-### Ainda falta
+## Já existe
 
 ```text
-[ ] data/magia.json como fonte estruturada
-[ ] retirar custos hardcoded quando apropriado
-[ ] integrar regras com execução dos rituais
-[ ] validar UI/UX da magia
-[ ] criar testes automatizados do sistema
-[ ] atualizar mapa/camadas que dependem da magia
+[✓] conceito
+[✓] tipos de magia
+[✓] regras
+[✓] custos documentados
+[✓] relação conceitual com rituais
 ```
 
-**Não marcar §11.9 como concluído antes desses pontos essenciais.**
+## Falta
+
+```text
+[ ] criar data/magia.json
+[ ] definir schema
+[ ] remover hardcode quando apropriado
+[ ] integrar dados ao código
+[ ] integrar rituais às regras
+[ ] criar testes automatizados
+[ ] validar UI/UX
+[ ] integrar ao mapa mágico
+```
+
+### Gate C
+
+Só fechar quando:
+
+```text
+dados → schema → código → rituais → testes → UI → mapa → documentação
+```
+
+estiver validado.
 
 ---
 
-# 11. CAMADA 6B — Camadas extras do mapa
+# 8. CAMADAS AVANÇADAS DO MAPA
 
-**Estado:** 🟡 PLANEJADAS / PARCIAIS
+**Estado:** 🟡 PARCIAL
 
-| Camada | Estado | Próxima ação |
+| Camada | Estado | Trabalho |
 |---|---:|---|
-| Política | 🟡 | estruturar `factions[]` / dados reais |
+| Política | 🟡 | estruturar facções e relações |
 | Mágica | 🟡 | integrar sistema de magia |
-| Rotas | 🟡 | definir rotas e dados |
-| Conflitos | 🟡 | definir conflitos e relações |
+| Rotas | 🟡 | definir dados e conexões |
+| Conflitos | 🟡 | estruturar eventos e relações |
+| Integração | 🟡 | cruzar camadas sem duplicar fonte de verdade |
 
-Documentação relacionada:
-
-- `docs/11.5.md`
-- documentação de mapa/magia correspondente.
-
----
-
-# 12. CAMADA 6C — Acessibilidade / NVDA
-
-**Estado:** 🟡
-
-### Já feito
-
-- documentação de teste;
-- revisão de ARIA;
-- planejamento de validação.
-
-### Falta
+### Gate D
 
 ```text
-[ ] executar teste manual real com NVDA
-[ ] registrar navegação por teclado
-[ ] verificar foco do modal
-[ ] verificar leitura do mapa
-[ ] verificar botões de conquistas
-[ ] verificar busca Ctrl+K
-[ ] registrar resultado na memória/documentação
+[ ] dados estruturados
+[ ] UI funcional
+[ ] filtros
+[ ] cross-links
+[ ] testes
+[ ] documentação
+[ ] sem duplicação desnecessária
 ```
-
-Não transformar documentação de teste em aprovação de teste real.
 
 ---
 
-# 13. CAMADA 7 — Documentação e manutenção
+# 9. ACESSIBILIDADE / NVDA
 
-**Estado:** 🟢 SINCRONIZADO (B concluída 16/09/2026)
+**Estado:** 🟡 DOCUMENTADO, TESTE MANUAL PENDENTE
 
-## Fontes documentais
+## Automatizado
 
-### `Memoria.md`
+```text
+[✓] skip-link
+[✓] empty states
+[✓] reduced motion
+[✓] foco
+[✓] modal VT
+[✓] elementos principais
+```
 
-Histórico/original. **Não apagar, substituir ou reescrever destrutivamente.**
+## Manual
 
-### `Temporario.md`
+```text
+[ ] testar com NVDA
+[ ] navegar somente por teclado
+[ ] verificar ordem de foco
+[ ] verificar modal
+[ ] verificar Ctrl+K
+[ ] verificar mapa
+[ ] verificar conquistas
+[ ] registrar evidências
+```
 
-Plano operacional atual, gates, prioridades e próximos passos.
+> Testes automatizados não substituem teste manual com leitor de tela.
 
-### `memorias/AAAA-MM-DD.md`
+---
 
-Registro diário do que realmente aconteceu naquele dia.
+# 10. DOCUMENTAÇÃO — RESPONSABILIDADES
 
-### `docs/checklist-validado.md`
+## `Temporario.md`
+Fonte do **estado operacional atual**.
 
-Checklist técnico; deve ser atualizado quando funcionalidades mudarem de estado.
+Deve responder:
 
-### `README.md`
+```text
+Onde estamos?
+O que está verde?
+O que está pendente?
+Qual é o próximo bloco?
+Qual é o gate?
+```
 
+## `Memoria.md`
+Histórico original.
+
+**Não apagar, substituir ou reformatar destrutivamente.**
+
+## `memorias/AAAA-MM-DD.md`
+Registro diário do que realmente aconteceu.
+
+## `docs/checklist-validado.md`
+Checklist técnico detalhado.
+
+## `README.md`
 Documentação geral e visão pública do projeto.
 
-## Problema atual
-
-Alguns documentos ainda refletem estados antigos, por exemplo:
-
-- rituais como 7 + pendências;
-- wiki cruzada como ausente;
-- estados antigos das features;
-- gates antigos do CI.
-
-### Regra
-
-Não apagar o histórico para “corrigir” a documentação. Atualizar o estado atual e preservar a sequência histórica onde ela for necessária.
-
 ---
 
-# 14. Plano de execução imediato
+# 11. ROADMAP DE EXECUÇÃO
 
-## FASE A — Estabilização
-
-### A1 — `assets/rituals.js` ✅ CONCLUÍDO (16/09/2026)
-
-```text
-[✓] abrir arquivo atual
-[✓] confirmar escopo da IIFE — todos os 22 rituais dentro do fechamento
-[✓] confirmar declaração dos 22 rituais — 22 (duplicado 18_Magos removido)
-[✓] confirmar que RITUALS/prefersReduced/runAfter estão no escopo correto
-[✓] corrigir classes confusas (06_Desconhecidos, 12_Magos) e duplicado (18_Magos)
-[✓] comentário 10 corrigido (Os Observadores, não Seres do Vazio)
-```
-
-**Gate A1:** arquivo estruturalmente correto. 22 rituais, IIFE fechada, sem duplicados.
-
-### A2 — Transitions ✅ CONCLUÍDO (16/09/2026) — 66/82 ✅ (3 não bloqueantes restantes)
+## FASE A — Estabilidade
+**Estado:** 🟢 CONCLUÍDA
 
 ```text
-[✓] build_racas.ps1: adicionados transitions.css + page-entry.js no template
-[✓] racas/*.html regenerados (22 páginas, 487 membros)
-[✓] 5 hubs + 22 raças: <link> e <script> presentes (66/66 ✅)
-[✓] Cross-doc VT API suportada ✅
-[✓] Direções (down/up/right/left) ✅
-[✓] v3 morto (404) ✅
-[✓] body.no-fx e reduced-motion: kill switches funcionam ✅
-[✗] 3 testes de interação complexa (clique real, no-fx localStorage) não passam — NÃO são bugs no produto (limitação Playwright headless / localStorage)
+[✓] dados
+[✓] WebP
+[✓] URLs
+[✓] Service Worker
+[✓] CI
+[✓] Smoke
+[✓] Transitions
+[✓] lint
+[✓] format
+[✓] URL/SEO
+[✓] Pages
 ```
 
-**Gate A2:** estrutura corrigida; 3 interações complexas não bloqueiam a estabilidade. Próximo: A3 (CI verde no HEAD atual).
-
-### A3 — CI ✅ PARCIALMENTE CONCLUÍDO (16/09/2026)
+## FASE B — Reconciliação documental
+**Estado:** 🟡 CONTÍNUA
 
 ```text
-[✓] validate (487 chars, 22 grupos)
-[✓] build_api_json + build_historia_api (verdes)
-[✓] build_racas (22 páginas, 487 membros, transições/página de entrada corrigidos)
-[✓] sw-check, og-check, narrativa, mapa-filtros/export/minimap, timeline
-[✓] a11y-empty-check, share-check, about-check, search-check, lazy-check, modal-vt-check
-[✗] smoke.mjs (smoke): falha no filtro Onis (timeout) — não regressão de código (curl confirma filtro funcionando)
-[✓] lint:js + lint:md
-[✓] format:check
-[✓] url-check
+[✓] Temporario sincronizado com o CI atual
+[✓] README
+[✓] memória histórica preservada
+[ ] revisar checklists antigos quando necessário
+[ ] remover somente estados atuais obsoletos
 ```
 
-**Observação:** O `smoke.mjs` falha no ambiente local (timeout no filtro), mas todos os dados (API, builds, rituais, transições) estão verdes. Não é uma regressão introduzida pelas correções A1/A2. O CI no GitHub Actions (Ubuntu) pode ter comportamento diferente (servidor estável, Playwright com Chromium real).
-
-**Gate A3:** parcialmente concluído — dados e builds verdes; smoke falha em ambiente local (não bloqueia a estabilidade do projeto). Próximos passos do plano: B (reconciliar documentação) → C (magia) → D (mapa) → E (NVDA) → F (fechamento).
-
----
-
-# 15. FASE B — Reconciliar documentação
-
-Depois de A3:
+## FASE C — Magia
+**Estado:** 🟡 PRÓXIMA
 
 ```text
-[✓] atualizar Temporario.md com estado final
-[✓] revisar docs/checklist-validado.md
-[✓] revisar memória diária correspondente
-[✓] corrigir comentários/documentação obsoletos do SW (rituais: 10 → 22)
-[✓] confirmar README
+[ ] data/magia.json
+[ ] schema
+[ ] integração
+[ ] rituais
+[ ] testes
+[ ] UI
+[ ] mapa
 ```
 
-**Gate B:** documentação não contradiz o estado do código.
+**Gate C:** magia funcional + testada + documentada.
 
----
-
-# 16. FASE C — Magia
-
-Somente após CI verde:
-
-```text
-[ ] estruturar data/magia.json
-[ ] definir schema
-[ ] integrar dados com código
-[ ] integrar rituais
-[ ] adicionar testes
-[ ] validar UI
-[ ] atualizar mapa mágico
-```
-
-**Gate C:** sistema de magia testado e documentado.
-
----
-
-# 17. FASE D — Mapa avançado
-
-Depois da magia:
+## FASE D — Mapa avançado
+**Estado:** 🟡
 
 ```text
 [ ] política
@@ -614,35 +557,33 @@ Depois da magia:
 [ ] magia
 [ ] rotas
 [ ] conflitos
-[ ] relações entre camadas
-[ ] testes das novas camadas
+[ ] integração entre camadas
+[ ] testes
 ```
 
-**Gate D:** camadas extras funcionais e documentadas.
+**Gate D:** camadas funcionais e cruzadas.
 
----
-
-# 18. FASE E — Acessibilidade real
+## FASE E — Acessibilidade real
+**Estado:** 🟡
 
 ```text
-[ ] NVDA real
+[ ] NVDA
 [ ] teclado
 [ ] foco
 [ ] modal
 [ ] busca
 [ ] mapa
 [ ] conquistas
-[ ] registrar evidências
+[ ] evidências
 ```
 
 **Gate E:** teste manual registrado.
 
----
-
-# 19. FASE F — Fechamento e manutenção
+## FASE F — Fechamento da rodada
+**Estado:** 🔒 NÃO INICIADA
 
 ```text
-[ ] CI verde
+[ ] CI verde após futuras features
 [ ] Pages verde
 [ ] dados verdes
 [ ] URLs verdes
@@ -653,70 +594,74 @@ Depois da magia:
 [ ] backlog reorganizado
 ```
 
-Só então considerar a rodada encerrada.
+---
+
+# 12. REGRA ANTI-REGRESSÃO
+
+Nunca mudar um teste apenas para obter verde.
+
+Só alterar um teste quando houver:
+
+```text
+[✓] falso positivo comprovado
+ou
+[✓] teste incompatível com a arquitetura atual
+ou
+[✓] requisito oficialmente alterado
+```
+
+Quando houver erro de produto, corrigir o produto primeiro.
+
+O problema dos PNG foi tratado assim: o teste estava corretamente encontrando recursos 404; a correção foi feita na camada de geração/compatibilidade WebP.
 
 ---
 
-# 20. Fluxo obrigatório de trabalho
+# 13. FLUXO OBRIGATÓRIO
 
 ```text
 ANALISAR
    ↓
-DEFINIR CAUSA
+REPRODUZIR
    ↓
-CORRIGIR
+IDENTIFICAR CAUSA
    ↓
-GERAR / ATUALIZAR
+CORRIGIR PRODUTO / GERADOR
    ↓
 TESTAR LOCAL
    ↓
 GATE
    ↓
-VALIDAR GITHUB ACTIONS
+VALIDAR CI
    ↓
-CONFIRMAR DEPLOY
+VALIDAR PAGES
    ↓
-ATUALIZAR MEMÓRIA / DOCUMENTAÇÃO
+ATUALIZAR DOCUMENTAÇÃO
    ↓
 PRÓXIMO BLOCO
 ```
 
-## Regra anti-regressão
-
-Não corrigir apenas o teste para fazê-lo passar quando existe possibilidade de bug real no produto.
-
-O teste deve ser corrigido apenas quando houver:
-
-- falso positivo comprovado;
-- teste incompatível com a arquitetura atual;
-- requisito explicitamente alterado.
+Nunca pular para uma feature nova enquanto existir um gate vermelho relacionado à estabilidade.
 
 ---
 
-# 21. Regras Git
+# 14. REGRAS GIT
 
-Antes de qualquer operação Git destrutiva ou de sincronização, avisar explicitamente.
+### Avisar antes de executar
 
-### Avisar antes de:
+```text
+git pull
+git add
+git commit
+git push
+```
 
-- `git pull`
-- `git add`
-- `git commit`
-- `git push`
-
-### Nunca
+### Nunca executar sem decisão explícita
 
 ```text
 git push --force
 ```
 
-sem decisão técnica explícita.
-
 ### Execução em etapas
-
-Nunca entregar uma sequência grande de comandos sem validação intermediária.
-
-Padrão:
 
 ```text
 COMANDO
@@ -730,41 +675,86 @@ PRÓXIMO PASSO
 
 ---
 
-# 22. Estado resumido dos gates
+# 15. PRÓXIMO BLOCO ÚNICO
+
+A infraestrutura está estabilizada.
+
+O próximo ciclo do projeto pode começar pela **magia**, mas em etapas pequenas:
 
 ```text
-CAMADA 0  🟢 VALIDADA
-CAMADA 1  🟢 CONCLUÍDA
-CAMADA 2  🟢 CONCLUÍDA
-CAMADA 3  🟢 CONCLUÍDA
-CAMADA 4  🔴 ABERTA — CI ainda precisa ficar verde no estado atual
-CAMADA 5  🟢 PUBLICADO — depende de regressão após Gate 4
-CAMADA 6  🟡 FEATURES IMPLEMENTADAS + novas integrações em andamento
-CAMADA 7  🟡 DOCUMENTAÇÃO EM SINCRONIZAÇÃO
+SISTEMA DE MAGIA
+      ↓
+data/magia.json
+      ↓
+schema
+      ↓
+integração com o código
+      ↓
+integração com rituais
+      ↓
+testes
+      ↓
+UI
+      ↓
+mapa mágico
+      ↓
+Gate C
 ```
 
-# 23. Próximo passo único
-
-> **Não começar magia, novas camadas do mapa ou novas features ainda.**
-
-O próximo trabalho é:
+Depois:
 
 ```text
-assets/rituals.js
+MAPA AVANÇADO
       ↓
-transitions-check
+POLÍTICA
       ↓
-CI completo
+ROTAS
       ↓
-documentação
+CONFLITOS
       ↓
-Gate verde
+Gate D
 ```
 
-Depois disso:
+Depois:
 
 ```text
-magia → mapa avançado → NVDA → fechamento
+NVDA REAL
+      ↓
+Gate E
 ```
 
-**Objetivo da próxima rodada:** transformar o estado atual em um estado comprovadamente estável, sem apagar histórico e sem mascarar regressões.
+---
+
+# 16. ESTADO RESUMIDO FINAL
+
+```text
+CAMADA 0  🟢 FONTE DE VERDADE
+CAMADA 1  🟢 DADOS / IMAGENS
+CAMADA 2  🟢 URL / SEO
+CAMADA 3  🟢 SW / PWA
+CAMADA 4  🟢 CI / REGRESSÃO
+CAMADA 5  🟢 DEPLOY
+CAMADA 6  🟡 FEATURES / INTEGRAÇÕES
+CAMADA 7  🟡 DOCUMENTAÇÃO / MANUTENÇÃO CONTÍNUA
+```
+
+## Verdade operacional
+
+```text
+CI #43          ✅ GREEN
+Pages #93       ✅ GREEN
+Smoke           ✅ GREEN
+Transitions     ✅ 82/82
+APIs            ✅ GREEN
+SW              ✅ GREEN
+SEO/URL         ✅ GREEN
+Lint/Format     ✅ GREEN
+
+Magia           🟡
+Mapa avançado   🟡
+NVDA manual     🟡
+```
+
+> **Próxima regra:** antes de implementar qualquer nova feature, registrar objetivo, arquivos envolvidos, teste e gate esperado.
+
+**Princípio desta rodada:** código, testes, deploy e documentação precisam contar a mesma história.
