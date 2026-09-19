@@ -282,9 +282,9 @@ Usar quando algo ameaça dados, estabilidade, produção ou CI.
 ## 🟡 P2 — Próximas evoluções
 
 ```text
-[ ] sistema formal de magia
-[ ] camadas extras do mapa
-[ ] teste manual com NVDA
+[✓] sistema formal de magia (data/magia.json + rituals.js integrado)
+[✓] camadas extras do mapa (CAMADAS + chips HTML adicionados)
+[🟡] teste manual com NVDA (documentado, ambiente sem NVDA real — não mascarado)
 [ ] melhorias de UX/documentação
 ```
 
