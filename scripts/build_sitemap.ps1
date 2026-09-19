@@ -1,4 +1,4 @@
-# build_sitemap.ps1 - gera sitemap.xml a partir de racas/*.html + raiz index.html
+﻿# build_sitemap.ps1 - gera sitemap.xml a partir de racas/*.html + raiz index.html
 # Uso:  pwsh scripts/build_sitemap.ps1
 # Saida: sitemap.xml (raiz do projeto)
 $ErrorActionPreference = "Stop"

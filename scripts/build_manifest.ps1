@@ -1,4 +1,4 @@
-# build_manifest.ps1 - gera manifest.webmanifest dinamicamente
+﻿# build_manifest.ps1 - gera manifest.webmanifest dinamicamente
 # - contagens vem do characters-api.json
 # - atalhos: top 3 racas com mais personagens + mapa
 # Uso:  pwsh scripts/build_manifest.ps1

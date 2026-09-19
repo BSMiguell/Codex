@@ -1,4 +1,4 @@
-# check_missing_images.ps1
+﻿# check_missing_images.ps1
 # Diagnostico: lista os personagens SEM imagem e classifica o motivo de cada um.
 #   COLISAO        - existe PNG com o mesmo nome normalizado na propria pasta, mas
 #                    ele ja foi atribuido a OUTRO personagem (nomes duplicados na ficha;

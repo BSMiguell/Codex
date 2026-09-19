@@ -1,4 +1,4 @@
-# migrate_codex_urls.ps1 — migra URLs antigas /Temporario para /Codex
+﻿# migrate_codex_urls.ps1 — migra URLs antigas /Temporario para /Codex
 # Uso: powershell -ExecutionPolicy Bypass -File scripts\migrate_codex_urls.ps1
 # A alteracao e deliberadamente textual e limitada a arquivos do projeto.
 $ErrorActionPreference = "Stop"

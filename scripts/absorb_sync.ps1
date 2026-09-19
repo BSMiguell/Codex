@@ -1,4 +1,4 @@
-# absorb_sync.ps1
+﻿# absorb_sync.ps1
 # A ferramenta de sincronizacao externa copia imagens/fichas para as pastas
 # numeradas NA RAIZ do projeto. Desde 26/08/2026 essas pastas vivem em codex/.
 # Este script absorve o que a sync (re)criou na raiz:

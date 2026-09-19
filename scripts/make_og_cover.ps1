@@ -1,4 +1,4 @@
-# make_og_cover.ps1 - converte assets/og-cover.png em og-cover.jpg (JPEG q=92)
+﻿# make_og_cover.ps1 - converte assets/og-cover.png em og-cover.jpg (JPEG q=92)
 # Dependencia: nada extra - usa System.Drawing (ja vem no .NET Framework do Windows)
 # Uso:  pwsh scripts/make_og_cover.ps1
 $ErrorActionPreference = "Stop"

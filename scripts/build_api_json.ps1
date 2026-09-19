@@ -1,4 +1,4 @@
-# build_api_json.ps1
+﻿# build_api_json.ps1
 # Gera o characters-api.json a partir das fichas .md de cada pasta.
 # Pipeline de imagens: WebP e PNG sao descobertos de forma independente.
 # Regra de saida: WebP em imageWebp; PNG em image quando existir; se nao houver PNG,

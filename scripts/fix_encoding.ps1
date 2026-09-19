@@ -1,4 +1,4 @@
-# fix_encoding.ps1
+﻿# fix_encoding.ps1
 # Repara arquivos de texto com encoding corrompido:
 #   1. Double-encoded UTF-8 (mojibake -> texto correto): reparo por segmento,
 #      preservando as partes do arquivo que ja estao corretas.

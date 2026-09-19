@@ -1,4 +1,4 @@
-# dedupe_images.ps1
+﻿# dedupe_images.ps1
 # Remove PNGs orfaos que sao duplicatas identicas (hash) de imagens ja referenciadas
 # na mesma pasta — caso tipico: a sincronizacao externa restaura o arquivo com o nome
 # com typo depois de ele ja ter sido renomeado.

@@ -1,4 +1,4 @@
-# build_search_index.ps1
+﻿# build_search_index.ps1
 # Gera data/search-index.json a partir de historia-api.json + characters-api.json.
 # Indice invertido: para cada termo normalizado (NFD + ASCII + lower), salva
 # df (document frequency) + hits (por doc: tf + positions para highlighter).

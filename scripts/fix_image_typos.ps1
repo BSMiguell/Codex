@@ -1,4 +1,4 @@
-# fix_image_typos.ps1
+﻿# fix_image_typos.ps1
 # Renomeia PNGs orfaos cujos nomes sao typos evidentes de personagens sem imagem.
 # Criterio conservador: distancia de Levenshtein <= 2 entre nomes normalizados
 # e pareamento UNICO dentro da pasta. Casos ambiguos sao apenas reportados.
