@@ -223,7 +223,7 @@ A estratégia atual mantém:
 
 ### Atenção
 
-Existe um comentário interno em `sw.js` que ainda menciona **10 rituais**. O projeto agora declara 22. Isso não é bloqueador funcional, mas deve ser corrigido na manutenção documental.
+Existe um comentário interno em `sw.js` que ainda menciona **10 rituais** (já corrigido — ver memória 16/09). A documentação foi sincronizada para 22 rituais.
 
 ### Gate 3
 

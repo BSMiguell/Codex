@@ -1992,3 +1992,16 @@ Bruno confirmou: §1.3 era o #2 do backlog Q4 (1-2 dias, altíssimo impacto). §
 | 19:45 | `Memoria.md` + `Temporario.md` atualizadas; commits autorizados pelo usuário. Nenhum `.ps1` editado sem pedido. | OK |
 
 **Lição nova:** `toBlob` competindo com `requestAnimationFrame` (60fps) → pausa ~75ms visível no mapa. Padrão: pausar render + desabilitar botão + `finally` restaura — sem mudar o produto além do necessário.
+
+---
+
+### 19/09/2026 — A1 (rituals) + A2 (transitions) + A3 (CI/Gate 4) + sincronização doc (10→22 rituais)
+
+| Hora | Evento | Resultado |
+| --- | ------ | -------- |
+| — | **A1 `assets/rituals.js`** verificado: IIFE fechada (297), `prefersReduced`/`runAfter`/`ritualFallback` dentro, `RITUALS` exposto global (`AETHERIA_RITUALS`), `runRitual()` exposto. 22 rituais declarados (01–22), 0 duplicados (18_Magos removido conforme A1 anterior), classes 06/12 corrigidas. | OK |
+| — | **A2 `tests/transitions-check.mjs`** rodado com servidor :8124 (servidor Python iniciado). Resultado: **82 passed, 0 failed**. Todos os blocos verdes: F5/reload/navegação (console limpo), transitions.css (5 hubs + 22 raças), page-entry.js (5 hubs + 22 raças), VT API suportada, direções (down/up/right/left), body.no-fx kill switch, prefers-reduced-motion kill switch, v3 morto (404). | OK |
+| — | **A3 `.github/workflows/ci.yml`** verificado: arquivo intacto, job `validate` com 21 passos, `pwsh` nos builds (Ubuntu), `npm test` incluído, servidores 8124+8080 com wait ativo (`curl` loop). `gh` CLI não disponível neste ambiente → CI remoto não executado diretamente. **Gate 4: local verde; remoto ainda 🟡 (necessita push + execução GitHub Actions)**. | PARCIAL |
+| — | **Sincronização doc `10 → 22 rituais`** aplicada: `scripts/build_readme.ps1` (fonte), `README.md` (regenerado — 4 ocorrências "22 rituais"), `Temporario.md` (linha 226 corrigida + nota sincronização), `docs/checklist-validado.md` (linha 11). `sw.js` já corrigido (não contém mais "10 rituais"). `Memoria.md` preservado (histórico oficial — não editado). | OK |
+
+**Status pós-tarefa:** A1 ✅ · A2 ✅ · A3 🟡 (CI remoto pendente — requer push/GitHub Actions). Próximo: P1 documentação sincronizada; P0 concluído. Só iniciar P2 (magia, mapa, NVDA) após Gate 4 verde comprovado.
