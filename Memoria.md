@@ -2005,3 +2005,15 @@ Bruno confirmou: §1.3 era o #2 do backlog Q4 (1-2 dias, altíssimo impacto). §
 | — | **Sincronização doc `10 → 22 rituais`** aplicada: `scripts/build_readme.ps1` (fonte), `README.md` (regenerado — 4 ocorrências "22 rituais"), `Temporario.md` (linha 226 corrigida + nota sincronização), `docs/checklist-validado.md` (linha 11). `sw.js` já corrigido (não contém mais "10 rituais"). `Memoria.md` preservado (histórico oficial — não editado). | OK |
 
 **Status pós-tarefa:** A1 ✅ · A2 ✅ · A3 🟡 (CI remoto pendente — requer push/GitHub Actions). Próximo: P1 documentação sincronizada; P0 concluído. Só iniciar P2 (magia, mapa, NVDA) após Gate 4 verde comprovado.
+
+---
+
+### 19/09/2026 — CI remoto (#39) — Gate 4
+
+| Hora | Evento | Resultado |
+| --- | ------ | -------- |
+| — | Push `main` (`69b1700`) executado; `.github/workflows/ci.yml` intacto; CI iniciado no GitHub Actions. | OK |
+| — | CI remoto (#39): `validate` falhou (exit code 1) — erro real, NÃO reproduzível localmente (`npm run validate` passa: 487 chars, 22 grupos). | 🔴 |
+| — | Warnings/notices no CI: Node.js 20 deprecated (forced to 24), Ubuntu 26 migration (19/10/2026) — não são bloqueadores. | 🟡 |
+| — | Gate 4: mantido 🔴 até correção da causa real no ambiente remoto (provavelmente `build_api_json.ps1`/`build_historia_api.ps1` no `pwsh` Ubuntu ou encoding do JSON). | PENDENTE |
+| — | Regra anti-regressão aplicada: não mascarar o teste; corrigir a causa real antes de fechar o gate. | OK |
