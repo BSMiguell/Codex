@@ -132,16 +132,34 @@
   ];
 
   // ---------- mídia de um membro (imagem ou placeholder) ----------
+  // Compatibilidade com páginas geradas antes da migração WebP:
+  // quando o payload antigo só traz *.png, a página tenta automaticamente
+  // o mesmo caminho em *.webp. O PNG continua como fallback de último recurso.
+  function resolveMemberImage(m) {
+    const explicitWebp =
+      typeof m.imageWebp === "string" ? m.imageWebp.trim() : "";
+    if (explicitWebp) return explicitWebp;
+
+    const legacy = typeof m.image === "string" ? m.image.trim() : "";
+    if (!legacy) return "";
+    return /\.png$/i.test(legacy)
+      ? legacy.replace(/\.png$/i, ".webp")
+      : legacy;
+  }
+
   function mediaHTML(m, lazy) {
-    if (m.image) {
-      return `<img src="${esc(m.image)}" alt="${esc(m.title)}" ${lazy ? 'loading="lazy" decoding="async"' : 'decoding="async"'} draggable="false">`;
+    const src = resolveMemberImage(m);
+    if (src) {
+      const fallback =
+        typeof m.image === "string" && m.image !== src ? m.image : "";
+      return `<img src="${esc(src)}" alt="${esc(m.title)}" ${fallback ? `data-fallback-src="${esc(fallback)}"` : ""} ${lazy ? 'loading="lazy" decoding="async"' : 'decoding="async"'} draggable="false">`;
     }
     const initial = esc((splitTitle(m.title).name || "?").charAt(0).toUpperCase());
     return `<div class="member-ph"><span class="ph-icon">${esc(RACE.icon)}</span><span class="ph-initial">${initial}</span><span class="ph-label">Sem arte</span></div>`;
   }
 
   function hasArt(m) {
-    return Boolean(m.image);
+    return Boolean(resolveMemberImage(m));
   }
 
   // ---------- reveal por caractere no nome ----------
@@ -245,13 +263,22 @@
     animateSwap(old, node, direction);
 
     currentImg = node.querySelector("img");
-    if (currentImg && !reducedMotion) {
-      currentImg.addEventListener("load", () => {
-        currentImg.classList.add("is-kb");
-      });
+    if (currentImg) {
+      if (!reducedMotion) {
+        currentImg.addEventListener("load", () => {
+          currentImg.classList.add("is-kb");
+        });
+      }
       currentImg.addEventListener("error", () => {
-        // arte sumida/quebrada → placeholder no lugar
-        node.innerHTML = mediaHTML({ ...m, image: null }, false);
+        // Em páginas antigas, o payload trazia PNG como image legado.
+        // Tenta esse fallback somente uma vez; se também falhar, usa placeholder.
+        const fallback = currentImg.getAttribute("data-fallback-src");
+        if (fallback) {
+          currentImg.removeAttribute("data-fallback-src");
+          currentImg.src = fallback;
+          return;
+        }
+        node.innerHTML = mediaHTML({ ...m, image: null, imageWebp: null }, false);
         currentImg = null;
         resetTilt();
       });
@@ -264,9 +291,10 @@
   function preloadAround() {
     [idx + 1, idx - 1].forEach((i) => {
       const m = MEMBERS[(i + MEMBERS.length) % MEMBERS.length];
-      if (m && m.image) {
+      const src = m ? resolveMemberImage(m) : "";
+      if (src) {
         const im = new Image();
-        im.src = m.image;
+        im.src = src;
       }
     });
   }

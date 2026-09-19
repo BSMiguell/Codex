@@ -1,5 +1,5 @@
 ﻿# ============================================================
-# build_racas.ps1 — gera as 21 páginas de raça (racas/*.html)
+# build_racas.ps1 — gera as 22 páginas de raça (racas/*.html)
 # Fontes: characters-api.json + historia-api.json (nunca os .md)
 # Os dados de cada raça vão EMBUTIDOS na página (funciona em file://).
 # Assets compartilhados escritos à mão: racas/assets/raca.css e raca.js
@@ -277,7 +277,10 @@ for ($gi = 0; $gi -lt $api.groups.Count; $gi++) {
     $noImage = 0
     foreach ($c in $chars) {
         $img = $null
-        if ($c.image) { $img = "../" + $c.image } else { $noImage++ }
+        # WebP é o formato publicado/prioritário; PNG continua como fallback legado.
+        if ($c.imageWebp) { $img = "../" + $c.imageWebp }
+        elseif ($c.image) { $img = "../" + $c.image }
+        else { $noImage++ }
         $attrs = $null
         if ($c.attributes) {
             $attrs = [ordered]@{}
